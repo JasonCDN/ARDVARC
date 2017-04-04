@@ -21,6 +21,10 @@ Other advanced features of the API include:
 
 See the README for examples and a detailed reference.
 
+Important Note: This class does not keep track of where the car has been. Its
+only job is to get it where you want it to go - the user will need to write
+the code to record where the car has been (if desired).
+
 Author: Jason Storey
 License: GPLv3
 
@@ -51,28 +55,31 @@ class DriveControl
 {
 public:
 	DriveControl();
-	~DriveControl();
 	
+	void forward(float dist, float speed); // Moves forwards a certain `dist` (in mm).
+	void backward(float dist, float speed); // Moves backwards a certain `dist` (in mm).
+	void setSpeed(float speed); // Modifies the overall speed of the car (every motion is scaled by `speed`)
+	void nudge(float x, float y); // Uses fine adjustment movements to move a small distance
+	void turnRight(); // Shortcut for turnAngle(90)
+	void turnLeft(); // Shortcut for turnAngle(-90)
+	void turnAngle(float theta); // Will turn the vehicle a certain angle relative to its current position.
+	void goToPoint(float x, float y); // Pass in relative coordinates (in mm) to travel there.
+	// void followPath(); 
+	void setP2PMode(); // Sets point to point driving mode
+	void setArcMode(); // Sets arc driving mode
+	void setRevsPerVolt(float rpv); // Used to keep track of how far car has gone in a certain amount of time
+	void setWheelDiameter(float wheel_dia); // This is in mm, and is used to keep track of travel distance
+	bool isDriving(); // Returns the "_driving" flag
+private:
+	bool _driving = false; // Flag for if driving or not. Could be used internally to perform an interrupt routine.
+	float _speed_scalar = 1; // Between 0 and 1 - scales the speed down from the max.
+	float _left_speed; // Speed of left motor
+	float _right_speed; // Speed of right motor
+	float _wheel_dia; // Wheel diameter - for distance tracking while travelling
+	float _rpv; // Revs-per-volt. Note that this is actually RPM per Volt.
+	float _x_disp; // To keep track of X axis displacement
+	float _y_disp; // To keep track of Y axis displacement
+
 };
-
-
-/*
-
-This class contains all the low-level code to get the voltages and currents
-where you need them to get the motors going. The user shouldn't need to use
-this class for anything - the class "DriveControl" uses "Motor" instances to
-control the vehicle.
-
-Because this class should not be needed by the user, it is not as heavily
-documented as those that are. Additionally, all documentation is inline,
-rather than in the README.
-
-*/
-class Motor
-{
-public:
-	Motor();
-};
-
 
 #endif
