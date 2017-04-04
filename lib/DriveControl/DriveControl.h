@@ -29,6 +29,15 @@ License: GPLv3
 #ifndef drivecontrol_h
 #define drivecontrol_h
 
+// Pull in the Arduino standard libraries
+#if ARDUINO >= 100
+  #include "Arduino.h"
+#else
+  #include "WProgram.h"
+  #include "pins_arduino.h"
+  #include "WConstants.h"
+#endif
+
 /*
 
 This is "Sir DriveControl". His job is to make the motors turn in such a precise
@@ -63,7 +72,7 @@ class Motor
 {
 public:
 	Motor();
-}
+};
 
 
 #endif
