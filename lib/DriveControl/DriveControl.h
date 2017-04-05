@@ -42,6 +42,8 @@ License: GPLv3
   #include "WConstants.h"
 #endif
 
+#include "L293d/L293dDriver.h" // Need the type definition
+
 /*
 
 This is "Sir DriveControl". His job is to make the motors turn in such a precise
@@ -50,14 +52,17 @@ where and how fast!
 
 See the README for specific details and examples.
 
+TODO: Need an "update" function to control changes in speed (should be called often)
+
 */
 class DriveControl
 {
 public:
 	DriveControl();
 	
-	void forward(float dist, float speed); // Moves forwards a certain `dist` (in mm).
-	void backward(float dist, float speed); // Moves backwards a certain `dist` (in mm).
+	void setMotorPins(int en1, int in1, int in2, int en2, int in3, int in4); // Pins for the motors
+	void forward(float dist, float speed_scalar = 1); // Moves forwards a certain `dist` (in mm). Optional speed scalar.
+	void backward(float dist, float speed_scalar = 1); // Moves backwards a certain `dist` (in mm).
 	void setSpeed(float speed); // Modifies the overall speed of the car (every motion is scaled by `speed`)
 	void nudge(float x, float y); // Uses fine adjustment movements to move a small distance
 	void turnRight(); // Shortcut for turnAngle(90)
@@ -71,6 +76,9 @@ public:
 	void setWheelDiameter(float wheel_dia); // This is in mm, and is used to keep track of travel distance
 	bool isDriving(); // Returns the "_driving" flag
 private:
+	void move(float dist, float speed_scalar = 1);
+
+	L293D _motors;
 	bool _driving = false; // Flag for if driving or not. Could be used internally to perform an interrupt routine.
 	float _speed_scalar = 1; // Between 0 and 1 - scales the speed down from the max.
 	float _left_speed; // Speed of left motor

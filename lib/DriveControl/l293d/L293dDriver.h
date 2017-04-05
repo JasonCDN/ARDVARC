@@ -23,30 +23,6 @@ License: GPLv3
 
 /*
 
-The L293D chip is a standard H-bridge to control two motors. As such, the
-class for it has two methods (left and right) that control the speed and
-direction of the left and right motors.
-
-Speed and direction is controlled with a single integer between -255 and 255.
-Numbers outside the range are clipped. Negative speed values will run the
-motor backwards. A "0" value lets the motor coast.
-
-*/
-
-class L293D
-{
-public:
-	void setLeft(int enable1, int input1, int input2);
-	void setRight(int enable2, int input3, int input4);
-	void left(float speed);
-	void right(float speed);
-private:
-	Motor _left_motor;
-	Motor _right_motor;
-}
-
-/*
-
 This class contains all the low-level code to get the voltages and currents
 where you need them to get the motors going. The user shouldn't need to use
 this class for anything - the class "L293D" uses "Motor" instances to
@@ -70,7 +46,29 @@ private:
 	float _speed; // Holds the current speed, in case it is needed.
 };
 
+/*
 
+The L293D chip is a standard H-bridge to control two motors. As such, the
+class for it has two methods (left and right) that control the speed and
+direction of the left and right motors.
+
+Speed and direction is controlled with a single integer between -255 and 255.
+Numbers outside the range are clipped. Negative speed values will run the
+motor backwards. A "0" value lets the motor coast.
+
+*/
+
+class L293D
+{
+public:
+	void setLeft(int enable1, int input1, int input2);
+	void setRight(int enable2, int input3, int input4);
+	void left(float speed);
+	void right(float speed);
+private:
+	Motor _left_motor;
+	Motor _right_motor;
+};
 
 
 #endif
