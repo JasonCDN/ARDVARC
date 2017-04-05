@@ -36,7 +36,7 @@ rather than in the README.
 class Motor
 {
 public:
-	Motor(); // Cannot pass pins in constructor. Breaks convention.
+	Motor() {}; // Cannot pass pins in constructor. Breaks convention.
 	void setPins(int enable, int input1, int input2); // Set up the pin numbers
 	void drive(float speed); // A "speed" between -255 and 255 (-ve = backwards)
 private:

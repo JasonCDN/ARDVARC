@@ -45,7 +45,7 @@ License: GPLv3
   #include "WConstants.h"
 #endif
 
-#include "L293d/L293dDriver.h" // Need the type definition
+#include <L293dDriver.h> // Need the type definition
 
 /*
 
@@ -61,35 +61,36 @@ TODO: Need an "update" function to control changes in speed (should be called of
 class DriveControl
 {
 public:
-	DriveControl();
+	DriveControl() {};
 	
 	void setMotorPins(int en1, int in1, int in2, int en2, int in3, int in4); // Pins for the motors
 	void forward(float dist, float speed_scalar = 1); // Moves forwards a certain `dist` (in mm). Optional speed scalar.
 	void backward(float dist, float speed_scalar = 1); // Moves backwards a certain `dist` (in mm).
 	void setSpeed(float speed); // Modifies the overall speed of the car (every motion is scaled by `speed`)
-	void nudge(float x, float y); // Uses fine adjustment movements to move a small distance
+	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment movements to move a small distance
 	void turnRight(); // Shortcut for turnAngle(90)
 	void turnLeft(); // Shortcut for turnAngle(-90)
 	void turnAngle(float theta); // Will turn the vehicle a certain angle relative to its current position.
 	void goToPoint(float x, float y); // Pass in relative coordinates (in mm) to travel there.
 	void setP2PMode(); // Sets point to point driving mode
 	void setArcMode(); // Sets arc driving mode
-	void setRevsPerVolt(float rpv); // Used to keep track of how far car has gone in a certain amount of time
+	void setRevsPerDC(float rpdc); // Used to keep track of how far car has gone in a certain amount of time
 	void setWheelDiameter(float wheel_dia); // This is in mm, and is used to keep track of travel distance
 	bool isDriving(); // Returns the "_driving" flag
 private:
-	void move(float dist, float speed_scalar = 1);
+	void move(float dist, float speed_scalar = 1); // Forward/backward translation
+	void left(float dist, float time);   // These move the wheels with L293D, with built in global speed scalar.
+	void right(float dist, float time);  // Time is relative to 1. A time of 2 means a speed of 0.5 (etc).
 
 	L293D _motors;
 	bool _driving = false; // Flag for if driving or not. Could be used internally to perform an interrupt routine.
-	float _speed_scalar = 1; // Between 0 and 1 - scales the speed down from the max.
+	float _global_speed_scalar = 1; // Between 0 and 1 - scales the speed down from the max.
 	float _left_speed; // Speed of left motor
 	float _right_speed; // Speed of right motor
 	float _wheel_dia; // Wheel diameter - for distance tracking while travelling
-	float _rpv; // Revs-per-volt. Note that this is actually RPM per Volt.
+	float _rpdc; // Revs-per-Duty-cycle. Note that this is actually RPM per Duty Cycle.
 	float _x_disp; // To keep track of X axis displacement
 	float _y_disp; // To keep track of Y axis displacement
-
 };
 
 #endif
