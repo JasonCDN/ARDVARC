@@ -14,16 +14,19 @@ distance, so short paths should be used (if used at all).
 Other advanced features of the API include:
 
 	* Driving and turning simultaneously
-	* Path following (control-vertex spline tracking)
 	* Turning on the spot
-	* Fine position adjustment
+	* Moving to a specific point relative to vehicle's current position
+	* Fine position adjustment (in all directions)
 	* Moving forwards and backwards (user specifies)
 
 See the README for examples and a detailed reference.
 
 Important Note: This class does not keep track of where the car has been. Its
 only job is to get it where you want it to go - the user will need to write
-the code to record where the car has been (if desired).
+the code to record where the car has been (if desired). Additionally, if you
+want the car to follow a path, then you will need to combine the "goToPoint()"
+and "isDriving()" methods yourself. This is because the format of your path
+may not be conducive to a pre-written method.
 
 Author: Jason Storey
 License: GPLv3
@@ -69,7 +72,6 @@ public:
 	void turnLeft(); // Shortcut for turnAngle(-90)
 	void turnAngle(float theta); // Will turn the vehicle a certain angle relative to its current position.
 	void goToPoint(float x, float y); // Pass in relative coordinates (in mm) to travel there.
-	// void followPath(); 
 	void setP2PMode(); // Sets point to point driving mode
 	void setArcMode(); // Sets arc driving mode
 	void setRevsPerVolt(float rpv); // Used to keep track of how far car has gone in a certain amount of time
