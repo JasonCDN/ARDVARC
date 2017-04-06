@@ -1,9 +1,9 @@
 #include <DriveControl.h>
 
-DriveControl sir_driver;
+DriveControl sir_driver(65, 1);
 
 void setup() {
-	sir_driver.setRevsPerDC(1);
+	sir_driver.clearQueue();
 };
 
 void loop() {

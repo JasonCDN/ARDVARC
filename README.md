@@ -17,3 +17,10 @@ The reason you need to change the sketchbook location, is that Arduino can only 
 ### Developer Information
 
 The ARDVARC code was developed with **Arduino IDE 1.8.1**
+
+### Recognition of External Code
+
+* Built-in Arduino libraries (various authors)
+* *QueueList Arduino Library*: 2010 Efstathios Chatzikyriakidis, Alexander Brevig. 
+  From: http://playground.arduino.cc/Code/QueueList [06/04/2017]
+  Released under: GPLv3

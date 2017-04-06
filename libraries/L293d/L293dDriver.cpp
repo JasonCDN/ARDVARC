@@ -11,22 +11,18 @@
 
 As this class is just a wrapper around two Motor classes, it isn't super
 interesting. One thing to note is that left and right motors must be
-initialized separately. The L293D's `left` and `right` methods are simply
-wrappers around each motor's `speed` method
+initialized separately here. The L293D's `left` and `right` methods are simply
+wrappers around each motor's `drive` method
 
 */
 void L293D::setLeft(int enable1, int input1, int input2)
 {
-	Motor left_motor;
-	left_motor.setPins(enable1, input1, input2);
-	L293D::_left_motor = left_motor;
+	L293D::_left_motor.setPins(enable1, input1, input2);
 };
 
 void L293D::setRight(int enable2, int input3, int input4)
 {
-	Motor right_motor;
-	right_motor.setPins(enable2, input3, input4);
-	L293D::_right_motor = right_motor;
+	L293D::_right_motor.setPins(enable2, input3, input4);
 };
 
 void L293D::left(float speed)
