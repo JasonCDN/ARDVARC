@@ -46,6 +46,7 @@ License: GPLv3
 #endif
 
 #include <L293dDriver.h> // Need the type definitions
+#include <QueueList.h>
 
 /*
 
@@ -66,11 +67,12 @@ public:
 	void setMotorPins(int en1, int in1, int in2, int en2, int in3, int in4); // Pins for the motors
 
 	void run(); // This class runs on a queue system. This function must be called to progress the queue. See README.
-	void clearQueue(); // Stop everything and remove all instructions from queue.
+	void clearQueue(); // Remove all instructions from queue and finish up what we're doing.
 
 	void forward(float dist, float speed_scalar = 1); // Moves forwards a certain `dist` (in mm). Optional speed scalar.
 	void backward(float dist, float speed_scalar = 1); // Moves backwards a certain `dist` (in mm).
 	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment movements to move a small distance
+	void stopAll(); // Clears the queue, add instruction to stop all motors, run.
 
 	void goToPoint(float x, float y); // Pass in relative coordinates (in mm) to travel there.
 	void setP2PMode(); // Sets point to point driving mode
@@ -95,19 +97,19 @@ private:
 	float _global_speed_scalar = 1; // Between 0 and 1 - scales the speed down from the max.
 	const float _wheel_dia; // Wheel diameter - for distance tracking while travelling
 	float _rpdc; // Revs-per-Duty-cycle. Note that this is actually RPM per Duty Cycle.
-	static const byte QUEUE_SIZE = 32; // Maximum number of items in the queue allowed.
 
 	struct drive_instruction {
-		bool is_instruction = false; // Because static array, need to know if should actually run.
-		unsigned long start_time; // Set by run when the instruction is called. Used to track when it should stop.
-		unsigned int duration; // Decides when to halt the instruction. If 0, instruction runs until this is changed.
+		bool is_instruction = false; // Because static array, need to know if should actually run
+		unsigned long start_time; // Set by run when the instruction is called. Used to track when it should stop
+		unsigned int duration; // Decides when to halt the instruction. If 0, instruction runs until this is changed
 		byte left_speed;
 		bool left_direction; // 1 is forward, 0 is backward
 		byte right_speed;
 		bool right_direction;
 	};
 
-	drive_instruction queue[QUEUE_SIZE]; // Static array to hold queue instructions.
+	drive_instruction current; // Register to hold the currently executing instruction.
+	QueueList<drive_instruction> queue; // Dynamic linked list to hold drive instructions
 };
 
 #endif

@@ -66,8 +66,9 @@ nuking it are the only ways to edit the queue.
 
 #### Important Note about the queue
 
-You can only have 32 instructions in the queue at once - this is due to
-restrictions of the Arduino platform.
+You should only have a max of 32 instructions in the queue at once - this is
+due to restrictions of the Arduino platform. You could theoretically have
+more, because the queue is dynamically sized, but you may run out of memory.
 
 
 
