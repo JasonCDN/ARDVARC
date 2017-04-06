@@ -32,14 +32,15 @@ void DriveControl::wheel(Motor motor, float dist, float time)
 
 void DriveControl::run()
 {
-	// Check instruction register.
-	// If instruction in register, then
+	// Check first item on queue (if there is one)
+	// If instruction, then
 		// Check if duration expired:
-			// If expired, shift instruction off the queue and check for other instructions as before
-			// If not expired (or equal to 0), store in register and do nothing
+			// If expired (or == 0, SE), shift instruction off the queue and check for other instructions as before
+				// If no instructions remain
+			// If not expired
 				// break if not expired --- >
 
-	// Pop first instruction from queue
+	// Otherwise, Pop first instruction from queue (and set driving flag)
 	// Check duration. 
 		// If > 0, set start time to millis()
 		// If not > 0, remove from queue and discard. Loop.
@@ -57,5 +58,6 @@ void DriveControl::clearQueue()
 
 bool DriveControl::isDriving()
 {
+	 // This is modified only by the run() method when adding/expiring instructions from the register.
 	return _driving;
 };

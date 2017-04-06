@@ -108,7 +108,6 @@ private:
 		bool right_direction;
 	};
 
-	drive_instruction current; // Register to hold the currently executing instruction.
 	QueueList<drive_instruction> queue; // Dynamic linked list to hold drive instructions
 };
 
