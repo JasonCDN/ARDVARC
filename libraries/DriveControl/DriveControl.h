@@ -87,11 +87,6 @@ public:
 	void setWheelDiameter(float wheel_dia); // This is in mm, and is used to keep track of travel distance
 	bool isDriving(); // Returns the "_driving" flag, for external use. Will be true when items are in queue.
 private:
-	void move(float dist, float speed_scalar = 1); // Forward/backward translation
-	void left(float dist, float time);   // These move the wheels with L293D, with built in global speed scalar.
-	void right(float dist, float time);  // Time is relative to 1. A time of 2 means a speed of 0.5 (etc).
-	void wheel(Motor motor, float dist, float time); // Left and right driving code
-
 	L293D _motors;
 	bool _driving = false; // Flag for if driving or not. Could be used externally to perform an interrupt routine.
 	float _global_speed_scalar = 1; // Between 0 and 1 - scales the speed down from the max.
@@ -99,7 +94,6 @@ private:
 	float _rpdc; // Revs-per-Duty-cycle. Note that this is actually RPM per Duty Cycle.
 
 	struct drive_instruction {
-		bool is_instruction = false; // Because static array, need to know if should actually run
 		unsigned long start_time; // Set by run when the instruction is called. Used to track when it should stop
 		unsigned int duration; // Decides when to halt the instruction. If 0, instruction runs until this is changed
 		byte left_speed;
@@ -109,6 +103,12 @@ private:
 	};
 
 	QueueList<drive_instruction> queue; // Dynamic linked list to hold drive instructions
+
+	void move(float dist, float speed_scalar = 1); // Forward/backward translation
+	void left(float dist, float time);   // These move the wheels with L293D, with built in global speed scalar.
+	void right(float dist, float time);  // Time is relative to 1. A time of 2 means a speed of 0.5 (etc).
+	bool boolsgn(float num); // Return true if positive or 0, false if negative
+	drive_instruction newInstruction(float left_dist, float right_dist, float speed_scalar = 1); // Create and return instruction
 };
 
 #endif

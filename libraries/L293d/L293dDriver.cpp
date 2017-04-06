@@ -79,7 +79,7 @@ void Motor::drive(float speed)
 {
 	// Clean up the speed value. The value might be "messy" because
 	// the user is using a math function to interpolate speeds.
-	speed = constrain(-255, floor(speed), 255);
+	speed = constrain(floor(speed), -255, 255);
 	Motor::_speed = speed;
 
 	if (Motor::_speed > 0)
