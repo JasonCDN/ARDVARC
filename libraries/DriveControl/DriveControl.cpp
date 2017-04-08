@@ -25,35 +25,77 @@ void DriveControl::right(float dist, float time)
 	
 };
 
-// TODO: Put this in a utilities library
+/*
+
+Instruction Logic:
+
+* Creating instructions: newInstruction()
+* Adding instructions to the queue: addInstruction()
+* Keeping track of instructions in queue (and expiring them): run()
+* Executing instructions: executeInstruction()
+
+*/
+
+// TODO: Put these in a utilities library
 // Return true if positive or 0, false if negative
 bool DriveControl::boolsgn(float num)
 {
 	return num >= 0;
 }
 
-// Will make an instruction to move the wheels a given distance. The speed of each wheel
-// is automatically calculated here. Duration is calculated from the speed.
+// Return 1 if true, or -1 if false
+short DriveControl::sgnbool(bool boolsgn)
+{
+	return -1^(1 + boolsgn);
+}
+
+// Takes required wheel distances, creates an instruction and pushes it onto the end of the queue.
+void DriveControl::addInstruction(float left_dist, float right_dist, float speed_scalar = 1)
+{
+	queue.push(newInstruction(left_dist, right_dist, speed_scalar));
+}
+
+void DriveControl::stopAll()
+{
+	clearQueue();
+	drive_instruction stop = {0, 0, 0, 0, 0, 0};
+	executeInstruction(stop);
+}
+
+// Will make an instruction to move the wheels a given distance in a scaled time frame. The speed of each wheel
+// is automatically calculated here. Duration is then calculated from the max speed we can handle.
 DriveControl::drive_instruction DriveControl::newInstruction(float left_dist, float right_dist, float speed_scalar = 1)
 {
-	// The fastest speed that a wheel can possibly travel in this system
+	// The fastest speed that a wheel can possibly travel in this system.
+	// Note that this should never equal 0, or we will have a problem.
 	float max_velocity = _rpdc * 60 * _wheel_dia * 3.14159; // Convert rmp to rps, then to a distance with dia*pi.
 
-	// Work out relative scales of the speeds
-	float left_speed = left_dist / abs(left_dist);
-	float right_speed = right_dist / abs(left_dist);
+	// Work out relative scales of the speeds. Be aware of division by 0.
+	float left_speed = (left_dist > 0) ? left_dist / abs(left_dist) : 0;
+	float right_speed = (right_dist > 0) ? right_dist / abs(left_dist) : 0;
 
 	// Scalar between "1" magnitude, and max_velocity (based on larger value)
 	float scalar = max(left_speed, right_speed) / max_velocity;
 	speed_scalar = constrain(speed_scalar, 0, 1); // Must be within range for this to work.
 
 	// Normalize results to have a max at the max_speed, then map to -255 -> 255
-	// TODO: Use lambdas here?
 	int left_analog = int(map(speed_scalar * scalar * left_speed, -max_velocity, max_velocity, -255, 255));
 	int right_analog = int(map(speed_scalar * scalar * right_speed, -max_velocity, max_velocity, -255, 255));
 
 	// Time needed to travel full distance of either wheel (remember that t is const)
-	float time_needed = left_dist / left_speed; // In seconds
+	float time_needed;
+	if (left_speed > 0)
+	{
+		time_needed = left_dist / left_speed; // In seconds
+	} 
+	else if (right_speed > 0) 
+	{
+		time_needed = right_dist / right_speed; // In seconds
+	}
+	else
+	{
+		time_needed = 0; // If both are 0, we are stopping. No time needed.
+	}
 
 	// Build instruction from previous calculations
 	drive_instruction inst;
@@ -66,21 +108,49 @@ DriveControl::drive_instruction DriveControl::newInstruction(float left_dist, fl
 	return inst;
 };
 
+void DriveControl::executeInstruction(drive_instruction inst) const
+{
+	_motors.left(sgnbool(inst.left_direction) * inst.left_speed);
+	_motors.right(sgnbool(inst.right_direction) * inst.right_speed);
+}
+
 void DriveControl::run()
 {
-	// Check first item on queue (if there is one)
-	// If instruction, then
-		// Check if duration expired:
-			// If expired (or == 0, SE), shift instruction off the queue and check for other instructions as before
-				// If no instructions remain
-			// If not expired
-				// break until expired --- >
+	// Loop through items, only moving on to the next if the current one has expired
+	while (queue.count() > 0)
+	{
+		// Get a pointer to the current instruction, so we can read/change it
+		drive_instruction *active_instruction = &queue.peek();
 
-	// Otherwise, Pop first instruction from queue (and set driving flag)
-	// Check duration. 
-		// If > 0, set start time to millis()
-		// If not > 0, remove from queue and discard. Loop.
-	// Set motor speeds and directions
+		// Start the instruction (if necessary)
+		if (active_instruction->start_time <= 0)
+		{
+			// Set start time to "right now"
+			active_instruction->start_time = millis();
+			// Execute the instruction (and set a flag for external use)
+			executeInstruction(*active_instruction); // Make sure to de-reference pointer
+			_driving = true;
+		}
+
+		// Check to see if current instruction has expired
+		float time_passed = millis() - active_instruction->start_time;
+		if (active_instruction->duration == 0 or time_passed > active_instruction->duration)
+		{
+			// If so, remove it from the queue and unset the _driving flag
+			queue.pop();
+			_driving = false;
+			// That may have been the only instruction. If it was, stop the car
+			if (queue.count() <= 0)
+			{
+				stopAll();
+			}
+			continue;
+		} else {
+			// If instruction not expired, then yield from loop. 
+			// This function will be called again, and we can check then.
+			break;
+		}
+	}
 };
 
 // Just loop through every item in the queue and remove it.
@@ -92,7 +162,7 @@ void DriveControl::clearQueue()
 	}
 };
 
-bool DriveControl::isDriving()
+bool DriveControl::isDriving() const
 {
 	 // This is modified only by the run() method when adding/expiring instructions from the front of the queue.
 	return _driving;

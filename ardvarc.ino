@@ -1,11 +1,11 @@
 #include <DriveControl.h>
 
-DriveControl sir_driver(65, 1);
+DriveControl driver(65, 1);
 
 void setup() {
-	sir_driver.clearQueue();
-};
+	driver.addInstruction(21, 21);
+}
 
 void loop() {
-  
-};
+	driver.run();
+}

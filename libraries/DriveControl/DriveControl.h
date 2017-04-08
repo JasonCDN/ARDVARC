@@ -65,14 +65,15 @@ public:
 	DriveControl(float wheel, float rpdc = 1) : _wheel_dia(wheel), _rpdc(rpdc) {};
 	
 	void setMotorPins(int en1, int in1, int in2, int en2, int in3, int in4); // Pins for the motors
+	void addInstruction(float left_dist, float right_dist, float speed_scalar = 1);
 
 	void run(); // This class runs on a queue system. This function must be called to progress the queue. See README.
-	void clearQueue(); // Remove all instructions from queue and finish up what we're doing.
+	void clearQueue(); // Remove all instructions from queue, finish up what we're doing.
+	void stopAll(); // Clears the queue and executes an instruction to stop all motors.
 
 	void forward(float dist, float speed_scalar = 1); // Moves forwards a certain `dist` (in mm). Optional speed scalar.
 	void backward(float dist, float speed_scalar = 1); // Moves backwards a certain `dist` (in mm).
 	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment movements to move a small distance
-	void stopAll(); // Clears the queue, add instruction to stop all motors, run.
 
 	void goToPoint(float x, float y); // Pass in relative coordinates (in mm) to travel there.
 	void setP2PMode(); // Sets point to point driving mode
@@ -85,7 +86,7 @@ public:
 	void setSpeed(float speed) { _global_speed_scalar = speed; }; // Modifies the overall speed of the car (every motion is scaled by `speed`)
 	void setRevsPerDC(float rpdc) { _rpdc = rpdc; }; // Used to keep track of how far car has gone in a certain amount of time
 	void setWheelDiameter(float wheel_dia); // This is in mm, and is used to keep track of travel distance
-	bool isDriving(); // Returns the "_driving" flag, for external use. Will be true when items are in queue.
+	bool isDriving() const; // Returns the "_driving" flag, for external use. Will be true when items are in queue.
 private:
 	L293D _motors;
 	bool _driving = false; // Flag for if driving or not. Could be used externally to perform an interrupt routine.
@@ -108,7 +109,9 @@ private:
 	void left(float dist, float time);   // These move the wheels with L293D, with built in global speed scalar.
 	void right(float dist, float time);  // Time is relative to 1. A time of 2 means a speed of 0.5 (etc).
 	bool boolsgn(float num); // Return true if positive or 0, false if negative
+	short sgnbool(bool boolsgn); // Return 1 if true, or -1 if false
 	drive_instruction newInstruction(float left_dist, float right_dist, float speed_scalar = 1); // Create and return instruction
+	void executeInstruction(drive_instruction instruction) const; // Actually run the instruction
 };
 
 #endif
