@@ -18,22 +18,22 @@ wrappers around each motor's `drive` method
 void L293D::setLeft(int enable1, int input1, int input2)
 {
 	L293D::_left_motor.setPins(enable1, input1, input2);
-};
+}
 
 void L293D::setRight(int enable2, int input3, int input4)
 {
 	L293D::_right_motor.setPins(enable2, input3, input4);
-};
+}
 
 void L293D::left(float speed)
 {
 	L293D::_left_motor.drive(speed);
-};
+}
 
 void L293D::right(float speed)
 {
 	L293D::_right_motor.drive(speed);
-};
+}
 
 
 
@@ -65,7 +65,7 @@ void Motor::setPins(int enable, int input1, int input2)
 	{
 		printf("Cannot reassign motor pins");
 	}
-};
+}
 
 /*
  
@@ -103,4 +103,4 @@ void Motor::drive(float speed)
 		digitalWrite(Motor::_in2, LOW);
 		analogWrite(Motor::_en, 0);
 	}
-};
+}

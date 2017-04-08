@@ -6,24 +6,24 @@ void DriveControl::setMotorPins(int en1, int in1, int in2, int en2, int in3, int
 {
 	_motors.setLeft(en1, in1, in2);
 	_motors.setRight(en2, in3, in4);
-};
+}
 
 void DriveControl::move(float dist, float speed_scalar = 1)
 {
 	speed_scalar = constrain(0, speed_scalar, 1);
 	_motors.left(speed_scalar * 255);
 	_motors.right(speed_scalar * 255);
-};
+}
 
 void DriveControl::left(float dist, float time)
 {
 
-};
+}
 
 void DriveControl::right(float dist, float time)
 {
 	
-};
+}
 
 /*
 
@@ -106,7 +106,7 @@ DriveControl::drive_instruction DriveControl::newInstruction(float left_dist, fl
 	inst.right_direction = boolsgn(left_analog);
 
 	return inst;
-};
+}
 
 void DriveControl::executeInstruction(drive_instruction inst) const
 {
@@ -151,7 +151,7 @@ void DriveControl::run()
 			break;
 		}
 	}
-};
+}
 
 // Just loop through every item in the queue and remove it.
 void DriveControl::clearQueue()
@@ -160,10 +160,10 @@ void DriveControl::clearQueue()
 	{
 		queue.pop();
 	}
-};
+}
 
 bool DriveControl::isDriving() const
 {
 	 // This is modified only by the run() method when adding/expiring instructions from the front of the queue.
 	return _driving;
-};
+}
