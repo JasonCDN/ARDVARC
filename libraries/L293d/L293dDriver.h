@@ -1,4 +1,7 @@
-/* 
+/*
+============
+ L293D Chip 
+============
 
 Library to control the dual-independent motors at the hardware level. This is
 a low level library that simply turns the motors forwards or backwards and

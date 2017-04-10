@@ -58,6 +58,7 @@ void DriveControl::addInstruction(float left_dist, float right_dist, float speed
 void DriveControl::stopAll()
 {
 	clearQueue();
+	queue.pop(); // Remove remaining instruction.
 	executeInstruction(empty_instruction);
 }
 
@@ -160,7 +161,7 @@ void DriveControl::run()
 // Just loop through every item in the queue and remove it.
 void DriveControl::clearQueue()
 {
-	while(!queue.isEmpty())
+	while(queue.count() > 1) // Keep first instruction
 	{
 		queue.pop();
 	}

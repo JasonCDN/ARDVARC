@@ -75,18 +75,20 @@ public:
 
 	void forward(float dist, float speed_scalar = 1); // Moves forwards a certain `dist` (in mm). Optional speed scalar.
 	void backward(float dist, float speed_scalar = 1); // Moves backwards a certain `dist` (in mm).
-	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment techniques to move a small distance
 
-	void goToPoint(float x, float y); // Pass in relative coordinates (in mm) to travel there.
-	void goToArc(float x, float y); // Same as above, but move in one continuous arc (one instruction, ideally)
+	void goToPoint(float x, float y, float speed_scalar = 1); // Pass in relative coordinates (in mm) to travel there.
+	void goToPointSticky(float x, float y, float speed_scalar = 1); // As above, but don't undo last rotation
+	void goToArc(float x, float y, float speed_scalar = 1); // Same as above, but move in one continuous arc (one instruction, ideally)
+	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment techniques to move a small distance
 
 	// void setP2PMode(); // Sets point to point driving mode
 	// void setArcMode(); // Sets arc driving mode
 
 	// All angles are in degrees (because people are used to it!)
-	void turnRight(float theta); // Shortcut for turnAngle(|theta|). Can be as large as needed, must be > 0.
-	void turnLeft(float theta); // Shortcut for turnAngle(-|theta|). Can be as large as needed, must be > 0.
-	void turnAngle(float theta); // Will turn the vehicle a certain angle relative to its current position.
+	void turnRight(float theta, float speed_scalar = 1); // Shortcut for turnAngle(|theta|). Can be as large as needed, must be > 0.
+	void turnLeft(float theta, float speed_scalar = 1); // Shortcut for turnAngle(-|theta|). Can be as large as needed, must be > 0.
+	void turnAngle(float theta, float speed_scalar = 1); // Will turn the vehicle a certain angle relative to its current position.
+	void turnAngleClamped(float theta, float speed_scalar = 1); // As above, but constrains to +-180 degrees.
 	
 	bool isDriving() const; // Returns the "_driving" flag, for external use. Will be true when items are in queue.
 private:

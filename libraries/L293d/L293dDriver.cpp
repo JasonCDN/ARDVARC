@@ -1,11 +1,19 @@
-#include "L293DDriver.h"
-
-
 /*
 ============
  L293D Chip 
 ============
+
+Library to control the dual-independent motors at the hardware level. This is
+a low level library that simply turns the motors forwards or backwards and
+controls their speed.
+
+Author: Jason Storey
+License: GPLv3
+
 */
+
+#include "L293DDriver.h"
+
 
 /*
 
