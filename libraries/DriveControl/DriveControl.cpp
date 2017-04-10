@@ -58,8 +58,8 @@ void DriveControl::addInstruction(float left_dist, float right_dist, float speed
 void DriveControl::stopAll()
 {
 	clearQueue();
-	drive_instruction stop = {0, 0, 0, 0, 0, 0};
-	executeInstruction(stop);
+	queue.pop(); // Remove remaining instruction.
+	executeInstruction(empty_instruction);
 }
 
 // Will make an instruction to move the wheels a given distance in a scaled time frame. The speed of each wheel
@@ -70,13 +70,18 @@ DriveControl::drive_instruction DriveControl::newInstruction(float left_dist, fl
 	// Note that this should never equal 0, or we will have a problem.
 	float max_velocity = _rpdc * 60 * _wheel_dia * 3.14159; // Convert rmp to rps, then to a distance with dia*pi.
 
+	if (max_velocity <= 0) {
+		// Do nothing. If we get to here, something went wrong with setting parameters.
+		return empty_instruction;
+	}
+
 	// Work out relative scales of the speeds. Be aware of division by 0.
 	float left_speed = (left_dist > 0) ? left_dist / abs(left_dist) : 0;
 	float right_speed = (right_dist > 0) ? right_dist / abs(left_dist) : 0;
 
 	// Scalar between "1" magnitude, and max_velocity (based on larger value)
 	float scalar = max(left_speed, right_speed) / max_velocity;
-	speed_scalar = constrain(speed_scalar, 0, 1); // Must be within range for this to work.
+	speed_scalar = constrain(speed_scalar, 0, 1) * _global_speed_scalar; // Must be within range for this to work.
 
 	// Normalize results to have a max at the max_speed, then map to -255 -> 255
 	int left_analog = int(map(speed_scalar * scalar * left_speed, -max_velocity, max_velocity, -255, 255));
@@ -156,7 +161,7 @@ void DriveControl::run()
 // Just loop through every item in the queue and remove it.
 void DriveControl::clearQueue()
 {
-	while(!queue.isEmpty())
+	while(queue.count() > 1) // Keep first instruction
 	{
 		queue.pop();
 	}
@@ -166,4 +171,22 @@ bool DriveControl::isDriving() const
 {
 	 // This is modified only by the run() method when adding/expiring instructions from the front of the queue.
 	return _driving;
+}
+
+// Set the internal speed scalar to a value between 0 and 1.
+void DriveControl::setSpeed(float speed)
+{
+	_global_speed_scalar = constrain(speed, 0, 1);
+}
+
+// Set the internal rpm (for 100% duty cycle) to a value. 
+// This cannot be negative, but it can be zero (but then the whole car is useless).
+void DriveControl::setRevsPerDC(float rpdc)
+{
+	_rpdc = max(rpdc, 0);
+}
+
+void DriveControl::setWheelDiameter(float wheel)
+{
+	_wheel_dia = max(wheel, 0);
 }

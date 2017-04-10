@@ -1,9 +1,9 @@
 #include <DriveControl.h>
 
-DriveControl driver(65, 1);
+DriveControl driver;
 
 void setup() {
-	driver.addInstruction(21, 21);
+	driver.setMotorPins(2,3,4,5,6,7);
 }
 
 void loop() {
