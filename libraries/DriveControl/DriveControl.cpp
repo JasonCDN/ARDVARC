@@ -185,7 +185,7 @@ void DriveControl::setRevsPerDC(float rpdc)
 	_rpdc = max(rpdc, 0);
 }
 
-void DriveControl::setWheelDia(float wheel)
+void DriveControl::setWheelDiameter(float wheel)
 {
 	_wheel_dia = max(wheel, 0);
 }

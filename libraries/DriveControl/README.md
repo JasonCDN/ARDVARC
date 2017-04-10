@@ -21,10 +21,76 @@ details. In this case, this person's job is to control how the vehicle moves.
 
 ## Setting up the parameters
 
-**TODO: Pins, Wheels and RPDC**
+Before using the DriveControl API, you need to hook a few things up in the
+code.
 
+#### Setting motor pins
 
-## Introduction to how it works
+So that DriveControl knows where the motors are, you need to tell it which
+pins to use. You can do this with the function `setMotorPins(...)` as such:
+
+```cpp
+
+DriveControl driver;
+
+setup() {
+	// Order: Enable1, Input1, Input2, Enable2, Input3, Input4
+	// See reference below for more information
+	driver.setMotorPins(3, 4, 5, 6, 7, 8);
+
+	// ... More code
+}
+
+```
+
+#### Setting the Wheel diameter
+
+To allow DriveControl to calculate (very roughly) how far it has traveled, one
+of the required parameters is the wheel diameter. To tell DriveControl how big
+your wheels are, use the `setWheelDiameter(...)` function.
+
+```cpp
+
+DriveControl driver;
+
+setup() {
+	// The diameter is in mm
+	driver.setWheelDiameter(65);
+
+	// ... More code (set pins, etc.)
+}
+
+```
+
+#### Setting the RPM for full power (RPDC)
+
+The second parameter for DriveControl to calculate roughly how far the vehicle
+has gone is the "speed-per-voltage". This is called "RPM-per-duty-cycle"
+(ARDVARC specific term) that tells DriveControl how far it can expect the
+motors to take the car at full power for one minute. 
+
+To be specific, this value is the revs-per-minute of the motors while the car
+is running at full power. This value can be found experimentally, by running
+the car at full speed for an amount of time and seeing how far it goes.
+
+You can set the RPDC with the `setRevsPerDC(...)` function, as such:
+
+```cpp
+
+DriveControl driver;
+
+setup() {
+	// Revs per minute at full power (full duty-cycle)
+	driver.setRevsPerDC(31);
+
+	// ... More code (set pins and wheel diameter)
+}
+
+```
+
+## How to get things moving
+
+#### Intro to the API
 
 Because actions done by DriveControl take considerable amounts of time to
 complete when compared to average processing speed, the API is based on a
@@ -86,6 +152,8 @@ restrict the number of instructions on the queue to a reasonable number. A
 recommended maximum is 32 - this is due to restrictions of the Arduino
 platform. You could theoretically have more, because the queue is dynamically
 sized, but be warned that you may run out of memory.
+
+#### Making the code wait
 
 ## Notes and warnings
 

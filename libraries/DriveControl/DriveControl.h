@@ -66,7 +66,7 @@ public:
 	
 	void setSpeed(float speed); // Modifies the overall speed of the car (every motion is scaled by `speed`)
 	void setRevsPerDC(float rpdc); // Used to keep track of how far car has gone in a certain amount of time
-	void setWheelDia(float wheel); // Wheel (diameter) is in mm, and is used to keep track of travel distance
+	void setWheelDiameter(float wheel); // Wheel (diameter) is in mm, and is used to keep track of travel distance
 	void setMotorPins(int en1, int in1, int in2, int en2, int in3, int in4); // Pins for the motors
 
 	void run(); // This class runs on a queue system. This function must be called to progress the queue. See README.
