@@ -33,7 +33,7 @@ pins to use. You can do this with the function `setMotorPins(...)` as such:
 
 DriveControl driver;
 
-setup() {
+void setup() {
 	// Order: Enable1, Input1, Input2, Enable2, Input3, Input4
 	// See reference below for more information
 	driver.setMotorPins(3, 4, 5, 6, 7, 8);
@@ -53,7 +53,7 @@ your wheels are, use the `setWheelDiameter(...)` function.
 
 DriveControl driver;
 
-setup() {
+void setup() {
 	// The diameter is in mm
 	driver.setWheelDiameter(65);
 
@@ -79,7 +79,7 @@ You can set the RPDC with the `setRevsPerDC(...)` function, as such:
 
 DriveControl driver;
 
-setup() {
+void setup() {
 	// Revs per minute at full power (full duty-cycle)
 	driver.setRevsPerDC(31);
 
@@ -117,18 +117,22 @@ forever until you terminate the program or add more instructions to the queue.
 
 
 ```cpp
-DriveControl driving_man(65); // Set wheel diameter to 65mm
+DriveControl driver();
 
-driving_man.setMotorPins(/* ... whatever */);
+void setup() {
+	driver.setMotorPins(/* ... whatever */);
+	driver.setWheelDiameter(/* ... */);
+	driver.setRevsPerDC(/* ... */);
 
-// Add actions to the queue
-driving_man.forward(100);
-driving_man.backward(50);
-driving_man.turnRight();
+	// Add actions to the queue
+	driver.forward(100);
+	driver.backward(50);
+	driver.turnRight();
+}
 
-while (true)
-{
-	driving_man.run() // IMPORTANT!
+
+void loop() {
+	driver.run() // IMPORTANT!
 }
 ```
 
