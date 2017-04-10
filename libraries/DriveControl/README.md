@@ -19,6 +19,10 @@ this class sort of like a person, who can be given tasks (like "turn around")
 and they will carry them out for you - without you needing to think about the
 details. In this case, this person's job is to control how the vehicle moves.
 
+## Setting up the parameters
+
+**TODO: Pins, Wheels and RPDC**
+
 
 ## Introduction to how it works
 
