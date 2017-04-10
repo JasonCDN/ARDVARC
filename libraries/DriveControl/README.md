@@ -159,10 +159,37 @@ sized, but be warned that you may run out of memory.
 
 #### Making the code wait
 
+The DriveControl API has a function called `isDriving()`. This function will
+return `true` if there is currently executing instructions on the queue, and
+`false` if the queue is empty (and thus, we aren't moving anywhere). This
+function is useful for quite a few things, like checking for motion, waiting
+for code to complete or stopping a motion-sensitive sensor from functioning
+until we stop.
+
+Here's an example of how to "pause" the code until all the instructions on the
+queue are finished:
+
+```cpp
+// ...
+void loop() {
+	driver.forward(100); // Instruction to move forward by 10cm
+
+	// When .isDriving() returns false, we have stopped and the loop will exit
+	while(driver.isDriving()) {
+		// Actually run and manage the instruction
+		driver.run();
+	}
+
+	// Print a message to the serial monitor
+	Serial.println("We have moved this country forward!");
+}
+
+```
+
 ## Notes and warnings
 
 A long driving instruction will be less accurate than a short one. This is
-because the vehicle calculates how far it has travelled based on a provided
+because the vehicle calculates how far it has traveled based on a provided
 revs-per-duty-cycle value. Over time, the accuracy of this calculation will
 decrease linearly.
 
@@ -180,27 +207,28 @@ the API makes available to you is documented there in detail.
 
 # Function reference
 
-* <a href="#drivecontrol">DriveControl(wheel, rpdc)</a> : The API constructor
+* <a href="#drivecontrol">DriveControl()</a> : The API constructor
 * <a href="#setmotorpins">setMotorPins(en1, in1, in2, en2, in3, in4)</a> : Set up motor pin numbers
+* <a href="#setwheeldiameter">setWheelDiameter(wheel_dia)</a> : Set wheel diameter (in mm)
+* <a href="#setrevsperdc">setRevsPerDC(rpdc)</a> : Set a positive speed multiplier for the wheels at full power
+* <a href="#setspeed">setSpeed(speed)</a> : Set a global (overlaid) speed multiplier.
 * <a href="#addinstruction">addInstruction(left_dist, right_dist, speed_scalar = 1)</a> : REMOVE THIS
 * <a href="#run">run()</a> : Run and maintain the instruction queue
 * <a href="#clearqueue">clearQueue()</a> : Remove all instructions from the queue
 * <a href="#stopall">stopAll()</a> : Clear the queue and turn off the motors
-* <a href="#forward">forward(dist, speed_scalar = 1)</a> : Move forward a given distance. Optional speed.
-* <a href="#backward">backward(dist, speed_scalar = 1)</a> : Move backward a given distance. Optional speed.
+* <a href="#forward">forward(dist, speed_scalar = 1)</a> : Move forward a given distance (in mm). Optional speed.
+* <a href="#backward">backward(dist, speed_scalar = 1)</a> : Move backward a given distance (in mm). Optional speed.
 * <a href="#nudge">nudge(x, y, speed_scalar = 0.5)</a> : Nudge to a certain point (ideally close by). Optional speed.
-* <a href="#gotopoint">goToPoint(x, y)</a> : Drive to a certain point
-* <a href="#setp2pmode">setP2PMode()</a> : REMOVE
-* <a href="#setarcmode">setArcMode()</a> : REMOVE
-* <a href="#turnright">turnRight()</a> : UPDATE 
-* <a href="#turnleft">turnLeft()</a> : UPDATE
-* <a href="#turnangle">turnAngle(theta)</a> : Turn an angle "theta" degrees on the spot. Negative is to the left.
-* <a href="#setspeed">setSpeed(speed)</a> : Set a global (stacking) speed multiplier.
-* <a href="#setrevsperdc">setRevsPerDC(rpdc)</a> : UPDATE
-* <a href="#setwheeldiameter">setWheelDiameter(wheel_dia)</a> : UPDATE
+* <a href="#gotopoint">goToPoint(x, y)</a> : Drive to a certain point relative to current location
+* <a href="#goToArc">goToArc(x, y)</a> : Drive to a certain point relative to current location
+* <a href="#turnright">turnRight(theta)</a> : Turn right a given angle, without constraint
+* <a href="#turnleft">turnLeft(theta)</a> : Turn left a given angle, without constraint
+* <a href="#turnangle">turnAngle(theta)</a> : Turn an angle "theta" degrees on the spot. Negative is to the left. Automatically constrained to principal angles (from -180 degrees to 180 degrees).
 
+
+<!-- WIP -->
 <a id="drivecontrol"></a>
-### DriveControl(float wheel, float rpdc = 1)
+### DriveControl()
 	
 <a id="setmotorpins"></a>
 ### setMotorPins(int en1, int in1, int in2, int en2, int in3, int in4); // Pins for the motors
@@ -229,11 +257,8 @@ the API makes available to you is documented there in detail.
 <a id="gotopoint"></a>
 ### goToPoint(float x, float y); // Pass in relative coordinates (in mm) to travel there.
 
-<a id="setp2pmode"></a>
-### setP2PMode(); // Sets point to point driving mode
-
-<a id="setarcmode"></a>
-### setArcMode(); // Sets arc driving mode
+<a id="gotopoint"></a>
+### gotToArc(float x, float y); // Sets point to point driving mode
 
 <a id="turnright"></a>
 ### turnRight(); // Shortcut for turnAngle(90)

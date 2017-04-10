@@ -54,9 +54,9 @@ This is "Sir DriveControl". His job is to make the motors turn in such a precise
 manner that the car ends up where you want it to. All you have to do is say
 where and how fast!
 
-See the README for specific details and examples.
+Don't forget to call the "run()" function!
 
-TODO: Need an "update" function to control changes in speed (should be called often)
+See the README for specific details and examples.
 
 */
 class DriveControl
@@ -75,14 +75,17 @@ public:
 
 	void forward(float dist, float speed_scalar = 1); // Moves forwards a certain `dist` (in mm). Optional speed scalar.
 	void backward(float dist, float speed_scalar = 1); // Moves backwards a certain `dist` (in mm).
-	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment movements to move a small distance
+	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment techniques to move a small distance
 
 	void goToPoint(float x, float y); // Pass in relative coordinates (in mm) to travel there.
-	void setP2PMode(); // Sets point to point driving mode
-	void setArcMode(); // Sets arc driving mode
+	void goToArc(float x, float y); // Same as above, but move in one continuous arc (one instruction, ideally)
 
-	void turnRight(); // Shortcut for turnAngle(90)
-	void turnLeft(); // Shortcut for turnAngle(-90)
+	// void setP2PMode(); // Sets point to point driving mode
+	// void setArcMode(); // Sets arc driving mode
+
+	// All angles are in degrees (because people are used to it!)
+	void turnRight(float theta); // Shortcut for turnAngle(|theta|). Can be as large as needed, must be > 0.
+	void turnLeft(float theta); // Shortcut for turnAngle(-|theta|). Can be as large as needed, must be > 0.
 	void turnAngle(float theta); // Will turn the vehicle a certain angle relative to its current position.
 	
 	bool isDriving() const; // Returns the "_driving" flag, for external use. Will be true when items are in queue.
