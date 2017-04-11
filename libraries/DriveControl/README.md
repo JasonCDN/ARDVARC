@@ -398,7 +398,11 @@ reverse instead.
 <a id="gotopoint"></a>
 ### goToPoint(float x, float y, float speed_scalar = 1);
 
-If you need to go somewhere relative to the vehicle's current position, then you need to "go to a point". That's what this function does. Pass in an `x` and `y` (in mm) and the vehicle will try its best to move there, relative to its current location. Try to keep the distances short, because we can only estimate how far the car has traveled.
+If you need to go somewhere relative to the vehicle's current position, then
+you need to "go to a point". That's what this function does. Pass in an `x`
+and `y` (in mm) and the vehicle will try its best to move there, relative to
+its current location. Try to keep the distances short, because we can only
+estimate how far the car has traveled.
 
 This function uses three instructions. 
 
