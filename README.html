@@ -1,0 +1,1162 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 980px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+body .markdown-body {
+    padding: 45px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    word-wrap: break-word;
+}
+
+pre {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  color: #333;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background-color: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body input {
+  font: 13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.markdown-body a {
+  color: #4078c0;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before {
+  display: table;
+  content: "";
+}
+
+.markdown-body hr:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body .select::-ms-expand {
+  opacity: 0;
+}
+
+.markdown-body .octicon {
+  font: normal normal normal 16px/1 octicons-anchor;
+  display: inline-block;
+  text-decoration: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.markdown-body .octicon-link:before {
+  content: '\f05c';
+}
+
+.markdown-body:before {
+  display: table;
+  content: "";
+}
+
+.markdown-body:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .anchor {
+  display: inline-block;
+  padding-right: 2px;
+  margin-left: -18px;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .octicon-link,
+.markdown-body h2 .octicon-link,
+.markdown-body h3 .octicon-link,
+.markdown-body h4 .octicon-link,
+.markdown-body h5 .octicon-link,
+.markdown-body h6 .octicon-link {
+  color: #000;
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor,
+.markdown-body h2:hover .anchor,
+.markdown-body h3:hover .anchor,
+.markdown-body h4:hover .anchor,
+.markdown-body h5:hover .anchor,
+.markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link,
+.markdown-body h2:hover .anchor .octicon-link,
+.markdown-body h3:hover .anchor .octicon-link,
+.markdown-body h4:hover .anchor .octicon-link,
+.markdown-body h5:hover .anchor .octicon-link,
+.markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h1 .anchor {
+  line-height: 1;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 .anchor {
+  line-height: 1;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h3 .anchor {
+  line-height: 1.2;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 .anchor {
+  line-height: 1.2;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h5 .anchor {
+  line-height: 1.1;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body h6 .anchor {
+  line-height: 1.1;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: #fff;
+}
+
+.markdown-body code {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb;
+}
+
+.markdown-body .pl-c {
+  color: #969896;
+}
+
+.markdown-body .pl-c1,
+.markdown-body .pl-s .pl-v {
+  color: #0086b3;
+}
+
+.markdown-body .pl-e,
+.markdown-body .pl-en {
+  color: #795da3;
+}
+
+.markdown-body .pl-s .pl-s1,
+.markdown-body .pl-smi {
+  color: #333;
+}
+
+.markdown-body .pl-ent {
+  color: #63a35c;
+}
+
+.markdown-body .pl-k {
+  color: #a71d5d;
+}
+
+.markdown-body .pl-pds,
+.markdown-body .pl-s,
+.markdown-body .pl-s .pl-pse .pl-s1,
+.markdown-body .pl-sr,
+.markdown-body .pl-sr .pl-cce,
+.markdown-body .pl-sr .pl-sra,
+.markdown-body .pl-sr .pl-sre {
+  color: #183691;
+}
+
+.markdown-body .pl-v {
+  color: #ed6a43;
+}
+
+.markdown-body .pl-id {
+  color: #b52a1d;
+}
+
+.markdown-body .pl-ii {
+  background-color: #b52a1d;
+  color: #f8f8f8;
+}
+
+.markdown-body .pl-sr .pl-cce {
+  color: #63a35c;
+  font-weight: bold;
+}
+
+.markdown-body .pl-ml {
+  color: #693a17;
+}
+
+.markdown-body .pl-mh,
+.markdown-body .pl-mh .pl-en,
+.markdown-body .pl-ms {
+  color: #1d3e81;
+  font-weight: bold;
+}
+
+.markdown-body .pl-mq {
+  color: #008080;
+}
+
+.markdown-body .pl-mi {
+  color: #333;
+  font-style: italic;
+}
+
+.markdown-body .pl-mb {
+  color: #333;
+  font-weight: bold;
+}
+
+.markdown-body .pl-md {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.markdown-body .pl-mi1 {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.markdown-body .pl-mdr {
+  color: #795da3;
+  font-weight: bold;
+}
+
+.markdown-body .pl-mo {
+  color: #1d3e81;
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb;
+}
+
+.markdown-body .plan-price-unit {
+  color: #767676;
+  font-weight: normal;
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 0.35em 0.25em -1.6em;
+  vertical-align: middle;
+}
+
+.markdown-body .plan-choice {
+  padding: 15px;
+  padding-left: 40px;
+  display: block;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  font-weight: normal;
+  background-color: #fafafa;
+}
+
+.markdown-body .plan-choice.open {
+  background-color: #fff;
+}
+
+.markdown-body .plan-choice.open .plan-choice-seat-breakdown {
+  display: block;
+}
+
+.markdown-body .plan-choice-free {
+  border-radius: 3px 3px 0 0;
+}
+
+.markdown-body .plan-choice-paid {
+  border-radius: 0 0 3px 3px;
+  border-top: 0;
+  margin-bottom: 20px;
+}
+
+.markdown-body .plan-choice-radio {
+  position: absolute;
+  left: 15px;
+  top: 18px;
+}
+
+.markdown-body .plan-choice-exp {
+  color: #999;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.markdown-body .plan-choice-seat-breakdown {
+  margin-top: 10px;
+  display: none;
+}
+
+.markdown-body :checked+.radio-label {
+  z-index: 1;
+  position: relative;
+  border-color: #4078c0;
+}
+</style><title>README</title></head><body><article class="markdown-body"><h1>
+<a id="user-content-drive-control-api" class="anchor" href="#drive-control-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Drive Control API</h1>
+<blockquote>
+<p>For ARDVARC.
+Author: Jason Storey</p>
+</blockquote>
+<p>This document will describe how the DriveControl API works, like a tutorial.
+The aim is to take you through how to use all the features of the DriveControl
+API to make full use of ARDVARC's dual-independent-motor drive system.</p>
+<p>There are different levels of features. High-level features like
+<code>turnAround()</code> will coordinate the motors to rotate the car 180 degrees about
+its Z axis, without changing its displacement. Low level features, such as
+<code>moveForward(distance, [speed])</code> will make the car drive <code>distance</code> (in
+centimeters) at a given percentage of its maximum speed.</p>
+<blockquote>
+<p>Note that unless you specify a global speed and/or specify an additional
+once-off speed, the DriveControl API will do things as fast as the vehicle
+physically allows it. Normally, that shouldn't be an issue.</p>
+</blockquote>
+<p>Each method in the API is attached to the <strong>DriveControl</strong> class. Think of
+this class sort of like a person, who can be given tasks (like "turn around")
+and they will carry them out for you - without you needing to think about the
+details. In this case, this person's job is to control how the vehicle moves.</p>
+<h2>
+<a id="user-content-setting-up-the-parameters" class="anchor" href="#setting-up-the-parameters" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setting up the parameters</h2>
+<p>Before using the DriveControl API, you need to hook a few things up in the
+code.</p>
+<h4>
+<a id="user-content-setting-motor-pins" class="anchor" href="#setting-motor-pins" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setting motor pins</h4>
+<p>So that DriveControl knows where the motors are, you need to tell it which
+pins to use. You can do this with the function <code>setMotorPins(...)</code> as such:</p>
+<div class="highlight highlight-source-c++"><pre>
+DriveControl driver;
+
+<span class="pl-k">void</span> <span class="pl-en">setup</span>() {
+	<span class="pl-c"><span class="pl-c">//</span> Order: Enable1, Input1, Input2, Enable2, Input3, Input4</span>
+	<span class="pl-c"><span class="pl-c">//</span> See reference below for more information</span>
+	driver.<span class="pl-c1">setMotorPins</span>(<span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>, <span class="pl-c1">6</span>, <span class="pl-c1">7</span>, <span class="pl-c1">8</span>);
+
+	<span class="pl-c"><span class="pl-c">//</span> ... More code</span>
+}
+</pre></div>
+<h4>
+<a id="user-content-setting-the-wheel-diameter" class="anchor" href="#setting-the-wheel-diameter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setting the Wheel diameter</h4>
+<p>To allow DriveControl to calculate (very roughly) how far it has traveled, one
+of the required parameters is the wheel diameter. To tell DriveControl how big
+your wheels are, use the <code>setWheelDiameter(...)</code> function.</p>
+<div class="highlight highlight-source-c++"><pre>
+DriveControl driver;
+
+<span class="pl-k">void</span> <span class="pl-en">setup</span>() {
+	<span class="pl-c"><span class="pl-c">//</span> The diameter is in mm</span>
+	driver.<span class="pl-c1">setWheelDiameter</span>(<span class="pl-c1">65</span>);
+
+	<span class="pl-c"><span class="pl-c">//</span> ... More code (set pins, etc.)</span>
+}
+</pre></div>
+<h4>
+<a id="user-content-setting-the-rpm-for-full-power-rpdc" class="anchor" href="#setting-the-rpm-for-full-power-rpdc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setting the RPM for full power (RPDC)</h4>
+<p>The second parameter for DriveControl to calculate roughly how far the vehicle
+has gone is the "speed-per-voltage". This is called "RPM-per-duty-cycle"
+(ARDVARC specific term) that tells DriveControl how far it can expect the
+motors to take the car at full power for one minute.</p>
+<p>To be specific, this value is the revs-per-minute of the motors while the car
+is running at full power. This value can be found experimentally, by running
+the car at full speed for an amount of time and seeing how far it goes.</p>
+<p>You can set the RPDC with the <code>setRevsPerDC(...)</code> function, as such:</p>
+<div class="highlight highlight-source-c++"><pre>
+DriveControl driver;
+
+<span class="pl-k">void</span> <span class="pl-en">setup</span>() {
+	<span class="pl-c"><span class="pl-c">//</span> Revs per minute at full power (full duty-cycle)</span>
+	driver.<span class="pl-c1">setRevsPerDC</span>(<span class="pl-c1">31</span>);
+
+	<span class="pl-c"><span class="pl-c">//</span> ... More code (set pins and wheel diameter)</span>
+}
+</pre></div>
+<h2>
+<a id="user-content-how-to-get-things-moving" class="anchor" href="#how-to-get-things-moving" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to get things moving</h2>
+<h4>
+<a id="user-content-intro-to-the-api" class="anchor" href="#intro-to-the-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Intro to the API</h4>
+<p>Because actions done by DriveControl take considerable amounts of time to
+complete when compared to average processing speed, the API is based on a
+queue system. Don't worry - you don't really need to know about how the queue
+works, just what it means.</p>
+<p>This means that when you call a function like <code>forward(100)</code>, all this does is
+add an instruction to the "driving queue". Then, the rest of the code will
+execute as normal, without waiting for the physical driving to happen.</p>
+<blockquote>
+<p>You <em>can</em> make the code wait if you want - more on that later.</p>
+</blockquote>
+<p>This instruction won't actually do anything. It will just sit there in the
+queue until you call the most important method in DriveControl: <code>run()</code>. This
+method will take instructions from the queue, start them running, monitor
+their progress and terminate the instruction when its time is up. To let
+DriveControl monitor what's going on, you should call <code>run()</code> often.</p>
+<p>If you want to add multiple actions to the queue, to be executed in sequence,
+then just call them one after the other. For example, the following code will
+cause the car to move forward 100 mm, then backward 50 mm, then turn 90 degrees
+to the right. After it's done all that, it will sit there and do nothing
+forever until you terminate the program or add more instructions to the queue.</p>
+<div class="highlight highlight-source-c++"><pre>DriveControl <span class="pl-en">driver</span>();
+
+<span class="pl-k">void</span> <span class="pl-en">setup</span>() {
+	driver.<span class="pl-c1">setMotorPins</span>(<span class="pl-c"><span class="pl-c">/*</span> ... whatever <span class="pl-c">*/</span></span>);
+	driver.<span class="pl-c1">setWheelDiameter</span>(<span class="pl-c"><span class="pl-c">/*</span> ... <span class="pl-c">*/</span></span>);
+	driver.<span class="pl-c1">setRevsPerDC</span>(<span class="pl-c"><span class="pl-c">/*</span> ... <span class="pl-c">*/</span></span>);
+
+	<span class="pl-c"><span class="pl-c">//</span> Add actions to the queue</span>
+	driver.<span class="pl-c1">forward</span>(<span class="pl-c1">100</span>);
+	driver.<span class="pl-c1">backward</span>(<span class="pl-c1">50</span>);
+	driver.<span class="pl-c1">turnRight</span>();
+}
+
+
+<span class="pl-k">void</span> <span class="pl-en">loop</span>() {
+	driver.<span class="pl-c1">run</span>() <span class="pl-c"><span class="pl-c">//</span> IMPORTANT!</span>
+}</pre></div>
+<p>If you add an instruction to the queue, but you change your mind later, you
+can call <code>clearQueue()</code>. This will remove all driving instructions from the
+list and the car will just finish up whatever it's currently running. At this
+time, adding individual instructions or nuking the queue are the only ways to
+edit the sequence of instructions.</p>
+<h4>
+<a id="user-content-a-word-on-memory" class="anchor" href="#a-word-on-memory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>A Word on Memory</h4>
+<p>The basis of an instruction is that all vehicle motions can be reduced to
+single steps of running each motor at a specific speed for a period of time.
+Whenever the speed of a motor needs to change, a new instruction is needed.
+This means that while some methods like <code>forward(&lt;dist&gt;)</code> only add one
+instruction to the queue, more advanced methods like <code>goToPoint(&lt;x&gt;, &lt;y&gt;)</code>
+might need to add 3 or more instructions to the queue.</p>
+<p>All this is to say that you should keep track of what you're doing. Try to
+restrict the number of instructions on the queue to a reasonable number. A
+recommended maximum is 32 - this is due to restrictions of the Arduino
+platform. You could theoretically have more, because the queue is dynamically
+sized, but be warned that you may run out of memory.</p>
+<h4>
+<a id="user-content-making-the-code-wait" class="anchor" href="#making-the-code-wait" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Making the code wait</h4>
+<p>The DriveControl API has a function called <code>isDriving()</code>. This function will
+return <code>true</code> if there is currently executing instructions on the queue, and
+<code>false</code> if the queue is empty (and thus, we aren't moving anywhere). This
+function is useful for quite a few things, like checking for motion, waiting
+for code to complete or stopping a motion-sensitive sensor from functioning
+until we stop.</p>
+<p>Here's an example of how to "pause" the code until all the instructions on the
+queue are finished:</p>
+<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> ...</span>
+<span class="pl-k">void</span> <span class="pl-en">loop</span>() {
+	driver.<span class="pl-c1">forward</span>(<span class="pl-c1">100</span>); <span class="pl-c"><span class="pl-c">//</span> Instruction to move forward by 10 cm</span>
+
+	<span class="pl-c"><span class="pl-c">//</span> When .isDriving() returns false, we have stopped and the loop will exit</span>
+	<span class="pl-k">while</span>(driver.<span class="pl-c1">isDriving</span>()) {
+		<span class="pl-c"><span class="pl-c">//</span> Actually run and manage the instruction</span>
+		driver.<span class="pl-c1">run</span>();
+	}
+
+	<span class="pl-c"><span class="pl-c">//</span> Print a message to the serial monitor</span>
+	Serial.<span class="pl-c1">println</span>(<span class="pl-s"><span class="pl-pds">"</span>We have moved this country forward!<span class="pl-pds">"</span></span>);
+}
+</pre></div>
+<h2>
+<a id="user-content-notes-and-warnings" class="anchor" href="#notes-and-warnings" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Notes and warnings</h2>
+<p>A long driving instruction will be less accurate than a short one. This is
+because the vehicle calculates how far it has traveled based on a provided
+revs-per-duty-cycle value. Over time, the accuracy of this calculation will
+decrease linearly.</p>
+<p>Note that the maximum duration for an instruction is one minute. This can be
+increased, but you shouldn't be running instructions for much longer than 10
+seconds anyway (for the sake of accuracy).</p>
+<h2>
+<a id="user-content-getting-things-going" class="anchor" href="#getting-things-going" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting things Going</h2>
+<p>That's all for the brief introduction to the API. If you want to learn more
+about what the API can do (or you need some specific help with a function)
+then the next step is the function reference below. Every single function that
+the API makes available to you is documented there in detail.</p>
+<h1>
+<a id="user-content-function-reference" class="anchor" href="#function-reference" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Function reference</h1>
+<ul>
+<li>
+<p><a href="#drivecontrol">DriveControl()</a> : The API constructor</p>
+</li>
+<li>
+<p><a href="#setmotorpins">setMotorPins(en1, in1, in2, en2, in3, in4)</a> : Set up motor pin numbers</p>
+</li>
+<li>
+<p><a href="#setwheeldiameter">setWheelDiameter(wheel_dia)</a> : Set wheel diameter (in mm)</p>
+</li>
+<li>
+<p><a href="#setrevsperdc">setRevsPerDC(rpdc)</a> : Set a positive speed multiplier for the wheels at full power</p>
+</li>
+<li>
+<p><a href="#setspeed">setSpeed(speed)</a> : Set a global (overlaid) speed multiplier.</p>
+</li>
+<li>
+<p><a href="#run">run()</a> : Run and maintain the instruction queue</p>
+</li>
+<li>
+<p><a href="#clearqueue">clearQueue()</a> : Remove all instructions from the queue</p>
+</li>
+<li>
+<p><a href="#stopall">stopAll()</a> : Clear the queue and turn off the motors</p>
+</li>
+<li>
+<p><a href="#forward">forward(dist, speed_scalar = 1)</a> : Move forward a given distance (in mm). Optional speed.</p>
+</li>
+<li>
+<p><a href="#backward">backward(dist, speed_scalar = 1)</a> : Move backward a given distance (in mm). Optional speed.</p>
+</li>
+<li>
+<p><a href="#gotopoint">goToPoint(x, y, speed_scalar = 1)</a> : Drive to a certain point relative to current location</p>
+</li>
+<li>
+<p><a href="#gotopointsticky">goToPointSticky(x, y, speed_scalar = 1)</a> : Drive to a certain point relative to current location</p>
+</li>
+<li>
+<p><a href="#gotoarc">goToArc(x, y, speed_scalar = 1)</a> : Drive to a certain point relative to current location</p>
+</li>
+<li>
+<p><a href="#nudge">nudge(x, y, speed_scalar = 0.5)</a> : Nudge to a certain point (ideally close by). Optional speed.</p>
+</li>
+<li>
+<p><a href="#turnright">turnRight(theta)</a> : Turn right a given angle, without constraint</p>
+</li>
+<li>
+<p><a href="#turnleft">turnLeft(theta)</a> : Turn left a given angle, without constraint</p>
+</li>
+<li>
+<p><a href="#turnangle">turnAngle(theta)</a> : Turn an angle "theta" degrees on the spot. Negative is to the left.</p>
+</li>
+<li>
+<p><a href="#turnangleclamped">turnAngleClamped(theta, speed_scalar = 1);</a> : Turn an angle "theta" degrees on the spot. Automatically constrains to principal angles (from -180 degrees to 180 degrees).</p>
+</li>
+</ul>
+<p><a id="user-content-drivecontrol"></a></p>
+<h3>
+<a id="user-content-drivecontrol" class="anchor" href="#drivecontrol" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>DriveControl()</h3>
+<p>This is the class constructor for the API. Note that you don't actually call
+this function - it is automatically called when you declare the API variable
+name (as below). When you declare a variable with this as the "type" (class)
+then you can use the variable to access the API functions.</p>
+<p>Usage example:</p>
+<div class="highlight highlight-source-c++"><pre>DriveControl driver;</pre></div>
+<h2>
+<a id="user-content-setting-up" class="anchor" href="#setting-up" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setting up</h2>
+<p><a id="user-content-setmotorpins"></a></p>
+<h3>
+<a id="user-content-setmotorpinsint-en1-int-in1-int-in2-int-en2-int-in3-int-in4" class="anchor" href="#setmotorpinsint-en1-int-in1-int-in2-int-en2-int-in3-int-in4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>setMotorPins(int en1, int in1, int in2, int en2, int in3, int in4);</h3>
+<p>This function is crucial to the API, as it tells it where to find the motors.
+More specifically, it tells the API what Arduino pins correspond to pins on
+the L293D driver chip. The pin names are:</p>
+<ul>
+<li>
+<strong>Enable 1</strong>: When this one is <code>HIGH</code>, output 1 and 2 can be activated by inputs 1 and 2. Should be a PWM pin.</li>
+<li>
+<strong>Input 1</strong>: The state of this pin (<code>HIGH</code> or <code>LOW</code>) matches the state of the corresponding output (output 1 in this case)</li>
+<li>
+<strong>Input 2</strong>: As for Input 1.</li>
+<li>
+<strong>Enable 2</strong> : As for Enable 1, but enables the second motor (output 3 and 4).</li>
+<li>
+<strong>Input 3</strong>: As for Input 1.</li>
+<li>
+<strong>Input 4</strong>: As for Input 1.</li>
+</ul>
+<p>It is expected that the motor tied to <strong>Enable 1</strong> is the left-most motor,
+while the motor tied to <strong>Enable 2</strong> is the one on the right. If you mix these
+around, then all the motion will be mirrored!</p>
+<p>Note that it's important that the Enable pins are a digital PWM pin. If they
+were not, then the DriveControl API couldn't manage the speed of the motors -
+they would be running at full tilt all the time!</p>
+<p>Usage example:</p>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> <span class="pl-en">setup</span>() {
+	driver.<span class="pl-c1">setMotorPins</span>(<span class="pl-c1">7</span>, <span class="pl-c1">8</span>, <span class="pl-c1">9</span>, <span class="pl-c1">10</span>, <span class="pl-c1">11</span>, <span class="pl-c1">12</span>);
+}</pre></div>
+<p><a id="user-content-setwheeldiameter"></a></p>
+<h3>
+<a id="user-content-setwheeldiameterfloat-wheel_dia" class="anchor" href="#setwheeldiameterfloat-wheel_dia" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>setWheelDiameter(float wheel_dia);</h3>
+<p>This function tells the DriveControl API the diameter of the drive wheels on
+the vehicle. Note that the units are <strong>millimeters</strong>. Because this API is
+written for two motors, we assume that all the drive wheels are the same size.</p>
+<p>This value is very important for estimating the distance traveled in a certain
+amount of time. By default, it is set to <code>1</code>, which is obviously too small. If
+you're having trouble with your car going way to far, make sure the diameter
+is set properly. Measure from the tires, not the wheel hub.</p>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> <span class="pl-en">setup</span>() {
+	<span class="pl-c"><span class="pl-c">//</span> code for driver.setMotorPins(...), etc.</span>
+	driver.<span class="pl-c1">setWheelDiameter</span>(<span class="pl-c1">65</span>);
+}</pre></div>
+<p><a id="user-content-setrevsperdc"></a></p>
+<h3>
+<a id="user-content-setrevsperdcfloat-rpdc" class="anchor" href="#setrevsperdcfloat-rpdc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>setRevsPerDC(float rpdc);</h3>
+<p>This value is used to keep track of how far car has gone in a certain amount
+of time. The value is the RPM of the wheels at full power. This number will
+vary from vehicle to vehicle and should thus be determined experimentally.</p>
+<p>Although the value is for wheels at full power, we assume that it scales
+linearly down with speed. Clearly, this won't be true at ridiculously low
+speeds, but it should hold for the vehicle's operating range.</p>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> <span class="pl-en">setup</span>() {
+	<span class="pl-c"><span class="pl-c">//</span> code for setting pins, wheel size etc.</span>
+	driver.<span class="pl-c1">setRevsPerDC</span>(<span class="pl-c1">32.5</span>); <span class="pl-c"><span class="pl-c">//</span> Example value</span>
+}</pre></div>
+<p><a id="user-content-setspeed"></a></p>
+<h3>
+<a id="user-content-setspeedfloat-speed" class="anchor" href="#setspeedfloat-speed" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>setSpeed(float speed);</h3>
+<p>Modifies the overall speed of the car, in everything it does. This is a global
+speed scalar between 0 and 1, which can be used to dial back the power of the
+motors. If you're worried about burning them out, or need to scale down the
+effective voltage a little, then this function should help.</p>
+<h2>
+<a id="user-content-queue-management" class="anchor" href="#queue-management" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Queue management</h2>
+<p><a id="user-content-run"></a></p>
+<h3>
+<a id="user-content-run" class="anchor" href="#run" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>run();</h3>
+<p>Whenever you add an instruction to the queue (see the introduction above if
+you don't follow), then it doesn't actually do anything. You need to <em>execute</em>
+the instruction somehow. That's what the <code>run()</code> function does.</p>
+<p>Additionally, the <code>run()</code> function keeps track of how long an instruction has
+run for and determines if it should be removed from the queue.</p>
+<p>Because the <code>run()</code> function has an important role in keeping time, it should
+be called in the code quite often - every 100 ms or so. For this reason, please
+try to avoid the <code>delay(...)</code> function, because it will increase the amount of
+time between calls to <code>run()</code>, and could make the DriveControl API quite
+inaccurate.</p>
+<p>Usage example:</p>
+<div class="highlight highlight-source-c++"><pre>
+<span class="pl-k">void</span> <span class="pl-en">setup</span>() {
+	<span class="pl-c"><span class="pl-c">//</span> Add two instructions to the queue</span>
+	driver.<span class="pl-c1">forward</span>(<span class="pl-c1">100</span>);
+	driver.<span class="pl-c1">backward</span>(<span class="pl-c1">100</span>);
+}
+
+<span class="pl-k">void</span> <span class="pl-en">loop</span>() {
+	driver.<span class="pl-c1">run</span>() <span class="pl-c"><span class="pl-c">//</span> Execute instructions and check for expiry</span>
+	<span class="pl-c1">delay</span>(<span class="pl-c1">10</span>); <span class="pl-c"><span class="pl-c">//</span> Only 10 ms **in the main loop** -- small enough time that it should be fine. Trying not to overheat Arduino</span>
+}</pre></div>
+<p><a id="user-content-clearqueue"></a></p>
+<h3>
+<a id="user-content-clearqueue" class="anchor" href="#clearqueue" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>clearQueue();</h3>
+<p>If you have added many instructions to the queue, but then decide for some
+reason that you don't want them anymore, just call this function to remove all
+the instructions from the queue. Note that this <strong>will not remove the first
+instruction</strong>, so the vehicle can finish up what it's doing. Then it will
+stop.</p>
+<p><a id="user-content-stopall"></a></p>
+<h3>
+<a id="user-content-stopall" class="anchor" href="#stopall" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>stopAll();</h3>
+<p>This function is like a supercharged <code>clearQueue()</code>. It will remove every
+single instruction, <em>and</em> issue a command to stop the motors. The <code>stopAll()</code>
+function will interrupt all driving actions and stop the car as quickly as it
+can.</p>
+<h2>
+<a id="user-content-simple-motion" class="anchor" href="#simple-motion" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Simple motion</h2>
+<p><a id="user-content-forward"></a></p>
+<h3>
+<a id="user-content-forwardfloat-dist-float-speed_scalar--1" class="anchor" href="#forwardfloat-dist-float-speed_scalar--1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>forward(float dist, float speed_scalar = 1);</h3>
+<p>This is hopefully easy to understand. When you call this function, it will add
+an instruction to the queue to move the car forward by <code>dist</code> (in mm). The
+optional speed scalar can make the car do it slower, just this once.</p>
+<p><a id="user-content-backward"></a></p>
+<h3>
+<a id="user-content-backwardfloat-dist-float-speed_scalar--1" class="anchor" href="#backwardfloat-dist-float-speed_scalar--1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>backward(float dist, float speed_scalar = 1);</h3>
+<p>This function is exactly the same as <code>forward(...)</code>, but the car moves in
+reverse instead.</p>
+<h2>
+<a id="user-content-relative-motion" class="anchor" href="#relative-motion" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Relative motion</h2>
+<p><a id="user-content-gotopoint"></a></p>
+<h3>
+<a id="user-content-gotopointfloat-x-float-y-float-speed_scalar--1" class="anchor" href="#gotopointfloat-x-float-y-float-speed_scalar--1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>goToPoint(float x, float y, float speed_scalar = 1);</h3>
+<p>If you need to go somewhere relative to the vehicle's current position, then
+you need to "go to a point". That's what this function does. Pass in an <code>x</code>
+and <code>y</code> (in mm) and the vehicle will try its best to move there, relative to
+its current location. Try to keep the distances short, because we can only
+estimate how far the car has traveled.</p>
+<p>This function uses three instructions.</p>
+<p>For example, if you call</p>
+<pre><code>driver.goToPoint(100, -50);
+</code></pre>
+<p>then the car will calculate where that point is, relative to the car, then rotate towards it (in this case, about 120 degrees to the right), travel the distance (about 112 mm) and undo the rotation it made, so it's facing the same direction before and after the turn.</p>
+<p><a id="user-content-gotopointsticky"></a></p>
+<h3>
+<a id="user-content-gotopointstickyfloat-x-float-y-float-speed_scalar--1" class="anchor" href="#gotopointstickyfloat-x-float-y-float-speed_scalar--1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>goToPointSticky(float x, float y, float speed_scalar = 1);</h3>
+<p>This function is identical to the <code>goToPoint(...)</code> function, but it won't undo
+it's initial rotation. As such, it only uses two instructions, but it means
+that you can expect to be facing the direction that you were last traveling.
+This may be useful, or not - it depends on your search algorithm.</p>
+<p><a id="user-content-gotoarc"></a></p>
+<h3>
+<a id="user-content-gottoarcfloat-x-float-y-float-speed_scalar--1" class="anchor" href="#gottoarcfloat-x-float-y-float-speed_scalar--1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>gotToArc(float x, float y, float speed_scalar = 1);</h3>
+<p>Exactly like <code>goToPointSticky(...)</code>, but it uses one instruction to travel in
+a single continuous arc. There's really not much need for this function,
+unless you need the motion to look smooth and nice.</p>
+<p>Depending on the point, the arc may have a little, or a lot of curvature. The
+function tries to minimize the distance traveled, but it isn't perfect.</p>
+<p><a id="user-content-nudge"></a></p>
+<h3>
+<a id="user-content-nudgefloat-x-float-y-float-speed_scalar--05" class="anchor" href="#nudgefloat-x-float-y-float-speed_scalar--05" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>nudge(float x, float y, float speed_scalar = 0.5);</h3>
+<p>When you need to move very slightly one way or another, standard movement
+algorithms don't really work - because the rest of the car is in the way. That
+is the time you need the <code>nudge(...)</code> function.</p>
+<p>By default, it will move at half of full speed, which should be slow enough to
+keep things accurate. The provided <code>x</code> and <code>y</code> can be positive or negative,
+and are relative to the vehicle's current position. Both <code>x</code> and <code>y</code> are in
+millimeters.</p>
+<h2>
+<a id="user-content-turning" class="anchor" href="#turning" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Turning</h2>
+<p><a id="user-content-turnright"></a></p>
+<h3>
+<a id="user-content-turnrightfloat-theta-float-speed_scalar--1s" class="anchor" href="#turnrightfloat-theta-float-speed_scalar--1s" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>turnRight(float theta, float speed_scalar = 1);s</h3>
+<p>Given a positive angle (in degrees), rotate the car that much to the right
+(clockwise, when viewed from the top) relative to its current position.</p>
+<p>Note that the angle can be pretty large (obviously not arbitrarily -- we do
+have memory limits). This means that you can make the car spin on the spot as
+many times as you need by just passing in <code>x * 360</code>, where <code>x</code> is the number
+of complete rotations you want.</p>
+<p>Note that, because distance is an estimation, it probably won't get this
+perfect every time.</p>
+<p><a id="user-content-turnleft"></a></p>
+<h3>
+<a id="user-content-turnleftfloat-theta-float-speed_scalar--1" class="anchor" href="#turnleftfloat-theta-float-speed_scalar--1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>turnLeft(float theta, float speed_scalar = 1);</h3>
+<p>As for <code>turnRight(...)</code>, but it goes the other way.</p>
+<p><a id="user-content-turnangle"></a></p>
+<h3>
+<a id="user-content-turnanglefloat-theta-float-speed_scalar--1" class="anchor" href="#turnanglefloat-theta-float-speed_scalar--1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>turnAngle(float theta, float speed_scalar = 1);</h3>
+<p>This is like the <code>turnRight(...)</code> and <code>turnLeft(...)</code> functions, but it takes
+a positive or negative angle. Positive mean "to the right" and negative means
+"to the left". This is a useful function if you have some sort of internal
+rotation mapping that needs negative angles.</p>
+<p><a id="user-content-turnangleclamped"></a></p>
+<h3>
+<a id="user-content-turnangleclampedfloat-theta-float-speed_scalar--1" class="anchor" href="#turnangleclampedfloat-theta-float-speed_scalar--1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>turnAngleClamped(float theta, float speed_scalar = 1);</h3>
+<p>This is functionally equivalent to <code>turnAngle(...)</code>, but it will constrain
+<code>theta</code> to be between -180 and +180 degrees.</p>
+<h2>
+<a id="user-content-other" class="anchor" href="#other" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Other</h2>
+<h3>
+<a id="user-content-bool-isdriving-const" class="anchor" href="#bool-isdriving-const" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>bool isDriving() const;</h3>
+<p>Returns <code>true</code> if there are currently instructions being executed from the
+queue. Will return <code>false</code> otherwise.</p>
+</article></body></html>
