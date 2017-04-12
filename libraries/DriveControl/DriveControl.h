@@ -67,6 +67,7 @@ public:
 	void setSpeed(float speed); // Modifies the overall speed of the car (every motion is scaled by `speed`)
 	void setRevsPerDC(float rpdc); // Used to keep track of how far car has gone in a certain amount of time
 	void setWheelDiameter(float wheel); // Wheel (diameter) is in mm, and is used to keep track of travel distance
+	void setTrackWidth(float track); // How far apart the drive wheels are (in mm)
 	void setMotorPins(int en1, int in1, int in2, int en2, int in3, int in4); // Pins for the motors
 
 	void run(); // This class runs on a queue system. This function must be called to progress the queue. See README.
@@ -96,6 +97,7 @@ private:
 	bool _driving = false; // Flag for if driving or not. Could be used externally to perform an interrupt routine.
 	float _global_speed_scalar = 1; // Between 0 and 1 - scales the speed down from the max.
 	float _wheel_dia = 1; // Wheel diameter - for distance tracking while travelling
+	float _track = 1; // Distance between wheel centers - used for rotational calculations
 	float _rpdc = 1; // Revs-per-Duty-cycle. Note that this is actually RPM per Duty Cycle.
 
 	struct drive_instruction {
@@ -110,9 +112,6 @@ private:
 	QueueList<drive_instruction> queue; // Dynamic linked list to hold drive instructions
 	drive_instruction empty_instruction = {0, 0, 0, 0, 0, 0}; // Used in value checking and to stop the car
 
-	void move(float dist, float speed_scalar = 1); // Forward/backward translation
-	void left(float dist, float time);   // These move the wheels with L293D, with built in global speed scalar.
-	void right(float dist, float time);  // Time is relative to 1. A time of 2 means a speed of 0.5 (etc).
 	bool boolsgn(float num); // Return true if positive or 0, false if negative
 	short sgnbool(bool boolsgn); // Return 1 if true, or -1 if false
 	drive_instruction newInstruction(float left_dist, float right_dist, float speed_scalar = 1); // Create and return instruction

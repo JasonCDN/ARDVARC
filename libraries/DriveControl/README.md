@@ -211,6 +211,7 @@ the API makes available to you is documented there in detail.
 
 * <a href="#drivecontrol">DriveControl()</a> : The API constructor
 * <a href="#setmotorpins">setMotorPins(en1, in1, in2, en2, in3, in4)</a> : Set up motor pin numbers
+* <a href="#settrackwidth">setTrackWidth(track)</a> : Set how far apart the wheels are (in mm)
 * <a href="#setwheeldiameter">setWheelDiameter(wheel_dia)</a> : Set wheel diameter (in mm)
 * <a href="#setrevsperdc">setRevsPerDC(rpdc)</a> : Set a positive speed multiplier for the wheels at full power
 * <a href="#setspeed">setSpeed(speed)</a> : Set a global (overlaid) speed multiplier.
@@ -297,6 +298,23 @@ void setup() {
 	driver.setWheelDiameter(65);
 }
 ```
+
+
+<a id="settrackwidth"></a>
+###	void setTrackWidth(float track); 
+
+Tell DriveControl how far apart the drive wheels are (in mm). This value
+should be measured from the center of each wheel. To do this, measure the
+thickness of one wheel (assuming both wheels are the same thickness!) and
+measure the distance between the outside faces of each wheel. Finally,
+subtract 1/2 of the wheel width from each end. You end up with the distance
+between centers, and hopefully more accurate than just eyeballing it.
+
+*General interest:* the word "track" is a standard term used for the distance
+between centers of wheels on the same rotational axis. The distance between
+centers for the front and back wheels (on the same plane) is called the
+"wheelbase".
+
 
 <a id="setrevsperdc"></a>
 ### setRevsPerDC(float rpdc); 
