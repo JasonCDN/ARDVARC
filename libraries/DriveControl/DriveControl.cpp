@@ -1,7 +1,9 @@
 #include "DriveControl.h"
 #include <L293dDriver.h>
 #include <QueueList.h>
+#include <Coordinates.h>
 
+#import <math.h>
 #define PI 3.141592 // Needed for rotational calculations
 
 /*
@@ -118,12 +120,26 @@ Compound (complex) motion
 
 void DriveControl::goToPoint(float x, float y, float speed_scalar = 1)
 {
+	goToPointSticky(x, y, speed_scalar);
 
+	// Find angle to rotate back by
+	Coordinates coords(x, y);
+	if (abs(coords.getAngle()) > 0) {
+		turnAngle(coords.getAngle(), speed_scalar);
+	}
 }
 
 void DriveControl::goToPointSticky(float x, float y, float speed_scalar = 1)
 {
+	// Perform polar convserion
+	Coordinates coords(x, y);
 
+	// With polar attributes, now execute minimal instruction set:
+	if (abs(coords.getAngle()) > 0) {
+		turnAngle(coords.getAngle(), speed_scalar);
+	}
+
+	forward(coords.getR(), speed_scalar);
 }
 
 void DriveControl::goToArc(float x, float y, float speed_scalar = 1)
