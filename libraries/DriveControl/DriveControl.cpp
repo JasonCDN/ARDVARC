@@ -2,6 +2,7 @@
 #include <L293dDriver.h>
 #include <QueueList.h>
 
+#define PI = 3.141592 // Needed for rotational calculations
 
 /*
 
@@ -61,17 +62,38 @@ Rotational Motion
 
 */
 
+// This is the fundamental turning function that transforms an angle into two
+// distances (arc-lengths). Speed will be the max given by the speed_scalar
+void DriveControl::turnAngle(float theta, float speed_scalar = 1)
+{
+	// Check that we have an angle
+	if (theta < 0.25) {
+		return void;
+	}
+
+
+	// Calculate circumference of turning circle
+	float turn_circ = 2 * PI * (_track/2);
+
+	// Calculate the arc length given the subtending angle
+	float arc_len = turn_circ * theta/360;
+
+	// Determine direction of rotation
+	byte director = 1; // This will be toggled to 1 or -1, depending on direction
+	if (theta > 0) {
+		director = 1;
+	} else {
+
+	}
+
+}
+
 void DriveControl::turnRight(float theta, float speed_scalar = 1)
 {
 
 }
 
 void DriveControl::turnLeft(float theta, float speed_scalar = 1)
-{
-
-}
-
-void DriveControl::turnAngle(float theta, float speed_scalar = 1)
 {
 
 }
@@ -169,7 +191,7 @@ DriveControl::drive_instruction DriveControl::newInstruction(float left_dist, fl
 {
 	// The fastest speed that a wheel can possibly travel in this system.
 	// Note that this should never equal 0, or we will have a problem.
-	float max_velocity = _rpdc * 60 * _wheel_dia * 3.14159; // Convert rmp to rps, then to a distance with dia*pi.
+	float max_velocity = _rpdc * 60 * _wheel_dia * PI; // Convert rmp to rps, then to a distance with dia*pi.
 
 	if (max_velocity <= 0) {
 		// Do nothing. If we get to here, something went wrong with setting parameters.
@@ -182,7 +204,7 @@ DriveControl::drive_instruction DriveControl::newInstruction(float left_dist, fl
 
 	// Scalar between "1" magnitude, and max_velocity (based on larger value)
 	float scalar = max(left_speed, right_speed) / max_velocity;
-	speed_scalar = constrain(speed_scalar, 0, 1) * _global_speed_scalar; // Must be within range for this to work.
+	speed_scalar = constrain(speed_scalar, 0, 1) * _global_speed_scalar; // Must be within range for this to work, also modified by global settings
 
 	// Normalize results to have a max at the max_speed, then map to -255 -> 255
 	int left_analog = int(map(speed_scalar * scalar * left_speed, -max_velocity, max_velocity, -255, 255));
@@ -190,16 +212,11 @@ DriveControl::drive_instruction DriveControl::newInstruction(float left_dist, fl
 
 	// Time needed to travel full distance of either wheel (remember that t is const)
 	float time_needed;
-	if (left_speed > 0)
-	{
+	if (left_speed > 0) {
 		time_needed = left_dist / left_speed; // In seconds
-	} 
-	else if (right_speed > 0) 
-	{
+	} else if (right_speed > 0) {
 		time_needed = right_dist / right_speed; // In seconds
-	}
-	else
-	{
+	} else {
 		time_needed = 0; // If both are 0, we are stopping. No time needed.
 	}
 
@@ -229,8 +246,7 @@ void DriveControl::run()
 		drive_instruction *active_instruction = &queue.peek();
 
 		// Start the instruction (if necessary)
-		if (active_instruction->start_time <= 0)
-		{
+		if (active_instruction->start_time <= 0) {
 			// Set start time to "right now"
 			active_instruction->start_time = millis();
 			// Execute the instruction (and set a flag for external use)
@@ -240,14 +256,12 @@ void DriveControl::run()
 
 		// Check to see if current instruction has expired
 		float time_passed = millis() - active_instruction->start_time;
-		if (active_instruction->duration == 0 or time_passed > active_instruction->duration)
-		{
+		if (active_instruction->duration == 0 or time_passed > active_instruction->duration) {
 			// If so, remove it from the queue and unset the _driving flag
 			queue.pop();
 			_driving = false;
 			// That may have been the only instruction. If it was, stop the car
-			if (queue.count() <= 0)
-			{
+			if (queue.count() <= 0)	{
 				stopAll();
 			}
 			continue;
@@ -262,8 +276,7 @@ void DriveControl::run()
 // Just loop through every item in the queue and remove it.
 void DriveControl::clearQueue()
 {
-	while(queue.count() > 1) // Keep first instruction
-	{
+	while(queue.count() > 1) { // Keep first instruction 
 		queue.pop();
 	}
 }
