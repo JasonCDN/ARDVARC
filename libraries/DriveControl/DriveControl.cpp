@@ -2,7 +2,7 @@
 #include <L293dDriver.h>
 #include <QueueList.h>
 
-#define PI = 3.141592 // Needed for rotational calculations
+#define PI 3.141592 // Needed for rotational calculations
 
 /*
 
@@ -68,7 +68,7 @@ void DriveControl::turnAngle(float theta, float speed_scalar = 1)
 {
 	// Check that we have an angle
 	if (theta < 0.25) {
-		return void;
+		return;
 	}
 
 
@@ -80,27 +80,34 @@ void DriveControl::turnAngle(float theta, float speed_scalar = 1)
 
 	// Determine direction of rotation
 	byte director = 1; // This will be toggled to 1 or -1, depending on direction
-	if (theta > 0) {
+	if (theta > 0) { // We are turning RIGHT, so left wheel forward
 		director = 1;
-	} else {
-
+	} else { // Then we are turning LEFT, so right wheel forward
+		director = -1;
 	}
 
+	// Add the instruction to the queue. Right always opposes left at same speed.
+	addInstruction(arc_len * director, -1 * arc_len * director, speed_scalar);
+
 }
 
+// Equivalent: a function alias
 void DriveControl::turnRight(float theta, float speed_scalar = 1)
 {
-
+	turnAngle(theta, speed_scalar);
 }
 
+// Opposite: a function antialias?
 void DriveControl::turnLeft(float theta, float speed_scalar = 1)
 {
-
+	turnAngle(-1 * theta, speed_scalar);
 }
 
+// turnAngle, but with theta between -180 and 180 degrees
 void DriveControl::turnAngleClamped(float theta, float speed_scalar = 1)
 {
-
+	float new_theta = constrain(-180, 180, theta);
+	turnAngle(new_theta, speed_scalar);
 }
 
 /*
