@@ -211,6 +211,7 @@ the API makes available to you is documented there in detail.
 
 * <a href="#drivecontrol">DriveControl()</a> : The API constructor
 * <a href="#setmotorpins">setMotorPins(en1, in1, in2, en2, in3, in4)</a> : Set up motor pin numbers
+* <a href="#settrackwidth">setTrackWidth(track)</a> : Set how far apart the wheels are (in mm)
 * <a href="#setwheeldiameter">setWheelDiameter(wheel_dia)</a> : Set wheel diameter (in mm)
 * <a href="#setrevsperdc">setRevsPerDC(rpdc)</a> : Set a positive speed multiplier for the wheels at full power
 * <a href="#setspeed">setSpeed(speed)</a> : Set a global (overlaid) speed multiplier.
@@ -224,7 +225,6 @@ the API makes available to you is documented there in detail.
 
 * <a href="#gotopoint">goToPoint(x, y, speed_scalar = 1)</a> : Drive to a certain point relative to current location
 * <a href="#gotopointsticky">goToPointSticky(x, y, speed_scalar = 1)</a> : Drive to a certain point relative to current location
-* <a href="#gotoarc">goToArc(x, y, speed_scalar = 1)</a> : Drive to a certain point relative to current location
 * <a href="#nudge">nudge(x, y, speed_scalar = 0.5)</a> : Nudge to a certain point (ideally close by). Optional speed.
 
 * <a href="#turnright">turnRight(theta)</a> : Turn right a given angle, without constraint
@@ -297,6 +297,23 @@ void setup() {
 	driver.setWheelDiameter(65);
 }
 ```
+
+
+<a id="settrackwidth"></a>
+###	void setTrackWidth(float track); 
+
+Tell DriveControl how far apart the drive wheels are (in mm). This value
+should be measured from the center of each wheel. To do this, measure the
+thickness of one wheel (assuming both wheels are the same thickness!) and
+measure the distance between the outside faces of each wheel. Finally,
+subtract 1/2 of the wheel width from each end. You end up with the distance
+between centers, and hopefully more accurate than just eyeballing it.
+
+*General interest:* the word "track" is a standard term used for the distance
+between centers of wheels on the same rotational axis. The distance between
+centers for the front and back wheels (on the same plane) is called the
+"wheelbase".
+
 
 <a id="setrevsperdc"></a>
 ### setRevsPerDC(float rpdc); 
@@ -422,16 +439,6 @@ it's initial rotation. As such, it only uses two instructions, but it means
 that you can expect to be facing the direction that you were last traveling.
 This may be useful, or not - it depends on your search algorithm.
 
-<a id="gotoarc"></a>
-### gotToArc(float x, float y, float speed_scalar = 1);
-
-Exactly like `goToPointSticky(...)`, but it uses one instruction to travel in
-a single continuous arc. There's really not much need for this function,
-unless you need the motion to look smooth and nice.
-
-Depending on the point, the arc may have a little, or a lot of curvature. The
-function tries to minimize the distance traveled, but it isn't perfect.
-
 <a id="nudge"></a>
 ### nudge(float x, float y, float speed_scalar = 0.5);
 
@@ -443,6 +450,8 @@ By default, it will move at half of full speed, which should be slow enough to
 keep things accurate. The provided `x` and `y` can be positive or negative,
 and are relative to the vehicle's current position. Both `x` and `y` are in
 millimeters.
+
+Note that a nudge will use up to 3 instructions on the queue.
 
 ## Turning
 

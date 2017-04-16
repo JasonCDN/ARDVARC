@@ -60,17 +60,14 @@ once, to avoid confusion down the track.
 */
 void Motor::setPins(int enable, int input1, int input2)
 {
-	if (Motor::_en == false)
-	{
+	if (Motor::_en == false) {
 		pinMode(enable, OUTPUT);
 		pinMode(input1, OUTPUT);
 		pinMode(input2, OUTPUT);
 		Motor::_en = enable;
 		Motor::_in1 = input1;
 		Motor::_in2 = input2;
-	} 
-	else 
-	{
+	} else {
 		printf("Cannot reassign motor pins");
 	}
 }
@@ -90,22 +87,17 @@ void Motor::drive(float speed)
 	speed = constrain(floor(speed), -255, 255);
 	Motor::_speed = speed;
 
-	if (Motor::_speed > 0)
-	{
+	if (Motor::_speed > 0) {
 		// We define "forward" as in1 high.
 		digitalWrite(Motor::_in1, HIGH);
 		digitalWrite(Motor::_in2, LOW);
 		analogWrite(Motor::_en, abs(Motor::_speed));
-	} 
-	else if (Motor::_speed < 0) 
-	{
+	} else if (Motor::_speed < 0) {
 		// Note reversed voltages of in1 and in2.
 		digitalWrite(Motor::_in1, LOW);
 		digitalWrite(Motor::_in2, HIGH);
 		analogWrite(Motor::_en, abs(Motor::_speed)); // Make sure written speed is +ve
-	}
-	else
-	{
+	} else {
 		// If everything is set to low, motor effectively coasts.
 		digitalWrite(Motor::_in1, LOW);
 		digitalWrite(Motor::_in2, LOW);

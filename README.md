@@ -3,7 +3,7 @@
 <acronym style="cursor:help;text-decoration:underline;" title="Autonomous Radioactive Debris Verification Acquisition and Retrieval
 Coordinator">ARDVARC</acronym> is an autonomous vehicle designed to collect radioactive waste.
 
-This directory contains the code behind ARDVARC.
+This directory contains the code behind ARDVARC, including libraries used and written.
 
 ## Important!
 
@@ -24,3 +24,6 @@ The ARDVARC code was developed with **Arduino IDE 1.8.1**
 * *QueueList Arduino Library*: 2010 Efstathios Chatzikyriakidis, Alexander Brevig. 
   From: http://playground.arduino.cc/Code/QueueList [06/04/2017]
   Released under: GPLv3
+* *Coordinates Arduino Library*: 2016 Sebastien Dumetz. 
+  From: https://github.com/sdumetz/coordinates [15/04/2017]
+  Released under: LGPLv3
