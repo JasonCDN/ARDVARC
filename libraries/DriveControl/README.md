@@ -225,7 +225,6 @@ the API makes available to you is documented there in detail.
 
 * <a href="#gotopoint">goToPoint(x, y, speed_scalar = 1)</a> : Drive to a certain point relative to current location
 * <a href="#gotopointsticky">goToPointSticky(x, y, speed_scalar = 1)</a> : Drive to a certain point relative to current location
-* <a href="#gotoarc">goToArc(x, y, speed_scalar = 1)</a> : Drive to a certain point relative to current location
 * <a href="#nudge">nudge(x, y, speed_scalar = 0.5)</a> : Nudge to a certain point (ideally close by). Optional speed.
 
 * <a href="#turnright">turnRight(theta)</a> : Turn right a given angle, without constraint
@@ -440,16 +439,6 @@ it's initial rotation. As such, it only uses two instructions, but it means
 that you can expect to be facing the direction that you were last traveling.
 This may be useful, or not - it depends on your search algorithm.
 
-<a id="gotoarc"></a>
-### gotToArc(float x, float y, float speed_scalar = 1);
-
-Exactly like `goToPointSticky(...)`, but it uses one instruction to travel in
-a single continuous arc. There's really not much need for this function,
-unless you need the motion to look smooth and nice.
-
-Depending on the point, the arc may have a little, or a lot of curvature. The
-function tries to minimize the distance traveled, but it isn't perfect.
-
 <a id="nudge"></a>
 ### nudge(float x, float y, float speed_scalar = 0.5);
 
@@ -461,6 +450,8 @@ By default, it will move at half of full speed, which should be slow enough to
 keep things accurate. The provided `x` and `y` can be positive or negative,
 and are relative to the vehicle's current position. Both `x` and `y` are in
 millimeters.
+
+Note that a nudge will use up to 3 instructions on the queue.
 
 ## Turning
 

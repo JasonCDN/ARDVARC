@@ -3,7 +3,7 @@
 <acronym style="cursor:help;text-decoration:underline;" title="Autonomous Radioactive Debris Verification Acquisition and Retrieval
 Coordinator">ARDVARC</acronym> is an autonomous vehicle designed to collect radioactive waste.
 
-This directory contains the code behind ARDVARC.
+This directory contains the code behind ARDVARC, including libraries used and written.
 
 ## Important!
 

@@ -79,7 +79,6 @@ public:
 
 	void goToPoint(float x, float y, float speed_scalar = 1); // Pass in relative coordinates (in mm) to travel there.
 	void goToPointSticky(float x, float y, float speed_scalar = 1); // As above, but don't undo last rotation
-	void goToArc(float x, float y, float speed_scalar = 1); // Same as above, but move in one continuous arc (one instruction, ideally)
 	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment techniques to move a small distance
 
 	// void setP2PMode(); // Sets point to point driving mode

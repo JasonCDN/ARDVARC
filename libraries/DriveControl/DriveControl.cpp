@@ -141,11 +141,6 @@ void DriveControl::goToPointSticky(float x, float y, float speed_scalar = 1)
 	forward(coords.getR(), speed_scalar);
 }
 
-void DriveControl::goToArc(float x, float y, float speed_scalar = 1)
-{
-
-}
-
 // Uses two arcs to move horizontally, and then corrects the vertical.
 // This function uses a very specific algorithm, meant for SHORT movements.
 // Longer paths won't work with this algorithm.
