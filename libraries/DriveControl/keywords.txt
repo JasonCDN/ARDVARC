@@ -1,0 +1,36 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+DriveControl	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setSpeed         	KEYWORD2
+setRevsPerDC     	KEYWORD2
+setWheelDiameter 	KEYWORD2
+setTrackWidth    	KEYWORD2
+setMotorPins     	KEYWORD2
+
+run              	KEYWORD2
+clearQueue       	KEYWORD2
+
+stopAll          	KEYWORD2
+forward          	KEYWORD2
+backward         	KEYWORD2
+goToPoint        	KEYWORD2
+goToPointSticky  	KEYWORD2
+nudge            	KEYWORD2
+turnRight        	KEYWORD2
+turnLeft         	KEYWORD2
+turnAngle        	KEYWORD2
+turnAngleClamped 	KEYWORD2
+
+isDriving        	KEYWORD2
+

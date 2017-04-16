@@ -81,9 +81,6 @@ public:
 	void goToPointSticky(float x, float y, float speed_scalar = 1); // As above, but don't undo last rotation
 	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment techniques to move a small distance
 
-	// void setP2PMode(); // Sets point to point driving mode
-	// void setArcMode(); // Sets arc driving mode
-
 	// All angles are in degrees (because people are used to it!)
 	void turnRight(float theta, float speed_scalar = 1); // Shortcut for turnAngle(|theta|). Can be as large as needed, must be > 0.
 	void turnLeft(float theta, float speed_scalar = 1); // Shortcut for turnAngle(-|theta|). Can be as large as needed, must be > 0.
