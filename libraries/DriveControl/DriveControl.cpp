@@ -32,12 +32,12 @@ void DriveControl::setRevsPerDC(float rpdc)
 
 void DriveControl::setWheelDiameter(float wheel)
 {
-	_wheel_dia = max(wheel, 0);
+	_wheel_dia = max(wheel, 1E-4);
 }
 
 void DriveControl::setTrackWidth(float track)
 {
-	_track = max(track, 0);
+	_track = max(track, 1E-4);
 }
 
 /*
@@ -146,9 +146,45 @@ void DriveControl::goToArc(float x, float y, float speed_scalar = 1)
 
 }
 
+// Uses two arcs to move horizontally, and then corrects the vertical.
+// This function uses a very specific algorithm, meant for SHORT movements.
+// Longer paths won't work with this algorithm.
 void DriveControl::nudge(float x, float y, float speed_scalar = 0.5)
 {
+	// Ensure the displacement is within doable boundaries
+	if (abs(x) > _track || abs(y) > _track) {
+		// Displacement is too large!
+		return;
+	}
 
+	// Find the angle needed for proper displacement
+	double angle = acos(1 - abs(x)/_track); // Angle needs to be in rads
+	// Find arc length
+	float wheel_dist = angle * (_track / 2); 
+	// Find how much to correct vertically after our two arcs
+	double vert_correct = abs(y) - abs(_track * sin(angle));
+
+
+	// Determine drive directions vertically
+	if (y > 0) { // Use forward motion
+		// (things are already positive)
+	} else if (y < 0) { // Use backwards motion
+		wheel_dist = -1 * wheel_dist;
+		vert_correct = -1 * vert_correct;
+	} // If 0, then things are fine already
+
+	// Perform double-arc horizontal "crawl" motion.
+	// Determine the motion based on the sign of x
+	if (x > 0) { // Left wheel first
+		addInstruction(wheel_dist, 0, speed_scalar);
+		addInstruction(0, wheel_dist, speed_scalar);
+	} else if (x < 0) { // Right wheel first
+		addInstruction(0, wheel_dist, speed_scalar);
+		addInstruction(wheel_dist, 0, speed_scalar);
+	} // If x == 0, do nothing.
+
+	// Do vertical correction
+	forward(vert_correct, speed_scalar);
 }
  
 
