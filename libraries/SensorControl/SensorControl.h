@@ -70,6 +70,8 @@ private:
 
 	// State variables
 	int _last_floor_time; // Time value in ms since last floor type change
+	int _spacing1; // Spacing between first and second sonar
+	int _spacing2; // Spacing between second ad third sonar
 	short _mag_history[3]; // Keeps the magnitude score of the last three readings
 
 	float getDistance(NewPing sonar); // Returns the distance ping in mm (rather than cm)
