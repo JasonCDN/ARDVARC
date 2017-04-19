@@ -41,10 +41,12 @@ void setup() {
 	// Ultrasonics 1,2,3 at front, 4 at back, 5 for the line tracker.
 	sensors.setSensorPins(7, 8, 9, 10, 11);
 
+	// Note that we don't need to set pins for the magnetic sensor, because it runs from I2C
+
 
 	// 20mm between both closest pairs of front ultrasonic sensor boards (between centers!)
-	sensors.setFrontUltrasonicSpacing(20);
-	// If spacing was off, you could do something like --> sensors.setFrontUltrasonicSpacing(19, 23)
+	sensors.setSonarSpacing(20);
+	// If spacing was off, you could do something like --> sensors.setSonarSpacing(19, 23)
 }
 
 ```
