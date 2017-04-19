@@ -255,8 +255,62 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 
 ### Table of Contents
 
+
+
+#### <a href="linetrackingsensor">Line tracking sensor (*Floor*)</a>
+
+* <a href="isfloorstart">isFloorStart()</a>: Returns true if the floor is dark
+* <a href="isfloormain">isFloorMain()</a>: Returns true if the floor is light
+* <a href="getfloortype">getFloorType()</a>: Returns 1 if the floor is dark, 2 if the floor is light.
+* <a href="hasfloorchanged">hasFloorChanged(interval = 100)</a>: Returns true if the floor has changed in the given interval
+* <a href="gettimefloorlastchanged">getTimeFloorLastChanged()</a>: Returns how many milliseconds ago the floor changed
+
+------------------------------------------------------------------------------
+
 ## Ultrasonic sensors (*Wall* or *Distance*)
 
+
+
+
+<a id="linetrackingsensor">
 ## Line tracking sensor (*Floor*)
 
+<a id="isfloorstart">
+### isFloorStart() 
+
+Returns true if the floor is dark, false if the floor is, well, not dark. Good
+for testing if we're in the starting area.
+
+<a id="isfloormain">
+### isFloorMain()
+
+Returns true if the floor is *light*, false if the floor is dark. Useful for
+testing if we're in the "main" area.
+
+<a id="getfloortype">
+### getFloorType()
+
+Returns 1 if the floor is dark, 2 if the floor is light. Good for if you need
+two logical conditions. Other than that, a bit redundant.
+
+<a id="hasfloorchanged">
+### hasFloorChanged(int interval = 100)
+
+This *should* tell you if the floor has changed type in the given interval (in
+milliseconds). However, it only updates its guess on whether or not the floor
+has changed when you actually test the floor. If you want to use this
+function, you need to be checking constantly (with *any* of the floor checking
+functions). Even then, it won't be perfectly accurate.
+
+<a id="gettimefloorlastchanged">
+### getTimeFloorLastChanged()
+
+This returns how may milliseconds ago the floor changed type. The same
+warnings apply as for `hasFloorChanged(...)` -- make sure you have been
+checking what the floor type is.
+
+
+
 ## 3-Axis Magnetic sensor (*Mag*)
+
+

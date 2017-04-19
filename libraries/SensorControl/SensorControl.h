@@ -37,10 +37,10 @@ public:
 	void setSensorPins(int f1, int f2, int f3, int r1, int lt); // Front 1,2,3; Rear 1; Line Tracker
 	void setSonarSpacing(int spacing1, int spacing2 = -1); // Pased in values must be positive and are in mm. spacing2 = spacing1 if negative.
 
-	float getWallAngle(); // Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
-	float getWallDistance(); // Returns the closest distance measured from the front
-	float* getDistanceComponents(); // Returns a 3-element array of distance measurements (from left to right).
-	float getRearDistance(); // Returns the distance to the closest rear obstacle (in line of sight of sensor).
+	int getWallAngle(); // Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
+	int getWallDistance(); // Returns the closest distance measured from the front
+	int* getDistanceComponents(); // Returns a 3-element array of distance measurements (from left to right).
+	int getRearDistance(); // Returns the distance to the closest rear obstacle (in line of sight of sensor).
 
 	bool isFloorStart(); // Returns true if the floor is dark
 	bool isFloorMain(); // Returns true if the floor is light
@@ -63,18 +63,19 @@ private:
 		// NewPing front2;
 		// NewPing front3;
 		// NewPing rear1;
-		// TCRT5000 floor;
+	// TCRT5000 floor;
 
 	// Magnetic sensor runs from I2C, so no pins declared
 	HMC5883L mag;
 
 	// State variables
-	int _last_floor_time; // Time value in ms since last floor type change
+	int _last_floor_time; // Time value in ms since last floor check (and it changed)
+	bool _last_floor_state;
 	int _spacing1; // Spacing between first and second sonar
 	int _spacing2; // Spacing between second ad third sonar
 	short _mag_history[3]; // Keeps the magnitude score of the last three readings
 
-	float getDistance(NewPing sonar); // Returns the distance ping in mm (rather than cm)
+	int getDistance(NewPing sonar); // Returns the distance ping in mm (rather than cm)
 };
 
 

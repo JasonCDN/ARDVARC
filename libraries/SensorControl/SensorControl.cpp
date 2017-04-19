@@ -18,7 +18,8 @@ Setting parameters
 */
 
 void SensorControl::setSensorPins(int f1, int f2, int f3, int r1, int lt) {
-	NewPing front1(f1, f1, MAX_SONAR_DIST); // Trigger and echo are the same
+	// MAX_SONAR_DIST is in mm, so divide by 10 to get cm for the NewPing functions
+	NewPing front1(f1, f1, MAX_SONAR_DIST/10); // Trigger and echo are the same
 
 }
 
@@ -35,3 +36,125 @@ void SensorControl::setSonarSpacing(int spacing1, int spacing2 = -1) {
 		}
 	}
 }
+
+
+
+/*
+
+Ultrasonic Sensors
+
+*/
+
+// Returns the distance ping in mm (rather than cm)
+// Takes a sensor object and returns its ping times 10.
+int SensorControl::getDistance(NewPing sonar) {
+	return sonar.ping_cm(MAX_SONAR_DIST/10) * 10;
+} 
+
+// Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
+int SensorControl::getWallAngle() {
+
+}
+
+// Returns the closest distance measured from the front
+int SensorControl::getWallDistance() {
+
+}
+
+// Returns a 3-element array of distance measurements (from left to right).
+int* SensorControl::getDistanceComponents() {
+	int components[3];
+	//....
+
+}
+
+// Returns the distance to the closest rear obstacle (in line of sight of sensor).
+int SensorControl::getRearDistance() {
+	return getDistance(rear);
+}
+
+
+
+/*
+
+Line Tracking Sensor
+
+*/
+
+// This is a wrapper around the .isClose() function with timing logic.
+// Everything is based on this.
+bool SensorControl::isFloorMain() {
+	bool floor_state = floor.isClose();
+	if (_last_floor_state != floor_state) {
+		_last_floor_time = millis();
+		_last_floor_state = floor_state;
+	}
+	return floor_state;
+}
+
+bool SensorControl::isFloorStart() {
+	return !isFloorMain();
+}
+
+
+short SensorControl::getFloorType() {
+	if (isFloorMain()) {
+		return 2;
+	} else {
+		return 1;
+	}
+}
+
+// Returns true if the difference between the current time and "the last
+// time that we checked and the floor had changed" is within the interval
+bool SensorControl::hasFloorChanged(int interval = 100) {
+	isFloorMain(); // Update estimates
+	return getTimeFloorLastChanged() < interval;
+}
+
+int SensorControl::getTimeFloorLastChanged() {
+	return (millis() - _last_floor_time);
+}
+
+
+
+/*
+
+3-Axis Magnetic Sensor
+
+*/
+
+// Returns an x,y,z array of ints with field components
+int* SensorControl::getMagComponents() {
+
+} 
+
+// Returns xy plane angle of displacement
+float SensorControl::getMagBearing() {
+
+} 
+
+// Returns angle of tile from horizon (negative if towards the ground)
+float SensorControl::getMagElevation() {
+
+} 
+
+// Returns the strength of the magnetic field
+float SensorControl::getMagStrength() {
+
+} 
+
+// Returns a value between 0 and 1 based on how much the reading has changed in recent times
+float SensorControl::deltaMagScore(int interval = 100) {
+
+} 
+
+// True if none of the axial components are maxed out
+bool SensorControl::isMagValid() {
+
+} 
+
+// True if the magnitude of the signal is far enough from Earth's magnetic field
+bool SensorControl::isMagInRange() {
+
+} 

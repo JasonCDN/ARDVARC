@@ -12,7 +12,7 @@ but the IR-diode would drain 100mW for no reason
 Umut Karci ( http://www.umutkarci.com )
 */
 
-#include "tcrt5k.h"
+#include <tcrt5k.h>
 TCRT5000 tcrt(2, 3);
 // TCRT5000 tcrt(2);  // IR-diode connected to 5v with 100ohm resistor
 
