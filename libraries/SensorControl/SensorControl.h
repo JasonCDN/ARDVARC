@@ -34,6 +34,12 @@ License: GPLv3
 class SensorControl
 {
 public:
+
+	// NOTE: Initializing all subclasses with a default value that won't work, because I want 
+	// the API to set pins *after* the class is constructed. That's just the pattern.
+	SensorControl() : front1(0,0), front2(0,0), front3(0,0), rear1(0,0), floor(0) {};
+
+
 	void setSensorPins(int f1, int f2, int f3, int r1, int lt); // Front 1,2,3; Rear 1; Line Tracker
 	void setSonarSpacing(int spacing1, int spacing2 = -1); // Pased in values must be positive and are in mm. spacing2 = spacing1 if negative.
 
@@ -57,13 +63,13 @@ public:
 	bool isMagInRange(); // True if the magnitude of the signal is far enough from Earth's magnetic field
 private:
 	/*
-		Sensor Objects (not constructed until pins are set)
+		Sensor Objects (constructed, then overwritten)
 	*/
-		// NewPing front1;
-		// NewPing front2;
-		// NewPing front3;
-		// NewPing rear1;
-	// TCRT5000 floor;
+	NewPing front1;
+	NewPing front2;
+	NewPing front3;
+	NewPing rear1;
+	TCRT5000 floor;
 
 	// Magnetic sensor runs from I2C, so no pins declared
 	HMC5883L mag;

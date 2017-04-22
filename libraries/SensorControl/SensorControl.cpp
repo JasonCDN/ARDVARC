@@ -19,8 +19,11 @@ Setting parameters
 
 void SensorControl::setSensorPins(int f1, int f2, int f3, int r1, int lt) {
 	// MAX_SONAR_DIST is in mm, so divide by 10 to get cm for the NewPing functions
-	NewPing front1(f1, f1, MAX_SONAR_DIST/10); // Trigger and echo are the same
-
+	front1 = NewPing(f1, f1, MAX_SONAR_DIST/10); // Trigger and echo are the same
+	front2 = NewPing(f2, f2, MAX_SONAR_DIST/10);
+	front3 = NewPing(f3, f3, MAX_SONAR_DIST/10); 
+	rear1  = NewPing(r1, r1, MAX_SONAR_DIST/10); 
+	floor  = TCRT5000(lt); // We only have a receiving pin
 }
 
 void SensorControl::setSonarSpacing(int spacing1, int spacing2 = -1) {
@@ -70,7 +73,7 @@ int* SensorControl::getDistanceComponents() {
 
 // Returns the distance to the closest rear obstacle (in line of sight of sensor).
 int SensorControl::getRearDistance() {
-	return getDistance(rear);
+	return getDistance(rear1);
 }
 
 
@@ -84,6 +87,7 @@ Line Tracking Sensor
 // This is a wrapper around the .isClose() function with timing logic.
 // Everything is based on this.
 bool SensorControl::isFloorMain() {
+	front1.ping_cm();
 	bool floor_state = floor.isClose();
 	if (_last_floor_state != floor_state) {
 		_last_floor_time = millis();
