@@ -104,6 +104,12 @@ void DriveControl::turnLeft(float theta, float speed_scalar = 1)
 	turnAngle(-1 * theta, speed_scalar);
 }
 
+// Does what it says.
+void DriveControl::turnAround(float speed_scalar = 1)
+{
+	turnAngle(180, speed_scalar);
+}
+
 // turnAngle, but with theta between -180 and 180 degrees
 void DriveControl::turnAngleClamped(float theta, float speed_scalar = 1)
 {

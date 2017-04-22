@@ -84,12 +84,13 @@ public:
 	// All angles are in degrees (because people are used to it!)
 	void turnRight(float theta, float speed_scalar = 1); // Shortcut for turnAngle(|theta|). Can be as large as needed, must be > 0.
 	void turnLeft(float theta, float speed_scalar = 1); // Shortcut for turnAngle(-|theta|). Can be as large as needed, must be > 0.
+	void turnAround(float speed_scalar = 1); // Shortcut for turnAngle(180), with a speed scalar
 	void turnAngle(float theta, float speed_scalar = 1); // Will turn the vehicle a certain angle relative to its current position.
 	void turnAngleClamped(float theta, float speed_scalar = 1); // As above, but constrains to +-180 degrees.
 	
 	bool isDriving() const; // Returns the "_driving" flag, for external use. Will be true when items are in queue.
 private:
-	L293D _motors;
+	L293D _motors; // Default initializer works fine.
 	bool _driving = false; // Flag for if driving or not. Could be used externally to perform an interrupt routine.
 	float _global_speed_scalar = 1; // Between 0 and 1 - scales the speed down from the max.
 	float _wheel_dia = 1; // Wheel diameter - for distance tracking while travelling
