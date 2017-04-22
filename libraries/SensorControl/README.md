@@ -259,11 +259,11 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 
 #### <a href="linetrackingsensor">Line tracking sensor (*Floor*)</a>
 
-* <a href="isfloorstart">isFloorStart()</a>: Returns true if the floor is dark
-* <a href="isfloormain">isFloorMain()</a>: Returns true if the floor is light
-* <a href="getfloortype">getFloorType()</a>: Returns 1 if the floor is dark, 2 if the floor is light.
-* <a href="hasfloorchanged">hasFloorChanged(interval = 100)</a>: Returns true if the floor has changed in the given interval
-* <a href="gettimefloorlastchanged">getTimeFloorLastChanged()</a>: Returns how many milliseconds ago the floor changed
+* <a href="#isfloorstart">isFloorStart()</a>: Returns true if the floor is dark
+* <a href="#isfloormain">isFloorMain()</a>: Returns true if the floor is light
+* <a href="#getfloortype">getFloorType()</a>: Returns 1 if the floor is dark, 2 if the floor is light.
+* <a href="#hasfloorchanged">hasFloorChanged(interval = 100)</a>: Returns true if the floor has changed in the given interval
+* <a href="#gettimefloorlastchanged">getTimeFloorLastChanged()</a>: Returns how many milliseconds ago the floor changed
 
 ------------------------------------------------------------------------------
 
@@ -272,28 +272,29 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 
 
 
-<a id="linetrackingsensor">
+<a id="linetrackingsensor"></a>
 ## Line tracking sensor (*Floor*)
 
-<a id="isfloorstart">
+
+<a id="isfloorstart"></a>
 ### isFloorStart() 
 
 Returns true if the floor is dark, false if the floor is, well, not dark. Good
 for testing if we're in the starting area.
 
-<a id="isfloormain">
+<a id="isfloormain"></a>
 ### isFloorMain()
 
 Returns true if the floor is *light*, false if the floor is dark. Useful for
 testing if we're in the "main" area.
 
-<a id="getfloortype">
+<a id="getfloortype"></a>
 ### getFloorType()
 
 Returns 1 if the floor is dark, 2 if the floor is light. Good for if you need
 two logical conditions. Other than that, a bit redundant.
 
-<a id="hasfloorchanged">
+<a id="hasfloorchanged"></a>
 ### hasFloorChanged(int interval = 100)
 
 This *should* tell you if the floor has changed type in the given interval (in
@@ -302,7 +303,7 @@ has changed when you actually test the floor. If you want to use this
 function, you need to be checking constantly (with *any* of the floor checking
 functions). Even then, it won't be perfectly accurate.
 
-<a id="gettimefloorlastchanged">
+<a id="gettimefloorlastchanged"></a>
 ### getTimeFloorLastChanged()
 
 This returns how may milliseconds ago the floor changed type. The same
