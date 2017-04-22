@@ -64,6 +64,26 @@ void setup() {
 
 ```
 
+#### Setting the Wheel spacing (track width)
+
+Another required parameter (for turning and arcs) is the so-called *track
+width*. This is the standard term for the the distance (in mm) that the wheels
+are apart, center to center. You can set it with the `setTrackWidth(...)` method.
+
+```cpp
+
+DriveControl driver;
+
+void setup() {
+	// The distance is in mm
+	driver.setTrackWidth(125);
+
+	// ... More code (set pins, etc.)
+}
+
+```
+
+
 #### Setting the RPM for full power (RPDC)
 
 The second parameter for DriveControl to calculate roughly how far the vehicle
@@ -74,6 +94,10 @@ motors to take the car at full power for one minute.
 To be specific, this value is the revs-per-minute of the motors while the car
 is running at full power. This value can be found experimentally, by running
 the car at full speed for an amount of time and seeing how far it goes.
+
+Ideally, this value is a constant. (Hopefully that assumption won't be a
+problem later - we might need to find some more data and this may become more
+complex in the future).
 
 You can set the RPDC with the `setRevsPerDC(...)` function, as such:
 
@@ -227,9 +251,10 @@ the API makes available to you is documented there in detail.
 * <a href="#gotopointsticky">goToPointSticky(x, y, speed_scalar = 1)</a> : Drive to a certain point relative to current location
 * <a href="#nudge">nudge(x, y, speed_scalar = 0.5)</a> : Nudge to a certain point (ideally close by). Optional speed.
 
-* <a href="#turnright">turnRight(theta)</a> : Turn right a given angle, without constraint
-* <a href="#turnleft">turnLeft(theta)</a> : Turn left a given angle, without constraint
-* <a href="#turnangle">turnAngle(theta)</a> : Turn an angle "theta" degrees on the spot. Negative is to the left.
+* <a href="#turnright">turnRight(theta, speed_scalar = 1)</a> : Turn right a given angle, without constraint
+* <a href="#turnleft">turnLeft(theta, speed_scalar = 1)</a> : Turn left a given angle, without constraint
+* <a href="#turnAround">turnAround(speed_scalar = 1)</a> : Turn 180 degress clockwise
+* <a href="#turnangle">turnAngle(theta, speed_scalar = 1)</a> : Turn an angle "theta" degrees on the spot. Negative is to the left.
 * <a href="#turnangleclamped">turnAngleClamped(theta, speed_scalar = 1);</a> : Turn an angle "theta" degrees on the spot. Automatically constrains to principal angles (from -180 degrees to 180 degrees).
 
 
@@ -473,6 +498,12 @@ perfect every time.
 ### turnLeft(float theta, float speed_scalar = 1);
 
 As for `turnRight(...)`, but it goes the other way.
+
+<a id="turnAround"></a>
+### turnAround(float speed_scalar = 1);
+
+Turns the vehicle 180 degrees clockwise. Use `turnAngle(-180)` if you wanted
+anti-clockwise (no pleasing some people...).
 
 <a id="turnangle"></a>
 ### turnAngle(float theta, float speed_scalar = 1);
