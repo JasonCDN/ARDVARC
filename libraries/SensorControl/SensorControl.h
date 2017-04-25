@@ -45,7 +45,7 @@ public:
 
 	int getWallAngle(); // Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
 	int getWallDistance(); // Returns the closest distance measured from the front
-	int* getDistanceComponents(); // Returns a 3-element array of distance measurements (from left to right).
+	int getDistanceComponents(); // Returns a 3-element array of distance measurements (from left to right).
 	int getRearDistance(); // Returns the distance to the closest rear obstacle (in line of sight of sensor).
 
 	bool isFloorStart(); // Returns true if the floor is dark

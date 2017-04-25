@@ -2,3 +2,5 @@ ARDVARC_AVR_UNO_atmega328p.hex
 *.o
 libraries/L293d/L293dDriver.cpp.d
 *.d
+config.stino-settings
+*.stino-settings
