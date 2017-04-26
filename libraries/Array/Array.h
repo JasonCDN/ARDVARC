@@ -30,12 +30,17 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
-#include <WProgram.h>
+#include <Arduino.h>
 
 template<typename type>
 class Array {
 	public:
 		Array( type* newArray, int newSize ): array(newArray), arraySize(newSize) {/**/}
+		// <ADDED>
+		Array(int newSize): arraySize(newSize) {
+			array[newSize] = {}; // Init to zeros
+		}
+		// </ADDED>
 		int size() const{
 			return arraySize;
 		}
@@ -48,6 +53,18 @@ class Array {
 			}
 			return max;
 		}
+
+		type getMaxIndex(){
+			type max = array[0];
+			type maxIndex = array[0];
+			for (int i=0; i<arraySize; i++){
+				if (max <= array[i]){
+					max = array[i];
+					maxIndex = i;
+				}
+			}
+			return maxIndex;
+		}
 		
 		type getMin(){
 			type min = array[0];
@@ -57,6 +74,18 @@ class Array {
 				}
 			}
 			return min;
+		}
+
+		type getMinIndex(){
+			type min = array[0];
+			type minIndex = array[0];
+			for (int i=0; i<arraySize; i++){
+				if (min >= array[i]){
+					min = array[i];
+					minIndex = i;
+				}
+			}
+			return minIndex;
 		}
 		
 		type getAverage(){
