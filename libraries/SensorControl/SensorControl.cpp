@@ -64,11 +64,12 @@ int SensorControl::getWallDistance() {
 
 }
 
-// Returns a 3-element array of distance measurements (from left to right).
-int SensorControl::getDistanceComponents() {
+// Modifies a 3-element array of distance measurements (from left to right).
+void SensorControl::getDistanceComponents(Array<int> array) {
 	// int components[3] = {getDistance(front1), getDistance(front2), getDistance(front3)};
-	int components[] = {1,2,3};
-	return components;
+	array[0] = 0;
+	array[1] = 2;
+	array[2] = 67;
 }
 
 // Returns the distance to the closest rear obstacle (in line of sight of sensor).

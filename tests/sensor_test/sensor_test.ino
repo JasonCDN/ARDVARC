@@ -1,4 +1,5 @@
 #include <SensorControl.h>
+#include <Array.h>
 
 SensorControl sensors;
 
@@ -9,9 +10,10 @@ void setup() {
 }
 
 void loop() {
+  Array<int> comps = Array<int>(3);
+  sensors.getDistanceComponents(comps);
 	for (int i = 0; i < 3; ++i) {
-		Serial.print(sensors.getDistanceComponents());
+		Serial.println(comps[i]);
 	}
-	Serial.print('\n');
 	delay(250); // Very bad practice, but works for a test
 }
