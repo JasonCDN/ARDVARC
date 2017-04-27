@@ -18,4 +18,6 @@ The reason you need to change the sketchbook location, is that Arduino can only 
 
 The ARDVARC code was developed with **Arduino IDE 1.8.1**
 
+The code is meant to run on an Arduino UNO Rev3
+
 **See the libraries folder README for recognition of external code.**

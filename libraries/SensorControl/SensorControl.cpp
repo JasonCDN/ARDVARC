@@ -49,9 +49,9 @@ Ultrasonic Sensors
 */
 
 // Returns the distance ping in mm (rather than cm)
-// Takes a sensor object and returns its ping times 10.
+// Takes a sensor object and returns its median ping times 10 (convert to mm).
 int SensorControl::getDistance(NewPing sonar) {
-	return NewPing::convert_cm(sonar.ping_median(2));
+	return NewPing::convert_cm(sonar.ping_median(3)) * 10;
 } 
 
 // Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)

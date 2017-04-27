@@ -2,23 +2,23 @@
 > For ARDVARC.
 > Author: Jason Storey
 
-This document will describe how the SensorControl API works, like a tutorial.
+This document describes how the SensorControl API works, like a tutorial.
 The aim is to take you through how to use all the features of the SensorControl
-API to make full use of the arm.
+API to make full use of the ARDVARC sensor system.
 
 The API aims to take as much of the hassle out of using the sensors as
 possible. As such, it provides many high-level features to quickly get access
-to the data you need as fast as possible. Because this API is written
-expressly for the ARDVARC hardware platform, you will come across API methods
-(like `setSensorPins(...)`) with design-specific parameters. Keep this in mind
-if porting the code to other projects.
+to the data you need. Because this API is written expressly for the ARDVARC
+hardware platform, you will come across API methods (like
+`setSensorPins(...)`) with design-specific parameters. Keep this in mind if
+porting the code to other projects.
 
 Each method in the API is attached to the **SensorControl** class. See below
 for a function reference.
 
 ## Setting up the sensors
 
-There is a few peices of information that SensorControl needs before you can
+There is a few pieces of information that SensorControl needs before you can
 start using sensors. The sensor array consists of four ultrasonic sensors
 (three at the front, one at the rear), one darkness sensor and one 3-axis
 magnetic sensor. The pins for all of these are set up in one
@@ -63,23 +63,27 @@ not everything is included in the tutorials below.
 
 ### Distance data
 
-The ultrasonic sensors are what provide distance data. For the singular sensor
-on the back, there's virtually only one way you can interface with it:
-`getDistanceRear()`. This function returns a noise-filtered distance reading (in
-mm) to whatever surface is in line-of-sight at the back of the vehicle. 
+The ultrasonic sensors are what provide distance data. They require parallel
+line of sight to whatever object is having its distance measured. Every
+reading is actually *three* readings that are taken and averaged. This ensures
+we have cleaner data, but the sample time is longer. (Contact library author
+or modify yourself if the ping time is too long).
 
-Where things actually get exiting is the three sensor array on the front of the
+For the singular sensor on the back, there's virtually only one way you can
+interface with it: `getDistanceRear()`. This function returns a noise-filtered
+distance reading (in mm) to whatever surface is in line-of-sight at the back
+of the vehicle.
+
+Where things actually get exciting is the three sensor array on the front of the
 vehicle. There are a few functions you can call, but I'll go over the two that
 are most useful: `getWallDistance()` and `getWallAngle()`.
 
 The first (`getWallDistance()`) returns the shortest measured distance to the
 wall. This way, you have a better estimate of how far forward you can actually
-drive. The `getWallAngle()` function gives you an offset angle to the normal of
-the wall (see diagram below). With the combination of these two datapoints, it
-becomes a fair bit easier to self-locate in an unknown environment. No where
-near as good as a 360 camera, but much better than just a distance reading.
-
-![Depiction of offset angle](url)
+drive. The `getWallAngle()` function gives you an offset angle to the normal
+of the wall. With the combination of these two datapoints, it becomes a fair
+bit easier to self-locate in an unknown environment. Nowhere near as good as a
+360 camera, but much better than just a distance reading.
 
 To get an idea of how one would implement these data readings, here's an example
 snippet which positions the vehicle to face a wall and stay 100 mm from it - no
@@ -114,6 +118,12 @@ void loop() {
 	}
 }
 ```
+
+A quick thing to note is that sensor data isn't always accurate and may even
+be useless in some cases. See the function reference for more detailed
+information. Note that it takes about 120 ms to get distance data from the
+front sensor array. This is because the pings are spaced by 29 ms to reduce
+crosstalk between the sensors.
 
 While this library doesn't know *how* to move the vehicle for you (use
 DriveControl for that), it can provide the necessary data to make informed
