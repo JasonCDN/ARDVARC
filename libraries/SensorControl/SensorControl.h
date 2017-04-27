@@ -24,6 +24,7 @@ License: GPLv3
 #include <NewPing.h>
 #include <HMC5883L.h>
 #include <tcrt5k.h>
+#include <Array.h>
 
 #define EARTH_FIELD 8.9E-3  // Tesla (NOT ACCURATE)
 #define PING_INTERVAL 33    // Minimum amount of time to wait in-between pings.
@@ -45,7 +46,7 @@ public:
 
 	int getWallAngle(); // Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
 	int getWallDistance(); // Returns the closest distance measured from the front
-	int* getDistanceComponents(); // Returns a 3-element array of distance measurements (from left to right).
+	void getDistanceComponents(Array<int> array); // Returns a 3-element array of distance measurements (from left to right).
 	int getRearDistance(); // Returns the distance to the closest rear obstacle (in line of sight of sensor).
 
 	bool isFloorStart(); // Returns true if the floor is dark
