@@ -2,6 +2,8 @@
 > For ARDVARC.
 > Author: Jason Storey
 
+**Note: Ultrasonic API has 100 ms blocking functions, to improve of ease of use. If a timer subroutine style is needed (i.e. like DriveControl's `run()` function) then contact API author.**
+
 This document describes how the SensorControl API works, like a tutorial.
 The aim is to take you through how to use all the features of the SensorControl
 API to make full use of the ARDVARC sensor system.
@@ -254,6 +256,63 @@ unhelpful, so we return false.
 Use the `isMagInRange()` and `isMagValid()` functions liberally to make sure
 your descisions are informed by useable data.
 
+<a id="arraysandapi"></a>
+# Using Arrays with the API
+
+In Arduino-C, arrays are contiguous blocks of memory that are allocated (i.e.
+reserved) and then written to. It is important to know the size of the array
+before hand, so the appropriate amount of memory can be allocated. If dynamic
+arrays are needed, usually special libraries are written to enable this.
+
+With that introduction, here's the key point: you should not expect a function
+to return an array. This is to save memory - every time you create a new
+array, a whole new chunk of memory is reserved (and may not be released until
+after you need it most). 
+
+Instead, especially in embedded systems like the Arduino, functions expect to
+be *passed* an array, which they will then modify. Usually the array is of an
+expected size, because when it comes to raw arrays (i.e. memory blocks),
+there's no real way to check the boundaries of the array.
+
+That's where the "Array" library comes in. It's simply a class-template
+wrapper around raw arrays that add boundary checking features and some useful
+methods, directly to the array variable. 
+
+You create an Array like this:
+
+```cpp
+
+#include <Array.h> // Include Array library -- make sure it's installed!
+
+const int size = 4; // Always know your sizes
+int raw[4] = {1,2,3,4}; // First create a raw array, with initialized values
+
+// Here's the library magic:
+Array<int> array = Array<int>(raw, size);
+
+```
+
+Whenever you see `Array<some_type>`, it means "This variable / expression is
+an 'Array' class filled with elements of type 'some_type'.". It's a bit funky
+looking, but it lets you declare what type of elements are members of the
+array (to preserve operations).
+
+Now, you can use:
+
+```cpp
+
+// Using array.size(), because it's awesome.
+for (int i = 0; i < array.size(); ++i) {
+	Serial.print(array[i]);
+}
+
+// Just because.
+Serial.println(array.getAverage());
+
+```
+
+There are a few more methods you can call on the Array object. Have a look at
+the `Array.h` file in the Array library folder for more detail in the code.
 
 # Function reference
 
@@ -274,12 +333,56 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 * <a href="#getfloortype">getFloorType()</a>: Returns 1 if the floor is dark, 2 if the floor is light.
 * <a href="#hasfloorchanged">hasFloorChanged(interval = 100)</a>: Returns true if the floor has changed in the given interval
 * <a href="#gettimefloorlastchanged">getTimeFloorLastChanged()</a>: Returns how many milliseconds ago the floor changed
+* <a href="#getwallangle">getWallAngle()</a> : Calculates the angle to the wall from the normal
+* <a href="#getwalldistance">getWallDistance()</a> : Returns the closest distance measured from the front
+* <a href="#getdistancecomponents">getDistanceComponents(Array<int> array)</a> : Returns a 3-element array of distance measurements (from left to right).
+* <a href="#getreardistance">getRearDistance()</a> : Returns the distance to the closest rear obstacle (in line of sight of sensor).
 
 ------------------------------------------------------------------------------
 
 ## Ultrasonic sensors (*Wall* or *Distance*)
 
+<a id="getwallangle"></a>
+### int getWallAngle()
 
+Returns the argument angle to the wall's normal. The angle will be negative if
+the car is angled to the right, and positive if angled to the left. All angles
+are relative to the normal vector.
+
+Note that the angle range isn't strictly `-90 -> 90` degrees. Rather, the
+angle range depends on the spacing and the accuracy of the ultrasonic sensors.
+
+Also take care with how often you call this function. It takes roughly 100 ms
+to get get samples from the ultrasonics on the front of the car (speed of
+sound and all that), so try not to use it while running timer sensitive tasks
+(like driving, for instance).
+
+<a id="getwalldistance"></a>
+### int getWallDistance()
+
+Returns the shortest distance to the wall - nuff said. (Contact API author if
+average or middle distance needed.)
+
+Like with previous functions, take care with how often you call *this* function.
+It takes roughly 100 ms to get get samples from the ultrasonics on the front of
+the car (speed of sound and all that), so try not to use it while running
+timer sensitive tasks.
+
+
+<a id="getdistancecomponents"></a>
+### void getDistanceComponents(Array<int> array)
+
+Internally fills a 3-element array with distances from each of the three
+ultrasonic sensors on the front. See the ["Using Arrays with the API"](#arraysandapi) section.
+
+Note that it takes roughly 100 ms to ping all three sensors, so try to keep
+pinging to a minimum. (Contact author if the timing is giving you trouble,
+then will check if can avoid pinging all three sensors.)
+
+<a id="getreardistance"></a>
+### int getRearDistance()
+
+Returns the distance measured by the rear ultrasonic sensor.
 
 
 <a id="linetrackingsensor"></a>
@@ -287,25 +390,25 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 
 
 <a id="isfloorstart"></a>
-### isFloorStart() 
+### bool isFloorStart() 
 
 Returns true if the floor is dark, false if the floor is, well, not dark. Good
 for testing if we're in the starting area.
 
 <a id="isfloormain"></a>
-### isFloorMain()
+### bool isFloorMain()
 
 Returns true if the floor is *light*, false if the floor is dark. Useful for
 testing if we're in the "main" area.
 
 <a id="getfloortype"></a>
-### getFloorType()
+### short getFloorType()
 
 Returns 1 if the floor is dark, 2 if the floor is light. Good for if you need
 two logical conditions. Other than that, a bit redundant.
 
 <a id="hasfloorchanged"></a>
-### hasFloorChanged(int interval = 100)
+### bool hasFloorChanged(int interval = 100)
 
 This *should* tell you if the floor has changed type in the given interval (in
 milliseconds). However, it only updates its guess on whether or not the floor
@@ -314,7 +417,7 @@ function, you need to be checking constantly (with *any* of the floor checking
 functions). Even then, it won't be perfectly accurate.
 
 <a id="gettimefloorlastchanged"></a>
-### getTimeFloorLastChanged()
+### int getTimeFloorLastChanged()
 
 This returns how may milliseconds ago the floor changed type. The same
 warnings apply as for `hasFloorChanged(...)` -- make sure you have been
