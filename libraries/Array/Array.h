@@ -38,7 +38,11 @@ class Array {
 		Array( type* newArray, int newSize ): array(newArray), arraySize(newSize) {/**/}
 		// <ADDED>
 		Array(int newSize): arraySize(newSize) {
-			array[newSize] = {}; // Init to zeros
+			type a[newSize] = {}; // Init
+			array = a;
+			for (int i = 0; i < newSize; ++i) {
+				array[i] = 0; // Fill with zero
+			}
 		}
 		// </ADDED>
 		int size() const{

@@ -51,29 +51,36 @@ Ultrasonic Sensors
 // Returns the distance ping in mm (rather than cm)
 // Takes a sensor object and returns its ping times 10.
 int SensorControl::getDistance(NewPing sonar) {
-	return sonar.ping_cm(MAX_SONAR_DIST/10) * 10;
+	return NewPing::convert_cm(sonar.ping_median(2));
 } 
 
 // Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
 int SensorControl::getWallAngle() {
+	Array<int> components = Array<int>(FRONT_SENS_NUM);
+	getDistanceComponents(components);
 
 }
 
 // Returns the closest distance measured from the front
 int SensorControl::getWallDistance() {
+	Array<int> components = Array<int>(FRONT_SENS_NUM);
+	getDistanceComponents(components);
 
+	return components.getMin();
 }
 
 // Modifies a 3-element array of distance measurements (from left to right).
 void SensorControl::getDistanceComponents(Array<int> array) {
-	// int components[3] = {getDistance(front1), getDistance(front2), getDistance(front3)};
-	array[0] = 0;
-	array[1] = 2;
-	array[2] = 67;
+	array[0] = getDistance(front1);
+	delay(PING_INTERVAL);
+	array[1] = getDistance(front2);
+	delay(PING_INTERVAL);
+	array[2] = getDistance(front3);
 }
 
 // Returns the distance to the closest rear obstacle (in line of sight of sensor).
 int SensorControl::getRearDistance() {
+	delay(PING_INTERVAL/2); // Stop crosstalk
 	return getDistance(rear1);
 }
 
