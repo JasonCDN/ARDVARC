@@ -32,6 +32,6 @@ void loop() {
 	// Test the TCRT5000 sensor
 */
 	Serial.println(sensors.isFloorMain());
-  delay(100);
+	delay(100);
 
 }
