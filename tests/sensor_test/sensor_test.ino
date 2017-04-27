@@ -24,9 +24,14 @@ void loop() {
 	Serial.print(comps[2]); // Front 3
 	Serial.print(",");
 	Serial.println(sensors.getRearDistance());
-*/
 	// Test the other sensor methods:
 	Serial.println(sensors.getWallDistance());
+*/
+
+/*
+	// Test the TCRT5000 sensor
+*/
+	Serial.println(sensors.isFloorMain());
   delay(100);
 
 }

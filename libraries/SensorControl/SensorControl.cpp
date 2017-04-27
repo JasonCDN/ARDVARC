@@ -56,8 +56,10 @@ int SensorControl::getDistance(NewPing sonar) {
 
 // Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
 int SensorControl::getWallAngle() {
-	Array<int> components = Array<int>(FRONT_SENS_NUM);
-	getDistanceComponents(components);
+	Array<int> c = Array<int>(FRONT_SENS_NUM);
+	getDistanceComponents(c);
+
+	//float theta1 = ;
 
 }
 
@@ -95,7 +97,6 @@ Line Tracking Sensor
 // This is a wrapper around the .isClose() function with timing logic.
 // Everything is based on this.
 bool SensorControl::isFloorMain() {
-	front1.ping_cm();
 	bool floor_state = floor.isClose();
 	if (_last_floor_state != floor_state) {
 		_last_floor_time = millis();
