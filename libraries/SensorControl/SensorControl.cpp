@@ -23,7 +23,7 @@ void SensorControl::setSensorPins(int f1, int f2, int f3, int r1, int lt) {
 	front2 = NewPing(f2, f2, MAX_SONAR_DIST/10);
 	front3 = NewPing(f3, f3, MAX_SONAR_DIST/10); 
 	rear1  = NewPing(r1, r1, MAX_SONAR_DIST/10); 
-	floor  = TCRT5000(lt); // We only have a receiving pin
+	floor1 = TCRT5000(lt); // We only have a receiving pin
 }
 
 void SensorControl::setSonarSpacing(int spacing1, int spacing2 = -1) {
@@ -48,6 +48,8 @@ Ultrasonic Sensors
 
 */
 
+float calculateAngle(int dist1, int dist2, int spacing); // Needed for sub-functionalty (definition later)
+
 // Returns the distance ping in mm (rather than cm)
 // Takes a sensor object and returns its median ping times 10 (convert to mm).
 int SensorControl::getDistance(NewPing sonar) {
@@ -56,11 +58,35 @@ int SensorControl::getDistance(NewPing sonar) {
 
 // Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
 int SensorControl::getWallAngle() {
+	// Get the 3 distances (as components)
 	Array<int> c = Array<int>(FRONT_SENS_NUM);
 	getDistanceComponents(c);
 
-	//float theta1 = ;
+/*
 
+	This is done in two pairs, labelled (1) and (2). Calculations are compared
+	to check for likely data. and filtered down to be more accurate.
+
+*/
+
+	float n_theta1 = calculateAngle(c[2], c[1], _spacing1);
+	float n_theta2 = calculateAngle(c[1], c[0], _spacing2);
+
+	// Decide if we need to choose a most-accurate, or average
+	if (abs(n_theta1 - n_theta2) > ANGLE_THRESHOLD) {
+		// Return the smallest angle (because that's likely from a more consistent surface)
+		return floor(min(n_theta2, n_theta2));
+	} else {
+		return floor((n_theta1 + n_theta2)/2);
+	}
+}
+
+float calculateAngle(int dist1, int dist2, int spacing) { // Right-side sonar first!
+	// If this is negative, the right-side sonar in the pair is
+	// reading a smaller distance (i.e. we are angled left of the wall normal)
+	int dist_delta = dist1 - dist2;
+	double theta = 90 - sin(dist_delta/spacing) * 180/PI;
+	return theta;
 }
 
 // Returns the closest distance measured from the front
@@ -97,7 +123,7 @@ Line Tracking Sensor
 // This is a wrapper around the .isClose() function with timing logic.
 // Everything is based on this.
 bool SensorControl::isFloorMain() {
-	bool floor_state = floor.isClose();
+	bool floor_state = floor1.isClose();
 	if (_last_floor_state != floor_state) {
 		_last_floor_time = millis();
 		_last_floor_state = floor_state;
@@ -137,7 +163,7 @@ int SensorControl::getTimeFloorLastChanged() {
 
 */
 
-// Returns an x,y,z array of ints with field components
+// Modifies an x,y,z array of ints with field components
 int* SensorControl::getMagComponents() {
 
 } 
