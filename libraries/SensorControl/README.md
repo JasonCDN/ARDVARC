@@ -333,13 +333,29 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 * <a href="#getfloortype">getFloorType()</a>: Returns 1 if the floor is dark, 2 if the floor is light.
 * <a href="#hasfloorchanged">hasFloorChanged(interval = 100)</a>: Returns true if the floor has changed in the given interval
 * <a href="#gettimefloorlastchanged">getTimeFloorLastChanged()</a>: Returns how many milliseconds ago the floor changed
+
+#### <a href="ultrasonicsonars">Ultrasonic sonars (*Wall* or *Distance*)</a>
+
 * <a href="#getwallangle">getWallAngle()</a> : Calculates the angle to the wall from the normal
 * <a href="#getwalldistance">getWallDistance()</a> : Returns the closest distance measured from the front
 * <a href="#getdistancecomponents">getDistanceComponents(Array<int> array)</a> : Returns a 3-element array of distance measurements (from left to right).
 * <a href="#getreardistance">getRearDistance()</a> : Returns the distance to the closest rear obstacle (in line of sight of sensor).
 
+#### <a href="magneticsensor">Magnetic sensor (*Mag*)</a>
+
+* <a href="#getmagcomponents">getMagComponents(Array<int> array);</a> :  Fills an x,y,z array of ints with magnetic field components
+* <a href="#getmagbearing">getMagBearing();</a> : Returns xy plane (horizon plane) angle of displacement from pure forward
+* <a href="#getmagelevation">getMagElevation();</a> : Returns angle of tile from horizon (negative if towards the ground)
+* <a href="#getmagstrength">getMagStrength();</a> : Returns the strength of the magnetic field
+* <a href="#deltamagscore">deltaMagScore(int interval = 100);</a> : Returns a value between 0 and 1 based on how much the reading has changed in recent times
+* <a href="#ismagvalid">isMagValid();</a> : True if none of the axial components are maxed out
+* <a href="#ismaginrange">isMagInRange();</a> : True if the magnitude of the signal is far enough from Earth's magnetic field to be considered a real signal
+
+
 ------------------------------------------------------------------------------
 
+
+<a id="ultrasonicsonars"></a>
 ## Ultrasonic sensors (*Wall* or *Distance*)
 
 <a id="getwallangle"></a>
@@ -385,6 +401,9 @@ then will check if can avoid pinging all three sensors.)
 Returns the distance measured by the rear ultrasonic sensor.
 
 
+------------------------------------------------------------------------------
+
+
 <a id="linetrackingsensor"></a>
 ## Line tracking sensor (*Floor*)
 
@@ -424,7 +443,69 @@ warnings apply as for `hasFloorChanged(...)` -- make sure you have been
 checking what the floor type is.
 
 
+------------------------------------------------------------------------------
 
+
+<a id="magneticsensor"></a>
 ## 3-Axis Magnetic sensor (*Mag*)
 
 
+<a id="getmagcomponents"></a>
+### void getMagComponents(Array<float> array);
+
+This is the coal-face of the magnetic sensor. Pass in a three-element array
+and it will fill it with x, y, and z component data for the magnetic field
+vector. These numbers are "floating point" (float) numbers, so they have a
+decimal place. The components are the measured magnetic field strength in
+Gauss. For your reference, here's a table of relatively common magnetic field
+strengths (in Gauss):
+
+| Magnetic Field Source^  | Strength (in Gauss) |
+|-------------------------|---------------------|
+| Earth's magnetic field  | 0.5                 |
+| Limit of the HMC5883L   | 8                   |
+| Fridge Magnet           | 100                 |
+| Strong permanent magnet | 12500               |
+| MRI Scanner             | 150000-300000       |
+
+> ^ Note that these measurements are **at the surface** of the object. Field
+> strength drops off with the inverse cube of the distance, so the sensor should
+> still work at reasonable range.
+
+<a id="getmagbearing"></a>
+### int getMagBearing();
+
+Converts the x,y,z component data into a bearing. That is, it will return a
+value (in degrees) between -180 and 180 that describes the bearing relative to
+the sensor's horizontal plane.
+
+Note that this *should* be accurate to within 2 degrees.
+
+<a id="getmagelevation"></a>
+### int getMagElevation();
+
+Converts x,y,z component data into an elevation angle. This is relative to the
+sensor's vertical front-facing plane.
+
+<a id="getmagstrength"></a>
+### float getMagStrength();
+
+This is a simple function that returns the strength (magnitude) of the
+magnetic field in Gauss.
+
+<a id="deltamagscore"></a>
+### float deltaMagScore(int interval = 100);
+
+Gives you a rough value between 0 and 1 based on how much the reading has
+changed in recent times
+
+<a id="ismagvalid"></a>
+### bool isMagValid();
+
+Returns true if none of the axial magnetic components are maxed out
+
+<a id="ismaginrange"></a>
+### bool isMagInRange();
+
+Returns true if the magnitude of the signal is far enough from Earth's
+magnetic field to be considered a real signal from a local magnet.

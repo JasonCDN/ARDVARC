@@ -164,7 +164,7 @@ int SensorControl::getTimeFloorLastChanged() {
 */
 
 // Modifies an x,y,z array of ints with field components
-int* SensorControl::getMagComponents() {
+void SensorControl::getMagComponents(Array<float> array) {
 
 } 
 
