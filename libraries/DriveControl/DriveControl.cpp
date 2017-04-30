@@ -67,20 +67,25 @@ Rotational Motion
 // distances (arc-lengths). Speed will be the max given by the speed_scalar
 void DriveControl::turnAngle(float theta, float speed_scalar = 1)
 {
+	if (F_DEBUG && Serial) {
+		Serial.print("Turn. Theta: ");
+		Serial.println(theta);
+	}
+
 	// Check that we have an angle
-	if (theta < 0.25) {
+	if (abs(theta) < 0.25) {
 		return;
 	}
 
 
 	// Calculate circumference of turning circle
-	float turn_circ = 2 * PI * (_track/2);
+	float turn_circ = PI * _track;
 
 	// Calculate the arc length given the subtending angle
-	float arc_len = turn_circ * theta/360;
+	float arc_len = turn_circ * abs(theta)/360;
 
 	// Determine direction of rotation
-	byte director = 1; // This will be toggled to 1 or -1, depending on direction
+	short director = 1; // This is toggled to 1 or -1, depending on direction
 	if (theta > 0) { // We are turning RIGHT, so left wheel forward
 		director = 1;
 	} else { // Then we are turning LEFT, so right wheel forward
@@ -130,7 +135,7 @@ void DriveControl::goToPoint(float x, float y, float speed_scalar = 1)
 	// Find angle to rotate back by
 	Coordinates coords(x, y);
 	if (abs(coords.getAngle()) > 0) {
-		turnAngle(coords.getAngle(), speed_scalar);
+		turnAngle(-1 * coords.getAngle() * 180/PI, speed_scalar);
 	}
 }
 
@@ -141,7 +146,7 @@ void DriveControl::goToPointSticky(float x, float y, float speed_scalar = 1)
 
 	// With polar attributes, now execute minimal instruction set:
 	if (abs(coords.getAngle()) > 0) {
-		turnAngle(coords.getAngle(), speed_scalar);
+		turnAngle(coords.getAngle() * 180/PI, speed_scalar);
 	}
 
 	forward(coords.getR(), speed_scalar);
@@ -269,8 +274,7 @@ drive_instruction DriveControl::newInstruction(float left_dist, float right_dist
 	// Work out relative scales of the speeds. Be aware of division by 0.
 	float left_speed = (abs(left_dist) > 0) ? left_dist / abs(left_dist) : 0;
 	float right_speed = (abs(right_dist) > 0) ? right_dist / abs(left_dist) : 0;
-	float normalizer = 1 / max(left_speed, right_speed); // Need to use this to cap the speeds at "1"
-
+	float normalizer = 1 / abs(max(left_speed, right_speed)); // Need to use this to cap the speeds at "1"
 
 	// Must be within range for this to work, also modified by global
 	// settings. This is the operative scalar that modifies the relative
@@ -295,21 +299,25 @@ drive_instruction DriveControl::newInstruction(float left_dist, float right_dist
 		time_needed = 0; // If both are 0, we are stopping. No time needed.
 	}
 
-	Serial.println(time_needed);
-
 	// Build instruction from previous calculations
 	drive_instruction inst;
 	inst.duration = time_needed * 1E3; // In milliseconds
 	inst.left_speed = abs(left_analog);
 	inst.left_direction = boolsgn(left_analog);
 	inst.right_speed = abs(right_analog);
-	inst.right_direction = boolsgn(left_analog);
+	inst.right_direction = boolsgn(right_analog);
 
 	return inst;
 }
 
 void DriveControl::executeInstruction(drive_instruction inst) const
 {
+	if (F_DEBUG && Serial) {
+		Serial.print("L:");
+		Serial.print(sgnbool(inst.left_direction) * inst.left_speed);
+		Serial.print(", R:");
+		Serial.println(sgnbool(inst.right_direction) * inst.right_speed);
+	}
 	_motors.left(sgnbool(inst.left_direction) * inst.left_speed);
 	_motors.right(sgnbool(inst.right_direction) * inst.right_speed);
 }

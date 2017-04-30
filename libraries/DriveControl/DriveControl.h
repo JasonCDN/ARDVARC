@@ -48,6 +48,9 @@ License: GPLv3
 #include <L293dDriver.h> // Need the type definitions
 #include <QueueList.h>
 
+
+#define F_DEBUG true // A debug flag that logs Serial messages (if available) when true.
+
 /*
 
 This is "Sir DriveControl". His job is to make the motors turn in such a precise
