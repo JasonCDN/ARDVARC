@@ -169,12 +169,12 @@ void SensorControl::getMagComponents(Array<float> array) {
 } 
 
 // Returns xy plane angle of displacement
-float SensorControl::getMagBearing() {
+int SensorControl::getMagBearing() {
 
 } 
 
 // Returns angle of tile from horizon (negative if towards the ground)
-float SensorControl::getMagElevation() {
+int SensorControl::getMagElevation() {
 
 } 
 
