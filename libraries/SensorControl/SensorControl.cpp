@@ -10,6 +10,7 @@ License: GPLv3
 */
 
 #include <SensorControl.h>
+#include <Wire.h>
 
 /*
 
@@ -24,6 +25,12 @@ void SensorControl::setSensorPins(int f1, int f2, int f3, int r1, int lt) {
 	front3 = NewPing(f3, f3, MAX_SONAR_DIST/10); 
 	rear1  = NewPing(r1, r1, MAX_SONAR_DIST/10); 
 	floor1 = TCRT5000(lt); // We only have a receiving pin
+
+	// Activate the Magnetic Sensor
+	if (Serial) Serial.println("Activating Magnetic Sensor...");
+	mag.begin();
+	mag.setRange(HMC5883L_RANGE_8_1GA);
+	if (Serial) Serial.println("Activated.");
 }
 
 void SensorControl::setSonarSpacing(int spacing1, int spacing2 = -1) {
@@ -163,37 +170,72 @@ int SensorControl::getTimeFloorLastChanged() {
 
 */
 
+// Returns 3D vector magnitude
+float magtd3(float a, float b, float c) {
+	return sqrt(square(a) + square(b) + square(c));
+}
+
 // Modifies an x,y,z array of ints with field components
 void SensorControl::getMagComponents(Array<float> array) {
 
+	Vector vec = mag.readNormalize();
+
+	array[0] = vec.XAxis;
+	array[1] = vec.YAxis;
+	array[2] = vec.ZAxis;
+
+	// Make sure to add magnitude to history
+	float magtd = magtd3(array[0], array[1], array[2]);
+	// Backwards shifting for-loop (leave first element)
+	for (int i = 3; i > 0 ; --i) {
+		_mag_history[i] = _mag_history[i - 1];
+	}
+	_mag_history[0] = magtd;
 } 
 
 // Returns xy plane angle of displacement
 int SensorControl::getMagBearing() {
+	Vector vec = mag.readNormalize();
 
+	return atan2(vec.YAxis, vec.XAxis) * 180/PI;
 } 
 
 // Returns angle of tile from horizon (negative if towards the ground)
 int SensorControl::getMagElevation() {
+	Vector vec = mag.readNormalize();
 
-} 
+	return atan2(vec.ZAxis, vec.XAxis) * 180/PI;
+}
 
-// Returns the strength of the magnetic field
+// Returns the strength (magnitude) of the magnetic field
 float SensorControl::getMagStrength() {
-
+	Array<float> comps = Array<float>(3);
+	getMagComponents(comps);
+	return _mag_history[0];
 } 
 
 // Returns a value between 0 and 1 based on how much the reading has changed in recent times
 float SensorControl::deltaMagScore(int interval = 100) {
-
+	// Break variables into a mathable form (for readability);
+	float a = _mag_history[0], b = _mag_history[1], c = _mag_history[2];
+	float avg = (a + b + c) / 3;
+	float std_dev = sqrt((square(a-avg) + square(b-avg) + square(c-avg))/3);
+	return constrain(std_dev / 50, 0, 1); // "Normalized" standard deviation
 } 
 
 // True if none of the axial components are maxed out
 bool SensorControl::isMagValid() {
-
+	Array<float> comps = Array<float>(3);
+	getMagComponents(comps);
+	for (int i = 0; i < 3; ++i) {
+		if (abs(comps[i]) > (8000)) {
+			return false;
+		}
+	}
+	return true;
 } 
 
 // True if the magnitude of the signal is far enough from Earth's magnetic field
 bool SensorControl::isMagInRange() {
-
+	return abs(getMagStrength() - EARTH_FIELD) > MAG_THRESHOLD;
 } 

@@ -457,20 +457,20 @@ This is the coal-face of the magnetic sensor. Pass in a three-element array
 and it will fill it with x, y, and z component data for the magnetic field
 vector. These numbers are "floating point" (float) numbers, so they have a
 decimal place. The components are the measured magnetic field strength in
-Gauss. For your reference, here's a table of relatively common magnetic field
-strengths (in Gauss):
+milligauss. For your reference, here's a table of relatively common magnetic field
+strengths (in milligauss):
 
-| Magnetic Field Source^  | Strength (in Gauss) |
+| Magnetic Field Source^  | Strength (in mG)    |
 |-------------------------|---------------------|
-| Earth's magnetic field  | 0.5                 |
-| Limit of the HMC5883L   | 8                   |
-| Fridge Magnet           | 100                 |
-| Strong permanent magnet | 12500               |
-| MRI Scanner             | 150000-300000       |
+| Earth's magnetic field  | 500                 |
+| Limit of the HMC5883L   | 8100                |
+| Fridge Magnet           | 100000              |
+| Strong permanent magnet | 12500000            |
+| MRI Scanner             | 150000000-300000000 |
 
 > ^ Note that these measurements are **at the surface** of the object. Field
 > strength drops off with the inverse cube of the distance, so the sensor should
-> still work at reasonable range.
+> still work at reasonable range (i.e. beyond ~3 cm of separation).
 
 <a id="getmagbearing"></a>
 ### int getMagBearing();
@@ -491,7 +491,7 @@ sensor's vertical front-facing plane.
 ### float getMagStrength();
 
 This is a simple function that returns the strength (magnitude) of the
-magnetic field in Gauss.
+magnetic field in milligauss.
 
 <a id="deltamagscore"></a>
 ### float deltaMagScore(int interval = 100);

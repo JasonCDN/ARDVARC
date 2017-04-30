@@ -26,10 +26,13 @@ License: GPLv3
 #include <tcrt5k.h>
 #include <Array.h>
 #include <Math.h>
+#include <Wire.h>
 
-#define EARTH_FIELD 0.5     // Gauss
-#define PING_INTERVAL 33    // Minimum amount of time to wait in-between pings.
+#define MAG_ADDR 0x1E		// Address of the HMC5883L
+#define EARTH_FIELD 630     // milligauss
+#define PING_INTERVAL 40    // Minimum amount of time to wait in-between pings.
 #define ANGLE_THRESHOLD 5   // Max angle measured difference before filtering applies.
+#define MAG_THRESHOLD 70    // Number of milligauss deviation before considered a real signal.
 #define FRONT_SENS_NUM 3    // Number of sensors on the front.
 #define MAX_SONAR_DIST 5000 // Maximum distance for sensing (in mm).
 
@@ -82,7 +85,7 @@ private:
 	bool _last_floor_state;
 	int _spacing1; // Spacing between first and second sonar
 	int _spacing2; // Spacing between second ad third sonar
-	short _mag_history[3]; // Keeps the magnitude score of the last three readings
+	float _mag_history[3]; // Keeps the magnitude score of the last three readings
 
 	int getDistance(NewPing sonar); // Returns the distance ping in mm (rather than cm)
 };
