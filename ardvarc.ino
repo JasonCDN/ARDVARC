@@ -13,8 +13,8 @@ void setup() {
   driver.setMotorPins(3,2,4,5,6,7);
   driver.setWheelDiameter(42);
   driver.setTrackWidth(90);
-  driver.setRevsPerDC(1);
-  driver.setSpeed(0.1); // MUST RUN AT 10% WITH THESE MOTORS!!
+  driver.setRevsPerDC(55);
+  driver.setSpeed(0.3); // MUST RUN AT 30% WITH THESE MOTORS!!
 }
 
 void loop() {
@@ -31,10 +31,14 @@ void loop() {
  */
 
  // Motor Demo
- driver.forward(10);
+ driver.forward(50);
+ driver.backward(50);
+ driver.turnRight(90);
+ driver.turnLeft(90);
  while (true) {
-  Serial.println("Running...");
   driver.run();
-  delay(1000);
+  Serial.print("R");
+  delay(100);
  }
+ Serial.println();
 }

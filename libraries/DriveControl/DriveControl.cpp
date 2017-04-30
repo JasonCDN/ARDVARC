@@ -267,25 +267,35 @@ drive_instruction DriveControl::newInstruction(float left_dist, float right_dist
 	}
 
 	// Work out relative scales of the speeds. Be aware of division by 0.
-	float left_speed = (left_dist > 0) ? left_dist / abs(left_dist) : 0;
-	float right_speed = (right_dist > 0) ? right_dist / abs(left_dist) : 0;
+	float left_speed = (abs(left_dist) > 0) ? left_dist / abs(left_dist) : 0;
+	float right_speed = (abs(right_dist) > 0) ? right_dist / abs(left_dist) : 0;
+	float normalizer = 1 / max(left_speed, right_speed); // Need to use this to cap the speeds at "1"
 
 
-	speed_scalar = constrain(speed_scalar, 0, 1) * _global_speed_scalar; // Must be within range for this to work, also modified by global settings
+	// Must be within range for this to work, also modified by global
+	// settings. This is the operative scalar that modifies the relative
+	// weighted speeds.
+	speed_scalar = normalizer * constrain(speed_scalar, 0, 1) * _global_speed_scalar * max_velocity; 
+
+	// Scale the speeds to the right dimensions
+	left_speed  *= speed_scalar;
+	right_speed *= speed_scalar;
 
 	// Normalize results to have a max at the max_speed, then map to -255 -> 255
-	int left_analog = int(map(speed_scalar * left_speed * max_velocity, -max_velocity, max_velocity, -255, 255));
-	int right_analog = int(map(speed_scalar * right_speed * max_velocity, -max_velocity, max_velocity, -255, 255));
+	int left_analog = int(map(left_speed, -max_velocity, max_velocity, -255, 255));
+	int right_analog = int(map(right_speed, -max_velocity, max_velocity, -255, 255));
 
 	// Time needed to travel full distance of either wheel (remember that t is const)
 	float time_needed;
-	if (left_speed > 0) {
-		time_needed = left_dist / left_speed; // In seconds
-	} else if (right_speed > 0) {
-		time_needed = right_dist / right_speed; // In seconds
+	if (abs(left_speed) > 0) {
+		time_needed = abs(left_dist / left_speed); // In seconds
+	} else if (abs(right_speed) > 0) {
+		time_needed = abs(right_dist / right_speed); // In seconds
 	} else {
 		time_needed = 0; // If both are 0, we are stopping. No time needed.
 	}
+
+	Serial.println(time_needed);
 
 	// Build instruction from previous calculations
 	drive_instruction inst;
