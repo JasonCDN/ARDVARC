@@ -199,8 +199,10 @@ Utility Functions
 
 void DriveControl::stopAll()
 {
-	clearQueue();
-	queue.pop(); // Remove remaining instruction.
+	// Remove any remaining instructions.
+	while (queue.count() > 0) {
+		queue.pop(); 
+	}
 	executeInstruction(empty_instruction);
 }
 
@@ -222,8 +224,15 @@ bool DriveControl::boolsgn(float num)
 // Return 1 if true, or -1 if false
 short DriveControl::sgnbool(bool boolsgn)
 {
-	return -1^(1 + boolsgn);
+	return pow(-1,(1 + boolsgn));
 }
+
+// Need our own map function that can handle decimals
+float map(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 
 /*
 
@@ -246,11 +255,11 @@ void DriveControl::addInstruction(float left_dist, float right_dist, float speed
 
 // Will make an instruction to move the wheels a given distance in a scaled time frame. The speed of each wheel
 // is automatically calculated here. Duration is then calculated from the max speed we can handle.
-DriveControl::drive_instruction DriveControl::newInstruction(float left_dist, float right_dist, float speed_scalar = 1)
+drive_instruction DriveControl::newInstruction(float left_dist, float right_dist, float speed_scalar = 1)
 {
 	// The fastest speed that a wheel can possibly travel in this system.
-	// Note that this should never equal 0, or we will have a problem.
-	float max_velocity = _rpdc * 60 * _wheel_dia * PI; // Convert rmp to rps, then to a distance with dia*pi.
+	// Note that this should never equal 0, or we will have a problem. (this is in mm/s)
+	float max_velocity = (_rpdc / 60) * _wheel_dia * PI; // Convert rpm to rps, then to a distance with dia*pi.
 
 	if (max_velocity <= 0) {
 		// Do nothing. If we get to here, something went wrong with setting parameters.
@@ -261,13 +270,12 @@ DriveControl::drive_instruction DriveControl::newInstruction(float left_dist, fl
 	float left_speed = (left_dist > 0) ? left_dist / abs(left_dist) : 0;
 	float right_speed = (right_dist > 0) ? right_dist / abs(left_dist) : 0;
 
-	// Scalar between "1" magnitude, and max_velocity (based on larger value)
-	float scalar = max(left_speed, right_speed) / max_velocity;
+
 	speed_scalar = constrain(speed_scalar, 0, 1) * _global_speed_scalar; // Must be within range for this to work, also modified by global settings
 
 	// Normalize results to have a max at the max_speed, then map to -255 -> 255
-	int left_analog = int(map(speed_scalar * scalar * left_speed, -max_velocity, max_velocity, -255, 255));
-	int right_analog = int(map(speed_scalar * scalar * right_speed, -max_velocity, max_velocity, -255, 255));
+	int left_analog = int(map(speed_scalar * left_speed * max_velocity, -max_velocity, max_velocity, -255, 255));
+	int right_analog = int(map(speed_scalar * right_speed * max_velocity, -max_velocity, max_velocity, -255, 255));
 
 	// Time needed to travel full distance of either wheel (remember that t is const)
 	float time_needed;
@@ -302,7 +310,7 @@ void DriveControl::run()
 	while (queue.count() > 0)
 	{
 		// Get a pointer to the current instruction, so we can read/change it
-		drive_instruction *active_instruction = &queue.peek();
+		drive_instruction * active_instruction = queue.peek();
 
 		// Start the instruction (if necessary)
 		if (active_instruction->start_time <= 0) {
