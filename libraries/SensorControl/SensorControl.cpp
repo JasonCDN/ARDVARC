@@ -27,12 +27,9 @@ void SensorControl::setSensorPins(int f1, int f2, int f3, int r1, int lt) {
 	floor1 = TCRT5000(lt); // We only have a receiving pin
 
 	// Activate the Magnetic Sensor
-	Wire.begin();
-	Wire.beginTransmission(MAG_ADDR); //open communication with HMC5883
-	Wire.write(0x02); //select mode register
-	Wire.write(0x00); //continuous measurement mode
 	if (Serial) Serial.println("Activating Magnetic Sensor...");
-	Wire.endTransmission();
+	mag.begin();
+	mag.setRange(HMC5883L_RANGE_8_1GA);
 	if (Serial) Serial.println("Activated.");
 }
 
@@ -180,28 +177,12 @@ float magtd3(float a, float b, float c) {
 
 // Modifies an x,y,z array of ints with field components
 void SensorControl::getMagComponents(Array<float> array) {
-	int x,y,z; //triple axis data
 
-	//Tell the HMC5883 where to begin reading data
-	Wire.beginTransmission(MAG_ADDR);
-	Wire.write(0x03); //select register 3, X MSB register
-	Wire.endTransmission();
+	Vector vec = mag.readNormalize();
 
-
-	//Read data from each axis, 2 registers per axis
-	Wire.requestFrom(MAG_ADDR, 6);
-	if(6<=Wire.available()){
-		x = Wire.read()<<8; //X msb
-		x |= Wire.read(); //X lsb
-		z = Wire.read()<<8; //Z msb
-		z |= Wire.read(); //Z lsb
-		y = Wire.read()<<8; //Y msb
-		y |= Wire.read(); //Y lsb
-	}
-
-	array[0] = x * MSCALE;
-	array[1] = y * MSCALE;
-	array[2] = z * MSCALE;
+	array[0] = vec.XAxis;
+	array[1] = vec.YAxis;
+	array[2] = vec.ZAxis;
 
 	// Make sure to add magnitude to history
 	float magtd = magtd3(array[0], array[1], array[2]);
@@ -214,12 +195,16 @@ void SensorControl::getMagComponents(Array<float> array) {
 
 // Returns xy plane angle of displacement
 int SensorControl::getMagBearing() {
+	Vector vec = mag.readNormalize();
 
+	return atan2(vec.YAxis, vec.XAxis) * 180/PI;
 } 
 
 // Returns angle of tile from horizon (negative if towards the ground)
 int SensorControl::getMagElevation() {
+	Vector vec = mag.readNormalize();
 
+	return atan2(vec.ZAxis, vec.XAxis) * 180/PI;
 }
 
 // Returns the strength (magnitude) of the magnetic field
@@ -243,7 +228,7 @@ bool SensorControl::isMagValid() {
 	Array<float> comps = Array<float>(3);
 	getMagComponents(comps);
 	for (int i = 0; i < 3; ++i) {
-		if (abs(comps[i]) > (4000 * MSCALE)) {
+		if (abs(comps[i]) > (8000)) {
 			return false;
 		}
 	}

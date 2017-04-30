@@ -20,6 +20,6 @@ void loop() {
     Serial.print(comps[i]); 
 		Serial.print(", ");
 	}
-	Serial.print(sensors.isMagValid());
+	Serial.print(sensors.getMagBearing());
 	Serial.println();
 }
