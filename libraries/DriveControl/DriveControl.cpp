@@ -340,7 +340,7 @@ void DriveControl::run()
 		}
 
 		// Check to see if current instruction has expired
-		float time_passed = millis() - active_instruction->start_time;
+		long time_passed = millis() - active_instruction->start_time;
 		if (active_instruction->duration == 0 or time_passed > active_instruction->duration) {
 			// If so, remove it from the queue and unset the _driving flag
 			queue.pop();
