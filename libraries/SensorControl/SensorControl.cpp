@@ -10,6 +10,7 @@ License: GPLv3
 */
 
 #include <SensorControl.h>
+#include <Wire.h>
 
 /*
 
@@ -24,6 +25,15 @@ void SensorControl::setSensorPins(int f1, int f2, int f3, int r1, int lt) {
 	front3 = NewPing(f3, f3, MAX_SONAR_DIST/10); 
 	rear1  = NewPing(r1, r1, MAX_SONAR_DIST/10); 
 	floor1 = TCRT5000(lt); // We only have a receiving pin
+
+	// Activate the Magnetic Sensor
+	Wire.begin();
+	Wire.beginTransmission(MAG_ADDR); //open communication with HMC5883
+	Wire.write(0x02); //select mode register
+	Wire.write(0x00); //continuous measurement mode
+	if (Serial) Serial.println("Activating Magnetic Sensor...");
+	Wire.endTransmission();
+	if (Serial) Serial.println("Activated.");
 }
 
 void SensorControl::setSonarSpacing(int spacing1, int spacing2 = -1) {
@@ -163,9 +173,43 @@ int SensorControl::getTimeFloorLastChanged() {
 
 */
 
+// Returns 3D vector magnitude
+float magtd3(float a, float b, float c) {
+	return sqrt(square(a) + square(b) + square(c));
+}
+
 // Modifies an x,y,z array of ints with field components
 void SensorControl::getMagComponents(Array<float> array) {
+	int x,y,z; //triple axis data
 
+	//Tell the HMC5883 where to begin reading data
+	Wire.beginTransmission(MAG_ADDR);
+	Wire.write(0x03); //select register 3, X MSB register
+	Wire.endTransmission();
+
+
+	//Read data from each axis, 2 registers per axis
+	Wire.requestFrom(MAG_ADDR, 6);
+	if(6<=Wire.available()){
+		x = Wire.read()<<8; //X msb
+		x |= Wire.read(); //X lsb
+		z = Wire.read()<<8; //Z msb
+		z |= Wire.read(); //Z lsb
+		y = Wire.read()<<8; //Y msb
+		y |= Wire.read(); //Y lsb
+	}
+
+	array[0] = x * MSCALE;
+	array[1] = y * MSCALE;
+	array[2] = z * MSCALE;
+
+	// Make sure to add magnitude to history
+	float magtd = magtd3(array[0], array[1], array[2]);
+	// Backwards shifting for-loop (leave first element)
+	for (int i = 3; i > 0 ; --i) {
+		_mag_history[i] = _mag_history[i - 1];
+	}
+	_mag_history[0] = magtd;
 } 
 
 // Returns xy plane angle of displacement
@@ -176,24 +220,37 @@ int SensorControl::getMagBearing() {
 // Returns angle of tile from horizon (negative if towards the ground)
 int SensorControl::getMagElevation() {
 
-} 
+}
 
-// Returns the strength of the magnetic field
+// Returns the strength (magnitude) of the magnetic field
 float SensorControl::getMagStrength() {
-
+	Array<float> comps = Array<float>(3);
+	getMagComponents(comps);
+	return _mag_history[0];
 } 
 
 // Returns a value between 0 and 1 based on how much the reading has changed in recent times
 float SensorControl::deltaMagScore(int interval = 100) {
-
+	// Break variables into a mathable form (for readability);
+	float a = _mag_history[0], b = _mag_history[1], c = _mag_history[2];
+	float avg = (a + b + c) / 3;
+	float std_dev = sqrt((square(a-avg) + square(b-avg) + square(c-avg))/3);
+	return constrain(std_dev / 50, 0, 1); // "Normalized" standard deviation
 } 
 
 // True if none of the axial components are maxed out
 bool SensorControl::isMagValid() {
-
+	Array<float> comps = Array<float>(3);
+	getMagComponents(comps);
+	for (int i = 0; i < 3; ++i) {
+		if (abs(comps[i]) > (4000 * MSCALE)) {
+			return false;
+		}
+	}
+	return true;
 } 
 
 // True if the magnitude of the signal is far enough from Earth's magnetic field
 bool SensorControl::isMagInRange() {
-
+	return abs(getMagStrength() - EARTH_FIELD) > MAG_THRESHOLD;
 } 
