@@ -463,14 +463,14 @@ strengths (in milligauss):
 | Magnetic Field Source^  | Strength (in mG)    |
 |-------------------------|---------------------|
 | Earth's magnetic field  | 500                 |
-| Limit of the HMC5883L   | 2000                |
+| Limit of the HMC5883L   | 8100                |
 | Fridge Magnet           | 100000              |
 | Strong permanent magnet | 12500000            |
 | MRI Scanner             | 150000000-300000000 |
 
 > ^ Note that these measurements are **at the surface** of the object. Field
 > strength drops off with the inverse cube of the distance, so the sensor should
-> still work at reasonable range.
+> still work at reasonable range (i.e. beyond ~3 cm of separation).
 
 <a id="getmagbearing"></a>
 ### int getMagBearing();
