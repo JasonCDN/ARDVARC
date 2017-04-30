@@ -14,7 +14,7 @@ control.
 * *Coordinates Arduino Library*: 2016 Sebastien Dumetz.  
   From: https://github.com/sdumetz/coordinates - Accessed: 15/04/2017  
   Released under: LGPLv3  
-* *Array Arduino Library*: 2009 Alexander Brevig.   
+* *Array Arduino Library*: 2009 Alexander Brevig, *Modified by Jason Storey*.   
   From: http://playground.arduino.cc/Code/Array - Accessed: 26/06/2017  
   Released under: LGPLv2.1  
 * *TCRT5000 Sensor Library*: 2014 Umut Karci.   

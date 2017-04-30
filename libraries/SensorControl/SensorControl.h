@@ -25,11 +25,13 @@ License: GPLv3
 #include <HMC5883L.h>
 #include <tcrt5k.h>
 #include <Array.h>
+#include <Math.h>
 
-#define EARTH_FIELD 8.9E-3  // Tesla (NOT ACCURATE)
+#define EARTH_FIELD 0.5     // Gauss
 #define PING_INTERVAL 33    // Minimum amount of time to wait in-between pings.
-#define FRONT_SENS_NUM 3    // Number of sensors on the front
-#define MAX_SONAR_DIST 5000 // Maximum distance for sensing (in mm)
+#define ANGLE_THRESHOLD 5   // Max angle measured difference before filtering applies.
+#define FRONT_SENS_NUM 3    // Number of sensors on the front.
+#define MAX_SONAR_DIST 5000 // Maximum distance for sensing (in mm).
 
 
 class SensorControl
@@ -38,7 +40,7 @@ public:
 
 	// NOTE: Initializing all subclasses with a default value that won't work, because I want 
 	// the API to set pins *after* the class is constructed. That's just the pattern.
-	SensorControl() : front1(0,0), front2(0,0), front3(0,0), rear1(0,0), floor(0) {};
+	SensorControl() : front1(0,0), front2(0,0), front3(0,0), rear1(0,0), floor1(0) {};
 
 
 	void setSensorPins(int f1, int f2, int f3, int r1, int lt); // Front 1,2,3; Rear 1; Line Tracker
@@ -46,7 +48,7 @@ public:
 
 	int getWallAngle(); // Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
 	int getWallDistance(); // Returns the closest distance measured from the front
-	void getDistanceComponents(Array<int> array); // Returns a 3-element array of distance measurements (from left to right).
+	void getDistanceComponents(Array<int> array); // Mods a 3-element array of distance measurements (from left to right).
 	int getRearDistance(); // Returns the distance to the closest rear obstacle (in line of sight of sensor).
 
 	bool isFloorStart(); // Returns true if the floor is dark
@@ -55,9 +57,9 @@ public:
 	bool hasFloorChanged(int interval = 100); // Returns true if the floor has changed in the given interval
 	int getTimeFloorLastChanged(); // Returns how many milliseconds ago the floor changed
 
-	int* getMagComponents(); // Returns an x,y,z array of ints with field components
-	float getMagBearing(); // Returns xy plane angle of displacement
-	float getMagElevation(); // Returns angle of tile from horizon (negative if towards the ground)
+	void getMagComponents(Array<float> array); // Mods an x,y,z array of ints with field components
+	int getMagBearing(); // Returns xy plane angle of displacement
+	int getMagElevation(); // Returns angle of tile from horizon (negative if towards the ground)
 	float getMagStrength(); // Returns the strength of the magnetic field
 	float deltaMagScore(int interval = 100); // Returns a value between 0 and 1 based on how much the reading has changed in recent times
 	bool isMagValid(); // True if none of the axial components are maxed out
@@ -70,7 +72,7 @@ private:
 	NewPing front2;
 	NewPing front3;
 	NewPing rear1;
-	TCRT5000 floor;
+	TCRT5000 floor1; // Note, we need the 1, so we don't override floor();
 
 	// Magnetic sensor runs from I2C, so no pins declared
 	HMC5883L mag;
