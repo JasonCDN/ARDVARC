@@ -81,7 +81,7 @@ private:
 	HMC5883L mag;
 
 	// State variables
-	int _last_floor_time; // Time value in ms since last floor check (and it changed)
+	unsigned long _last_floor_time; // Time value in ms since last floor check (and it changed)
 	bool _last_floor_state;
 	int _spacing1; // Spacing between first and second sonar
 	int _spacing2; // Spacing between second ad third sonar
