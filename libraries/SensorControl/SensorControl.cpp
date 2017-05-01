@@ -29,7 +29,7 @@ void SensorControl::setSensorPins(int f1, int f2, int f3, int r1, int lt) {
 	// Activate the Magnetic Sensor
 	if (Serial) Serial.println("Activating Magnetic Sensor...");
 	mag.begin();
-	mag.setRange(HMC5883L_RANGE_8_1GA);
+	mag.setRange(HMC5883L_RANGE_0_88GA);
 	if (Serial) Serial.println("Activated.");
 }
 
@@ -100,6 +100,12 @@ float calculateAngle(int dist1, int dist2, int spacing) { // Right-side sonar fi
 int SensorControl::getWallDistance() {
 	Array<int> components = Array<int>(FRONT_SENS_NUM);
 	getDistanceComponents(components);
+
+	for (int i = 0; i < components.size(); ++i) {
+		if (components[i] <= 0) {
+			components[i] = 1E6; // Make large to skip low pass filter
+		}
+	}
 
 	return components.getMin();
 }
@@ -228,7 +234,6 @@ bool SensorControl::isMagValid() {
 	Array<float> comps = Array<float>(3);
 	getMagComponents(comps);
 	for (int i = 0; i < 3; ++i) {
-		if (abs(comps[i]) > (8000)) {
 			return false;
 		}
 	}
