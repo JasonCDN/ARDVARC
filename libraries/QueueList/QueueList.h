@@ -65,7 +65,7 @@ class QueueList {
     T pop ();
 
     // get an item from the queue.
-    T peek () const;
+    T* peek ();
 
     // check if the queue is empty.
     bool isEmpty () const;
@@ -175,13 +175,13 @@ T QueueList<T>::pop () {
 
 // get an item from the queue.
 template<typename T>
-T QueueList<T>::peek () const {
+T* QueueList<T>::peek () {
   // check if the queue is empty.
   if (isEmpty ())
     exit ("QUEUE: can't peek item from queue: queue is empty.");
 
   // return the item of the head node.
-  return head->item;
+  return &head->item;
 }
 
 // check if the queue is empty.

@@ -326,7 +326,7 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 
 
 
-#### <a href="linetrackingsensor">Line tracking sensor (*Floor*)</a>
+#### <a href="#linetrackingsensor">Line tracking sensor (*Floor*)</a>
 
 * <a href="#isfloorstart">isFloorStart()</a>: Returns true if the floor is dark
 * <a href="#isfloormain">isFloorMain()</a>: Returns true if the floor is light
@@ -334,14 +334,14 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 * <a href="#hasfloorchanged">hasFloorChanged(interval = 100)</a>: Returns true if the floor has changed in the given interval
 * <a href="#gettimefloorlastchanged">getTimeFloorLastChanged()</a>: Returns how many milliseconds ago the floor changed
 
-#### <a href="ultrasonicsonars">Ultrasonic sonars (*Wall* or *Distance*)</a>
+#### <a href="#ultrasonicsonars">Ultrasonic sonars (*Wall* or *Distance*)</a>
 
 * <a href="#getwallangle">getWallAngle()</a> : Calculates the angle to the wall from the normal
 * <a href="#getwalldistance">getWallDistance()</a> : Returns the closest distance measured from the front
 * <a href="#getdistancecomponents">getDistanceComponents(Array<int> array)</a> : Returns a 3-element array of distance measurements (from left to right).
 * <a href="#getreardistance">getRearDistance()</a> : Returns the distance to the closest rear obstacle (in line of sight of sensor).
 
-#### <a href="magneticsensor">Magnetic sensor (*Mag*)</a>
+#### <a href="#magneticsensor">Magnetic sensor (*Mag*)</a>
 
 * <a href="#getmagcomponents">getMagComponents(Array<int> array);</a> :  Fills an x,y,z array of ints with magnetic field components
 * <a href="#getmagbearing">getMagBearing();</a> : Returns xy plane (horizon plane) angle of displacement from pure forward
@@ -457,20 +457,20 @@ This is the coal-face of the magnetic sensor. Pass in a three-element array
 and it will fill it with x, y, and z component data for the magnetic field
 vector. These numbers are "floating point" (float) numbers, so they have a
 decimal place. The components are the measured magnetic field strength in
-Gauss. For your reference, here's a table of relatively common magnetic field
-strengths (in Gauss):
+milligauss. For your reference, here's a table of relatively common magnetic field
+strengths (in milligauss):
 
-| Magnetic Field Source^  | Strength (in Gauss) |
+| Magnetic Field Source^  | Strength (in mG)    |
 |-------------------------|---------------------|
-| Earth's magnetic field  | 0.5                 |
-| Limit of the HMC5883L   | 8                   |
-| Fridge Magnet           | 100                 |
-| Strong permanent magnet | 12500               |
-| MRI Scanner             | 150000-300000       |
+| Earth's magnetic field  | 500                 |
+| Limit of the HMC5883L   | 8100                |
+| Fridge Magnet           | 100000              |
+| Strong permanent magnet | 12500000            |
+| MRI Scanner             | 150000000-300000000 |
 
 > ^ Note that these measurements are **at the surface** of the object. Field
 > strength drops off with the inverse cube of the distance, so the sensor should
-> still work at reasonable range.
+> still work at reasonable range (i.e. beyond ~3 cm of separation).
 
 <a id="getmagbearing"></a>
 ### int getMagBearing();
@@ -491,7 +491,7 @@ sensor's vertical front-facing plane.
 ### float getMagStrength();
 
 This is a simple function that returns the strength (magnitude) of the
-magnetic field in Gauss.
+magnetic field in milligauss.
 
 <a id="deltamagscore"></a>
 ### float deltaMagScore(int interval = 100);

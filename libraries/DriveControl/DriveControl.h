@@ -48,6 +48,9 @@ License: GPLv3
 #include <L293dDriver.h> // Need the type definitions
 #include <QueueList.h>
 
+
+#define F_DEBUG true // A debug flag that logs Serial messages (if available) when true.
+
 /*
 
 This is "Sir DriveControl". His job is to make the motors turn in such a precise
@@ -59,6 +62,17 @@ Don't forget to call the "run()" function!
 See the README for specific details and examples.
 
 */
+
+struct drive_instruction {
+	unsigned long start_time = 0; // Set by run when the instruction is called. Used to track when it should stop
+	unsigned int duration = 0; // Decides when to halt the instruction. If 0, instruction runs until this is changed
+	byte left_speed = 0;
+	bool left_direction = 1; // 1 is forward, 0 is backward
+	byte right_speed = 0;
+	bool right_direction = 1;
+};
+
+
 class DriveControl
 {
 public:
@@ -97,17 +111,9 @@ private:
 	float _track = 1; // Distance between wheel centers - used for rotational calculations
 	float _rpdc = 1; // Revs-per-Duty-cycle. Note that this is actually RPM per Duty Cycle.
 
-	struct drive_instruction {
-		unsigned long start_time; // Set by run when the instruction is called. Used to track when it should stop
-		unsigned int duration; // Decides when to halt the instruction. If 0, instruction runs until this is changed
-		byte left_speed;
-		bool left_direction; // 1 is forward, 0 is backward
-		byte right_speed;
-		bool right_direction;
-	};
 
 	QueueList<drive_instruction> queue; // Dynamic linked list to hold drive instructions
-	drive_instruction empty_instruction = {0, 0, 0, 0, 0, 0}; // Used in value checking and to stop the car
+	drive_instruction empty_instruction; // Used in value checking and to stop the car
 
 	bool boolsgn(float num); // Return true if positive or 0, false if negative
 	short sgnbool(bool boolsgn); // Return 1 if true, or -1 if false
