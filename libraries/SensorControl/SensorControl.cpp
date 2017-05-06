@@ -234,6 +234,7 @@ bool SensorControl::isMagValid() {
 	Array<float> comps = Array<float>(3);
 	getMagComponents(comps);
 	for (int i = 0; i < 3; ++i) {
+		if (abs(comps[i]) > (290)) {
 			return false;
 		}
 	}
