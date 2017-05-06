@@ -18,35 +18,21 @@ Setting parameters
 
 */
 
-void SensorControl::setSensorPins(int f1, int f2, int f3, int r1, int lt) {
+void SensorControl::setSensorPins(int front, int right, int rear, int left, int line_tracker) {
 	// MAX_SONAR_DIST is in mm, so divide by 10 to get cm for the NewPing functions
-	front1 = NewPing(f1, f1, MAX_SONAR_DIST/10); // Trigger and echo are the same
-	front2 = NewPing(f2, f2, MAX_SONAR_DIST/10);
-	front3 = NewPing(f3, f3, MAX_SONAR_DIST/10); 
-	rear1  = NewPing(r1, r1, MAX_SONAR_DIST/10); 
-	floor1 = TCRT5000(lt); // We only have a receiving pin
+	front_sonar = NewPing(front, front, MAX_SONAR_DIST/10); // Trigger and echo are the same
+	right_sonar = NewPing(right, right, MAX_SONAR_DIST/10);
+	rear_sonar = NewPing(rear, rear, MAX_SONAR_DIST/10); 
+	left_sonar  = NewPing(left, left, MAX_SONAR_DIST/10); 
+	floor1 = TCRT5000(line_tracker); // We only have a receiving pin
 
 	// Activate the Magnetic Sensor
+	// Note that we have a serial output so we can detect if we have a freeze
 	if (Serial) Serial.println("Activating Magnetic Sensor...");
 	mag.begin();
 	mag.setRange(HMC5883L_RANGE_0_88GA);
 	if (Serial) Serial.println("Activated.");
 }
-
-void SensorControl::setSonarSpacing(int spacing1, int spacing2 = -1) {
-	if (spacing1 < 0) { // Spacing1 is negative - useless
-		return;
-	} else { // Then, spacing 2 must be 0 or positive, so...
-		if (spacing2 < 0) { // If spacing2 is negative, set both spacings to be spacing1
-			_spacing1 = spacing1;
-			_spacing2 = spacing1;
-		} else { // Otherwise both are positive or 0, so set them to their respective values
-			_spacing1 = spacing1;
-			_spacing2 = spacing2;
-		}
-	}
-}
-
 
 
 /*
@@ -55,74 +41,54 @@ Ultrasonic Sensors
 
 */
 
-float calculateAngle(int dist1, int dist2, int spacing); // Needed for sub-functionalty (definition later)
+
+// Modifies a 4-element array of distance measurements (clockwise from front).
+void SensorControl::fillDistArray(Array<int> array) {
+	array[0] = getDistance(front_sonar);
+	delay(PING_INTERVAL);
+	array[1] = getDistance(right_sonar);
+	delay(PING_INTERVAL);
+	array[2] = getDistance(rear_sonar);	
+	delay(PING_INTERVAL);
+	array[3] = getDistance(left_sonar);
+}
+
+// INDIVIDUAL SONARS:
+int SensorControl::getFrontDistance() {
+	return getDistance(front_sonar);
+}
+
+int SensorControl::getRightDistance() {
+	return getDistance(right_sonar);
+}
+
+int SensorControl::getRearDistance() {
+	return getDistance(rear_sonar);
+}
+
+int SensorControl::getLeftDistance() {
+	return getDistance(left_sonar);
+}
+
 
 // Returns the distance ping in mm (rather than cm)
 // Takes a sensor object and returns its median ping times 10 (convert to mm).
 int SensorControl::getDistance(NewPing sonar) {
-	return NewPing::convert_cm(sonar.ping_median(3)) * 10;
+	delay(getPingDelay()); // Stop crosstalk
+	int dist = NewPing::convert_cm(sonar.ping_median(3)) * 10;
+	_last_ping_time = millis();
+	return dist;
 } 
 
-// Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
-int SensorControl::getWallAngle() {
-	// Get the 3 distances (as components)
-	Array<int> c = Array<int>(FRONT_SENS_NUM);
-	getDistanceComponents(c);
-
-/*
-
-	This is done in two pairs, labelled (1) and (2). Calculations are compared
-	to check for likely data. and filtered down to be more accurate.
-
-*/
-
-	float n_theta1 = calculateAngle(c[2], c[1], _spacing1);
-	float n_theta2 = calculateAngle(c[1], c[0], _spacing2);
-
-	// Decide if we need to choose a most-accurate, or average
-	if (abs(n_theta1 - n_theta2) > ANGLE_THRESHOLD) {
-		// Return the smallest angle (because that's likely from a more consistent surface)
-		return floor(min(n_theta2, n_theta2));
+// From current time and the last ping time, return a 
+// suitable minimal delay (in ms). Based on PING_INTERVAL.
+int SensorControl::getPingDelay() {
+	int ping_diff = abs(millis() - _last_ping_time);
+	if (ping_diff > PING_INTERVAL) {
+		return 0;
 	} else {
-		return floor((n_theta1 + n_theta2)/2);
+		return PING_INTERVAL - ping_diff;
 	}
-}
-
-float calculateAngle(int dist1, int dist2, int spacing) { // Right-side sonar first!
-	// If this is negative, the right-side sonar in the pair is
-	// reading a smaller distance (i.e. we are angled left of the wall normal)
-	int dist_delta = dist1 - dist2;
-	double theta = 90 - sin(dist_delta/spacing) * 180/PI;
-	return theta;
-}
-
-// Returns the closest distance measured from the front
-int SensorControl::getWallDistance() {
-	Array<int> components = Array<int>(FRONT_SENS_NUM);
-	getDistanceComponents(components);
-
-	for (int i = 0; i < components.size(); ++i) {
-		if (components[i] <= 0) {
-			components[i] = 1E6; // Make large to skip low pass filter
-		}
-	}
-
-	return components.getMin();
-}
-
-// Modifies a 3-element array of distance measurements (from left to right).
-void SensorControl::getDistanceComponents(Array<int> array) {
-	array[0] = getDistance(front1);
-	delay(PING_INTERVAL);
-	array[1] = getDistance(front2);
-	delay(PING_INTERVAL);
-	array[2] = getDistance(front3);
-}
-
-// Returns the distance to the closest rear obstacle (in line of sight of sensor).
-int SensorControl::getRearDistance() {
-	delay(PING_INTERVAL/2); // Stop crosstalk
-	return getDistance(rear1);
 }
 
 

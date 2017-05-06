@@ -10,28 +10,26 @@ void setup() {
 }
 
 void loop() {
-/*
-	// Test the 3 front ultrasonics:
 
-	Array<int> comps = Array<int>(3); // Make a zeroed 3-element array
-	sensors.getDistanceComponents(comps); // Give to the function to fill array
+	// Test the ultrasonics
+
+	Array<int> comps = Array<int>(4); // Make a zeroed 4-element array
+	sensors.fillDistArray(comps); // Give to the function to fill array
 
 	// Not best practice, but shows results in serial plotter
-	Serial.print(comps[0]); // Front 1
+	Serial.print(comps[0]); // Front
 	Serial.print(",");
-	Serial.print(comps[1]); // Front 2
+	Serial.print(comps[1]); // Right
 	Serial.print(",");
-	Serial.print(comps[2]); // Front 3
+	Serial.print(comps[2]); // Rear
 	Serial.print(",");
-	Serial.println(sensors.getRearDistance());
-	// Test the other sensor methods:
-	Serial.println(sensors.getWallDistance());
-*/
+	Serial.print(comps[3]); // Rear
+
 
 /*
 	// Test the TCRT5000 sensor
-*/
+
 	Serial.println(sensors.isFloorMain());
-	delay(100);
+	delay(100);*/
 
 }

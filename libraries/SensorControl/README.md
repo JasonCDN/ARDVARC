@@ -22,33 +22,23 @@ for a function reference.
 
 There is a few pieces of information that SensorControl needs before you can
 start using sensors. The sensor array consists of four ultrasonic sensors
-(three at the front, one at the rear), one darkness sensor and one 3-axis
+(one on each side of the car), one darkness sensor and one 3-axis
 magnetic sensor. The pins for all of these are set up in one
 `setSensorPins(...)` function. The pins of the 3-axis magnetic sensor are
 already known and therefore don't need to be set up (because the sensor uses
 the I2C bus).
 
-The only other required information is the spacing between the front facing
-ultrasonic sensors. Ideally, the spacing will be the same between all of
-them, but things *can* go wrong, so you can pass in two spacing values if
-needed.
-
 Below is an example of how one might set up the sensors:
 
 ```cpp
 
-SensorControl sensors;
+SensorControl sensors; // Define the sensors handle (class instance)
 
 void setup() {
 	// Ultrasonics 1,2,3 at front, 4 at back, 5 for the line tracker.
 	sensors.setSensorPins(7, 8, 9, 10, 11);
 
 	// Note that we don't need to set pins for the magnetic sensor, because it runs from I2C
-
-
-	// 20mm between both closest pairs of front ultrasonic sensor boards (between centers!)
-	sensors.setSonarSpacing(20);
-	// If spacing was off, you could do something like --> sensors.setSonarSpacing(19, 23)
 }
 
 ```
@@ -67,31 +57,21 @@ not everything is included in the tutorials below.
 
 The ultrasonic sensors are what provide distance data. They require parallel
 line of sight to whatever object is having its distance measured. Every
-reading is actually *three* readings that are taken and averaged. This ensures
+reading is actually multiple readings that are taken and averaged. This ensures
 we have cleaner data, but the sample time is longer. (Contact library author
 or modify yourself if the ping time is too long).
 
-For the singular sensor on the back, there's virtually only one way you can
-interface with it: `getDistanceRear()`. This function returns a noise-filtered
-distance reading (in mm) to whatever surface is in line-of-sight at the back
-of the vehicle.
+As there are four sensors, there are four data points. You can get the
+distance to the nearest line-of-sight plane on a side by calling
+`get<side>Dist()`, where `<side>` is one of *Front*, *Back*, *Left* or
+*Right*. You can also use the `fillDistArray(array)` to fill up a four-element
+array (which you pass into the function) with distance data. Note that this
+function takes a while (~200 ms) to call.
 
-Where things actually get exciting is the three sensor array on the front of the
-vehicle. There are a few functions you can call, but I'll go over the two that
-are most useful: `getWallDistance()` and `getWallAngle()`.
-
-The first (`getWallDistance()`) returns the shortest measured distance to the
-wall. This way, you have a better estimate of how far forward you can actually
-drive. The `getWallAngle()` function gives you an offset angle to the normal
-of the wall. With the combination of these two datapoints, it becomes a fair
-bit easier to self-locate in an unknown environment. Nowhere near as good as a
-360 camera, but much better than just a distance reading.
-
-To get an idea of how one would implement these data readings, here's an example
-snippet which positions the vehicle to face a wall and stay 100 mm from it - no
-matter where it starts in relation to the wall it chooses. Here we assume that
-the vehicle is in an irregular box with flat walls, such that the sensors always
-return valid readings:
+To get an idea of how one would implement these data readings, here's an
+example snippet which positions to stay 100 mm from a wall - no matter where
+it starts in relation to the wall it chooses. Here we assume that the vehicle
+is placed head on to the wall, such that the algorithms involved aren't too complex:
 
 ```cpp
 
@@ -100,36 +80,30 @@ SensorControl sensors;
 void setup() { 
 	// Blah blah blah (pin setups etc.)
 
-	// I want the robot within 2 degrees of facing the wall dead on.
-	int angle_threshold = 2;
-
 	// I want the robot to be 100 mm from the wall, give or take 3mm.
 	int desired_dist = 100;
 	int dist_threshold = 3;
 }
 
 void loop() {
-	while (abs(sensors.getWallAngle()) > angle_threshold) {
-		// turn the car by the value returned by getWallAngle()
-		// (whatever code you need to do that)
-	}
+	int diff_pos;
+	while (abs(sensors.getFrontDist() - desired_dist) > dist_threshold) {
+		// Move the car forward/backward by the difference in position.
+		// diff_pos will be negative if too close, indicating we need to move backwards
+		diff_pos = sensors.getFrontDist() - desired_dist;
 
-	while (abs(sensors.getWallDistance() - desired_dist) > dist_threshold) {
-		// Move the car forward/backward by the difference in position
-		// (whatever code you need to do that)
+		// (whatever code you need to move the car)
 	}
 }
 ```
 
 A quick thing to note is that sensor data isn't always accurate and may even
 be useless in some cases. See the function reference for more detailed
-information. Note that it takes about 120 ms to get distance data from the
-front sensor array. This is because the pings are spaced by 29 ms to reduce
-crosstalk between the sensors.
+information.
 
 While this library doesn't know *how* to move the vehicle for you (use
 DriveControl for that), it can provide the necessary data to make informed
-descions about *where* to move the vehicle.
+descions about *where* (or *why*)to move the vehicle.
 
 ## Floor-type data
 
