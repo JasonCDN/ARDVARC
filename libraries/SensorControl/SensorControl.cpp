@@ -169,7 +169,7 @@ void SensorControl::getMagComponents(Array<float> array) {
 int SensorControl::getMagBearing() {
 	Vector vec = mag.readNormalize();
 
-	return atan2(vec.YAxis, vec.XAxis) * 180/PI;
+	return atan2(vec.XAxis, vec.YAxis) * 180/PI;
 } 
 
 // Returns angle of tile from horizon (negative if towards the ground)

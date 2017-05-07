@@ -63,7 +63,7 @@ or modify yourself if the ping time is too long).
 
 As there are four sensors, there are four data points. You can get the
 distance to the nearest line-of-sight plane on a side by calling
-`get<side>Dist()`, where `<side>` is one of *Front*, *Back*, *Left* or
+`get<side>Distance()`, where `<side>` is one of *Front*, *Back*, *Left* or
 *Right*. You can also use the `fillDistArray(array)` to fill up a four-element
 array (which you pass into the function) with distance data. Note that this
 function takes a while (~200 ms) to call.

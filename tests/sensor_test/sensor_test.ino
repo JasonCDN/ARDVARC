@@ -6,11 +6,11 @@ SensorControl sensors;
 void setup() {
 	Serial.begin(9600);
 	// Order is Front 1,2,3; Rear 1; Line Tracker
-	sensors.setSensorPins(8, 9, 10, 11, 12);
+	sensors.setSensorPins(10, 11, 8, 9, 12);
 }
 
 void loop() {
-
+/*
 	// Test the ultrasonics
 
 	Array<int> comps = Array<int>(4); // Make a zeroed 4-element array
@@ -23,7 +23,9 @@ void loop() {
 	Serial.print(",");
 	Serial.print(comps[2]); // Rear
 	Serial.print(",");
-	Serial.print(comps[3]); // Rear
+	Serial.println(comps[3]); // Left
+ */
+ Serial.println(sensors.getMagBearing());
 
 
 /*
