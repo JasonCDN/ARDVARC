@@ -22,7 +22,7 @@ License: GPLv3
 #include <L293dDriver.h> // Need the type definitions
 #include <QueueList.h>
 
-#define TEST_SWITCH 13
+#define TEST_SWITCH_PIN 13
 
 /*
 	DO NOT CALL THIS
@@ -35,7 +35,7 @@ void _ardvarc_init() {
 	if (!__ardvarc_initialized) {
 		Serial.println("ARDVARC Initialized.");
 		__ardvarc_initialized = true;
-		pinMode(TEST_SWITCH, INPUT);
+		pinMode(TEST_SWITCH_PIN, INPUT);
 	}
 }
 
@@ -43,7 +43,7 @@ void _ardvarc_init() {
 // test mode switch is on or off.
 bool isTestMode() {
 	_ardvarc_init();
-	return digitalRead(TEST_SWITCH) == LOW;
+	return digitalRead(TEST_SWITCH_PIN) == LOW;
 }
 
 #endif
