@@ -29,7 +29,7 @@ License: GPLv3
 #include <Wire.h>
 
 #define MAG_ADDR 0x1E		// Address of the HMC5883L
-#define EARTH_FIELD 630     // milligauss
+#define EARTH_FIELD 110     // milligauss
 #define PING_INTERVAL 40    // Minimum amount of time to wait in-between pings.
 #define ANGLE_THRESHOLD 5   // Max angle measured difference before filtering applies.
 #define MAG_THRESHOLD 70    // Number of milligauss deviation before considered a real signal.

@@ -30,7 +30,8 @@ void SensorControl::setSensorPins(int front, int right, int rear, int left, int 
 	// Note that we have a serial output so we can detect if we have a freeze
 	if (Serial) Serial.println("Activating Magnetic Sensor...");
 	mag.begin();
-	mag.setRange(HMC5883L_RANGE_0_88GA);
+	mag.setRange(HMC5883L_RANGE_8_1GA);
+	mag.setDataRate(HMC5883L_DATARATE_75HZ);
 	if (Serial) Serial.println("Activated.");
 }
 
@@ -144,13 +145,13 @@ int SensorControl::getTimeFloorLastChanged() {
 
 // Returns 3D vector magnitude
 float magtd3(float a, float b, float c) {
-	return sqrt(square(a) + square(b) + square(c));
+	return sqrt(square(abs(a)) + square(abs(b)) + square(abs(c)));
 }
 
 // Modifies an x,y,z array of ints with field components
 void SensorControl::getMagComponents(Array<float> array) {
 
-	Vector vec = mag.readNormalize();
+	Vector vec = mag.readRaw();
 
 	array[0] = vec.XAxis;
 	array[1] = vec.YAxis;
@@ -169,7 +170,10 @@ void SensorControl::getMagComponents(Array<float> array) {
 int SensorControl::getMagBearing() {
 	Vector vec = mag.readNormalize();
 
-	return atan2(vec.XAxis, vec.YAxis) * 180/PI;
+	// Find angle in the Q1 section
+	int angle = atan2(vec.YAxis, vec.XAxis) * 180.0/PI;
+
+	return angle;
 } 
 
 // Returns angle of tile from horizon (negative if towards the ground)
