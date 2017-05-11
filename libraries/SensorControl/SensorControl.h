@@ -29,7 +29,7 @@ License: GPLv3
 #include <Wire.h>
 
 #define MAG_ADDR 0x1E		// Address of the HMC5883L
-#define EARTH_FIELD 630     // milligauss
+#define EARTH_FIELD 110     // milligauss
 #define PING_INTERVAL 40    // Minimum amount of time to wait in-between pings.
 #define ANGLE_THRESHOLD 5   // Max angle measured difference before filtering applies.
 #define MAG_THRESHOLD 70    // Number of milligauss deviation before considered a real signal.
@@ -43,16 +43,16 @@ public:
 
 	// NOTE: Initializing all subclasses with a default value that won't work, because I want 
 	// the API to set pins *after* the class is constructed. That's just the pattern.
-	SensorControl() : front1(0,0), front2(0,0), front3(0,0), rear1(0,0), floor1(0) {};
+	SensorControl() : front_sonar(0,0), right_sonar(0,0), rear_sonar(0,0), left_sonar(0,0), floor1(0) {};
 
+	void setSensorPins(int front, int right, int rear, int left, int line_tracker); // Sonars F,Ri,Re,L; Rear 1; Line Tracker
 
-	void setSensorPins(int f1, int f2, int f3, int r1, int lt); // Front 1,2,3; Rear 1; Line Tracker
-	void setSonarSpacing(int spacing1, int spacing2 = -1); // Pased in values must be positive and are in mm. spacing2 = spacing1 if negative.
-
-	int getWallAngle(); // Calculates the angle to the wall from the normal (+ve to the right, -ve to the left)
-	int getWallDistance(); // Returns the closest distance measured from the front
-	void getDistanceComponents(Array<int> array); // Mods a 3-element array of distance measurements (from left to right).
-	int getRearDistance(); // Returns the distance to the closest rear obstacle (in line of sight of sensor).
+	void fillDistArray(Array<int> array); // Mods a 4-element array of distance measurements (starting at front, clockwise).
+	int getFrontDistance(); // Returns the distance to the closest Front obstacle (in line of sight of sensor).
+	int getRightDistance(); // As above, for Right
+	int getRearDistance(); // As above, for Rear
+	int getLeftDistance(); // As above, for Left
+	int getBehindDistance() { return getRearDistance(); }; // Alias for getRearDistance
 
 	bool isFloorStart(); // Returns true if the floor is dark
 	bool isFloorMain(); // Returns true if the floor is light
@@ -71,10 +71,10 @@ private:
 	/*
 		Sensor Objects (constructed, then overwritten)
 	*/
-	NewPing front1;
-	NewPing front2;
-	NewPing front3;
-	NewPing rear1;
+	NewPing front_sonar;
+	NewPing right_sonar;
+	NewPing rear_sonar;
+	NewPing left_sonar;
 	TCRT5000 floor1; // Note, we need the 1, so we don't override floor();
 
 	// Magnetic sensor runs from I2C, so no pins declared
@@ -82,12 +82,12 @@ private:
 
 	// State variables
 	unsigned long _last_floor_time; // Time value in ms since last floor check (and it changed)
+	unsigned long _last_ping_time = 0;  // Time value in ms since last ping (to avoid cross talk)
 	bool _last_floor_state;
-	int _spacing1; // Spacing between first and second sonar
-	int _spacing2; // Spacing between second ad third sonar
 	float _mag_history[3]; // Keeps the magnitude score of the last three readings
 
 	int getDistance(NewPing sonar); // Returns the distance ping in mm (rather than cm)
+	int getPingDelay(); // Returns a delay (in ms) that should work to wait for next ping
 };
 
 
