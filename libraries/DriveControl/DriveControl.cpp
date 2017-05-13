@@ -1,7 +1,4 @@
 #include "DriveControl.h"
-#include <L293dDriver.h>
-#include <QueueList.h>
-#include <Coordinates.h>
 
 #define PI 3.141592 // Needed for rotational calculations
 
@@ -232,13 +229,6 @@ short DriveControl::sgnbool(bool boolsgn)
 	return pow(-1,(1 + boolsgn));
 }
 
-// Need our own map function that can handle decimals
-float map(float x, float in_min, float in_max, float out_min, float out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-
 /*
 
 Instruction and Queue Logic:
@@ -286,8 +276,8 @@ drive_instruction DriveControl::newInstruction(float left_dist, float right_dist
 	right_speed *= speed_scalar;
 
 	// Normalize results to have a max at the max_speed, then map to -255 -> 255
-	int left_analog = int(map(left_speed, -max_velocity, max_velocity, -255, 255));
-	int right_analog = int(map(right_speed, -max_velocity, max_velocity, -255, 255));
+	int left_analog = int(mapf(left_speed, -max_velocity, max_velocity, -255, 255));
+	int right_analog = int(mapf(right_speed, -max_velocity, max_velocity, -255, 255));
 
 	// Time needed to travel full distance of either wheel (remember that t is const)
 	float time_needed;
@@ -317,6 +307,8 @@ void DriveControl::executeInstruction(drive_instruction inst) const
 		Serial.print(sgnbool(inst.left_direction) * inst.left_speed);
 		Serial.print(", R:");
 		Serial.println(sgnbool(inst.right_direction) * inst.right_speed);
+		Serial.print("D: ");
+		Serial.println(inst.duration);
 	}
 	_motors.left(sgnbool(inst.left_direction) * inst.left_speed);
 	_motors.right(sgnbool(inst.right_direction) * inst.right_speed);
