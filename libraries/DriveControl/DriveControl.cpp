@@ -349,12 +349,17 @@ void DriveControl::run()
 		}
 
 		// Check to see if current instruction has expired
-		long time_passed = millis() - active_instruction->start_time;
-		// if (F_DEBUG && Serial) Serial.print(String(time_passed) + ", ");
-		if (active_instruction->duration == 0 or time_passed > active_instruction->duration) {
+		time_passed = millis() - active_instruction->start_time;
+
+		if (
+			active_instruction->duration == 0 or 
+			(time_passed > active_instruction->duration and time_passed < millis())
+		   ) {
 			// If so, remove it from the queue and unset the _driving flag
 			queue.pop();
 			_driving = false;
+			Serial.println(active_instruction->duration);
+			Serial.println(time_passed);
 			// That may have been the only instruction. If it was, stop the car
 			if (queue.count() <= 0)	{
 				stopAll();
@@ -365,7 +370,6 @@ void DriveControl::run()
 			// This function will be called again, and we can check then.
 			break;
 		}
-		delay(RUN_STEP); // REQUIRED!!!
 	}
 }
 

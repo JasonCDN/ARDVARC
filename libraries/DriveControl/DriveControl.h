@@ -50,8 +50,6 @@ License: GPLv3
 #include <Coordinates.h>
 #include <ARDVARC_UTIL.h>
 
-#define RUN_STEP 20 // To stop over-comparison errors
-
 /*
 
 This is "Sir DriveControl". His job is to make the motors turn in such a precise
@@ -119,6 +117,7 @@ private:
 	float _track = 1; // Distance between wheel centers - used for rotational calculations
 	float _rpdc = 1; // Revs-per-Duty-cycle. Note that this is actually RPM per Duty Cycle.
 
+	unsigned long time_passed; // Declaration for keeping track of time
 
 	QueueList<drive_instruction> queue; // Dynamic linked list to hold drive instructions
 	drive_instruction empty_instruction; // Used in value checking and to stop the car
