@@ -1,0 +1,10 @@
+API Calls with pin numbers
+
+sensors.setSensorPins(10, 11, 8, 9, 12);
+arm.setServoPins(A0, A1);
+driver.setSpeed(0.9); // Preserve motors
+driver.setMotorPins(3, 4, 2, 5, 6, 7);
+driver.setWheelDiameter(55);
+driver.setTrackWidth(105);
+driver.setRevsPerDC(22.5);
+driver.setBackScaling(1);

@@ -1,7 +1,4 @@
 #include "DriveControl.h"
-#include <L293dDriver.h>
-#include <QueueList.h>
-#include <Coordinates.h>
 
 #define PI 3.141592 // Needed for rotational calculations
 
@@ -21,6 +18,18 @@ void DriveControl::setMotorPins(int en1, int in1, int in2, int en2, int in3, int
 void DriveControl::setSpeed(float speed)
 {
 	_global_speed_scalar = constrain(speed, 0, 1);
+}
+
+// Set the internal backwards speed scalar
+void DriveControl::setBackScaling(float speed)
+{
+	_back_scalar = constrain(speed, 0, 5);
+}
+
+void DriveControl::setWheelScales(float left, float right) {
+	float normalizer = 1.0 / max(left, right);
+	_left_scalar = left * normalizer;
+	_right_scalar = right * normalizer;
 }
 
 // Set the internal rpm (for 100% duty cycle) to a value. 
@@ -59,6 +68,26 @@ void DriveControl::backward(float dist, float speed_scalar = 1)
 
 /*
 
+	Stopping Motion (management)
+
+*/
+
+void DriveControl::pause(int duration) {
+
+	if (duration <= 0) {
+		return; // Make sure input makes sense
+	}
+
+	// Build instruction simply with a duration (positive)
+	drive_instruction pause_inst;
+	pause_inst.duration = duration; // In milliseconds
+	// Keep other struct variables as given (defaults)
+
+	queue.push(pause_inst);
+}
+
+/*
+
 Rotational Motion
 
 */
@@ -83,6 +112,13 @@ void DriveControl::turnAngle(float theta, float speed_scalar = 1)
 
 	// Calculate the arc length given the subtending angle
 	float arc_len = turn_circ * abs(theta)/360;
+
+	// Correct with scaling factors, depending on direction we're turning
+	if (theta > 0) {
+		arc_len *= R_SPIN_SCALE;
+	} else {
+		arc_len *= L_SPIN_SCALE;
+	}
 
 	// Determine direction of rotation
 	short director = 1; // This is toggled to 1 or -1, depending on direction
@@ -155,7 +191,7 @@ void DriveControl::goToPointSticky(float x, float y, float speed_scalar = 1)
 // Uses two arcs to move horizontally, and then corrects the vertical.
 // This function uses a very specific algorithm, meant for SHORT movements.
 // Longer paths won't work with this algorithm.
-void DriveControl::nudge(float x, float y, float speed_scalar = 0.5)
+void DriveControl::nudge(float x, float y, float speed_scalar = 1)
 {
 	// Ensure the displacement is within doable boundaries
 	if (abs(x) > _track || abs(y) > _track) {
@@ -166,7 +202,7 @@ void DriveControl::nudge(float x, float y, float speed_scalar = 0.5)
 	// Find the angle needed for proper displacement
 	double angle = acos(1 - abs(x)/_track); // Angle needs to be in rads
 	// Find arc length
-	float wheel_dist = angle * (_track / 2); 
+	float wheel_dist = angle * (_track); 
 	// Find how much to correct vertically after our two arcs
 	double vert_correct = abs(y) - abs(_track * sin(angle));
 
@@ -183,14 +219,14 @@ void DriveControl::nudge(float x, float y, float speed_scalar = 0.5)
 	// Determine the motion based on the sign of x
 	if (x > 0) { // Left wheel first
 		addInstruction(wheel_dist, 0, speed_scalar);
-		addInstruction(0, wheel_dist, speed_scalar);
-	} else if (x < 0) { // Right wheel first
-		addInstruction(0, wheel_dist, speed_scalar);
+		addInstruction(0, NR_SCALE * wheel_dist, speed_scalar);
+	} else { // Right wheel first
+		addInstruction(0, NR_SCALE * wheel_dist, speed_scalar);
 		addInstruction(wheel_dist, 0, speed_scalar);
 	} // If x == 0, do nothing.
 
 	// Do vertical correction
-	forward(vert_correct, speed_scalar);
+	forward(NR_SCALE * vert_correct, speed_scalar);
 }
  
 
@@ -232,13 +268,6 @@ short DriveControl::sgnbool(bool boolsgn)
 	return pow(-1,(1 + boolsgn));
 }
 
-// Need our own map function that can handle decimals
-float map(float x, float in_min, float in_max, float out_min, float out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-
 /*
 
 Instruction and Queue Logic:
@@ -273,7 +302,7 @@ drive_instruction DriveControl::newInstruction(float left_dist, float right_dist
 
 	// Work out relative scales of the speeds. Be aware of division by 0.
 	float left_speed = (abs(left_dist) > 0) ? left_dist / abs(left_dist) : 0;
-	float right_speed = (abs(right_dist) > 0) ? right_dist / abs(left_dist) : 0;
+	float right_speed = (abs(right_dist) > 0) ? right_dist / abs(right_dist) : 0;
 	float normalizer = 1 / abs(max(left_speed, right_speed)); // Need to use this to cap the speeds at "1"
 
 	// Must be within range for this to work, also modified by global
@@ -281,13 +310,13 @@ drive_instruction DriveControl::newInstruction(float left_dist, float right_dist
 	// weighted speeds.
 	speed_scalar = normalizer * constrain(speed_scalar, 0, 1) * _global_speed_scalar * max_velocity; 
 
-	// Scale the speeds to the right dimensions
-	left_speed  *= speed_scalar;
-	right_speed *= speed_scalar;
+	// Scale the speeds to the right dimensions, and scale by required modifiers
+	left_speed  *= speed_scalar * _left_scalar; // left_scalar is an adjuster to keep it straight
+	right_speed *= speed_scalar * _right_scalar;
 
 	// Normalize results to have a max at the max_speed, then map to -255 -> 255
-	int left_analog = int(map(left_speed, -max_velocity, max_velocity, -255, 255));
-	int right_analog = int(map(right_speed, -max_velocity, max_velocity, -255, 255));
+	int left_analog = int(mapf(left_speed, -max_velocity, max_velocity, -255, 255));
+	int right_analog = int(mapf(right_speed, -max_velocity, max_velocity, -255, 255));
 
 	// Time needed to travel full distance of either wheel (remember that t is const)
 	float time_needed;
@@ -297,6 +326,11 @@ drive_instruction DriveControl::newInstruction(float left_dist, float right_dist
 		time_needed = abs(right_dist / right_speed); // In seconds
 	} else {
 		time_needed = 0; // If both are 0, we are stopping. No time needed.
+	}
+
+	// If we're going backwards, apply the back scalar for how much extra time we need
+	if (left_speed < 0 && right_speed < 0) {
+		time_needed *= time_needed * _back_scalar;
 	}
 
 	// Build instruction from previous calculations
@@ -317,6 +351,8 @@ void DriveControl::executeInstruction(drive_instruction inst) const
 		Serial.print(sgnbool(inst.left_direction) * inst.left_speed);
 		Serial.print(", R:");
 		Serial.println(sgnbool(inst.right_direction) * inst.right_speed);
+		Serial.print("D: ");
+		Serial.println(inst.duration);
 	}
 	_motors.left(sgnbool(inst.left_direction) * inst.left_speed);
 	_motors.right(sgnbool(inst.right_direction) * inst.right_speed);
@@ -340,11 +376,17 @@ void DriveControl::run()
 		}
 
 		// Check to see if current instruction has expired
-		long time_passed = millis() - active_instruction->start_time;
-		if (active_instruction->duration == 0 or time_passed > active_instruction->duration) {
+		time_passed = millis() - active_instruction->start_time;
+
+		if (
+			active_instruction->duration == 0 or 
+			(time_passed > active_instruction->duration and time_passed < millis())
+		   ) {
 			// If so, remove it from the queue and unset the _driving flag
 			queue.pop();
 			_driving = false;
+			Serial.println(active_instruction->duration);
+			Serial.println(time_passed);
 			// That may have been the only instruction. If it was, stop the car
 			if (queue.count() <= 0)	{
 				stopAll();

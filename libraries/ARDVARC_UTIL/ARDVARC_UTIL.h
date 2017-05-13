@@ -19,10 +19,8 @@ License: GPLv3
   #include "WConstants.h"
 #endif
 
-#include <L293dDriver.h> // Need the type definitions
-#include <QueueList.h>
-
 #define TEST_SWITCH_PIN 13
+#define F_DEBUG true // A debug flag that logs Serial messages (if available) when true.
 
 /*
 	DO NOT CALL THIS
@@ -30,8 +28,10 @@ License: GPLv3
 	but will automatically only be called once whenever 
 	an ardvarc function is called.
 */
-bool __ardvarc_initialized = false;
-void _ardvarc_init() {
+
+static bool __ardvarc_initialized = false;
+inline void _ardvarc_init() {
+
 	if (!__ardvarc_initialized) {
 		Serial.println("ARDVARC Initialized.");
 		__ardvarc_initialized = true;
@@ -41,9 +41,16 @@ void _ardvarc_init() {
 
 // Returns true or false based on whether or not the 
 // test mode switch is on or off.
-bool isTestMode() {
+inline bool isTestMode() {
+
 	_ardvarc_init();
 	return digitalRead(TEST_SWITCH_PIN) == LOW;
+}
+
+// Need our own map function that can handle decimals
+inline float mapf(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 #endif
