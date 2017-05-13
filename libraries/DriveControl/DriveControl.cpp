@@ -20,6 +20,18 @@ void DriveControl::setSpeed(float speed)
 	_global_speed_scalar = constrain(speed, 0, 1);
 }
 
+// Set the internal backwards speed scalar
+void DriveControl::setBackScaling(float speed)
+{
+	_back_scalar = constrain(speed, 0, 5);
+}
+
+void DriveControl::setWheelScales(float left, float right) {
+	float normalizer = 1.0 / max(left, right);
+	_left_scalar = left * normalizer;
+	_right_scalar = right * normalizer;
+}
+
 // Set the internal rpm (for 100% duty cycle) to a value. 
 // This cannot be negative, but it can be zero (but then the whole car is useless).
 void DriveControl::setRevsPerDC(float rpdc)
@@ -271,9 +283,9 @@ drive_instruction DriveControl::newInstruction(float left_dist, float right_dist
 	// weighted speeds.
 	speed_scalar = normalizer * constrain(speed_scalar, 0, 1) * _global_speed_scalar * max_velocity; 
 
-	// Scale the speeds to the right dimensions
-	left_speed  *= speed_scalar;
-	right_speed *= speed_scalar;
+	// Scale the speeds to the right dimensions, and scale by required modifiers
+	left_speed  *= speed_scalar * _left_scalar; // left_scalar is an adjuster to keep it straight
+	right_speed *= speed_scalar * _right_scalar;
 
 	// Normalize results to have a max at the max_speed, then map to -255 -> 255
 	int left_analog = int(mapf(left_speed, -max_velocity, max_velocity, -255, 255));
@@ -287,6 +299,11 @@ drive_instruction DriveControl::newInstruction(float left_dist, float right_dist
 		time_needed = abs(right_dist / right_speed); // In seconds
 	} else {
 		time_needed = 0; // If both are 0, we are stopping. No time needed.
+	}
+
+	// If we're going backwards, apply the back scalar for how much extra time we need
+	if (left_speed < 0 && right_speed < 0) {
+		time_needed *= time_needed * _back_scalar;
 	}
 
 	// Build instruction from previous calculations
@@ -333,6 +350,7 @@ void DriveControl::run()
 
 		// Check to see if current instruction has expired
 		long time_passed = millis() - active_instruction->start_time;
+		// if (F_DEBUG && Serial) Serial.print(String(time_passed) + ", ");
 		if (active_instruction->duration == 0 or time_passed > active_instruction->duration) {
 			// If so, remove it from the queue and unset the _driving flag
 			queue.pop();
@@ -347,6 +365,7 @@ void DriveControl::run()
 			// This function will be called again, and we can check then.
 			break;
 		}
+		delay(RUN_STEP); // REQUIRED!!!
 	}
 }
 

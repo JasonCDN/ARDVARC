@@ -12,12 +12,12 @@ void setup() {
   driver.setWheelDiameter(55);
   driver.setTrackWidth(102);
   driver.setRevsPerDC(22.5);
+  driver.setBackScaling(1);
 }
 
 void loop() {
   arm.restPosition();
-  driver.turnRight(90);
-  driver.turnLeft(90);
+  driver.backward(100);
 
   while (true) {
     driver.run();

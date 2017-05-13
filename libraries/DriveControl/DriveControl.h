@@ -50,6 +50,8 @@ License: GPLv3
 #include <Coordinates.h>
 #include <ARDVARC_UTIL.h>
 
+#define RUN_STEP 20 // To stop over-comparison errors
+
 /*
 
 This is "Sir DriveControl". His job is to make the motors turn in such a precise
@@ -81,6 +83,8 @@ public:
 	void setRevsPerDC(float rpdc); // Used to keep track of how far car has gone in a certain amount of time
 	void setWheelDiameter(float wheel); // Wheel (diameter) is in mm, and is used to keep track of travel distance
 	void setTrackWidth(float track); // How far apart the drive wheels are (in mm)
+	void setBackScaling(float speed); // How to modify drive duration for moving backwards (scalar for duration)
+	void setWheelScales(float left, float right); // One of these should be 1, and the other is the percent rotation
 	void setMotorPins(int en1, int in1, int in2, int en2, int in3, int in4); // Pins for the motors
 
 	void run(); // This class runs on a queue system. This function must be called to progress the queue. See README.
@@ -101,11 +105,16 @@ public:
 	void turnAngle(float theta, float speed_scalar = 1); // Will turn the vehicle a certain angle relative to its current position.
 	void turnAngleClamped(float theta, float speed_scalar = 1); // As above, but constrains to +-180 degrees.
 	
+	void pause(int duration); // Make the driver stop the wheels for <duration> ms.
+
 	bool isDriving() const; // Returns the "_driving" flag, for external use. Will be true when items are in queue.
 private:
 	L293D _motors; // Default initializer works fine.
 	bool _driving = false; // Flag for if driving or not. Could be used externally to perform an interrupt routine.
 	float _global_speed_scalar = 1; // Between 0 and 1 - scales the speed down from the max.
+	float _back_scalar = 1; // Between 0 and 5 - scales the backwards duration.
+	float _left_scalar = 1; // Between 0 and 1 - scales the left wheel speed.
+	float _right_scalar = 1; // Between 0 and 1 - scales the right wheel speed.
 	float _wheel_dia = 1; // Wheel diameter - for distance tracking while travelling
 	float _track = 1; // Distance between wheel centers - used for rotational calculations
 	float _rpdc = 1; // Revs-per-Duty-cycle. Note that this is actually RPM per Duty Cycle.
