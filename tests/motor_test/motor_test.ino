@@ -13,12 +13,26 @@ void setup() {
   driver.setWheelDiameter(55);
   driver.setTrackWidth(105);
   driver.setRevsPerDC(22.5);
-  driver.setBackScaling(0.75);
+  driver.setBackScaling(1);
 }
 
 void loop() {
-  arm.restPosition();
-  driver.nudge(20, 20, 1);
+  arm.restPosition(); // Required, to keep servos steady
+  driver.forward(50);
+  driver.pause(500);
+  driver.backward(50);
+  driver.pause(500);
+  driver.turnRight(45);
+  driver.pause(500);
+  driver.turnLeft(90);
+  driver.pause(500);
+  driver.turnRight(45);
+  driver.pause(500);
+  driver.nudge(20, 20);
+  driver.pause(500);
+  driver.goToPoint(50, 100);
+  driver.pause(500);
+  driver.goToPointSticky(-50, -100);
 
   while (true) {
     driver.run();
