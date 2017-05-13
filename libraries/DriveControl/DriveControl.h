@@ -50,6 +50,10 @@ License: GPLv3
 #include <Coordinates.h>
 #include <ARDVARC_UTIL.h>
 
+#define L_SPIN_SCALE 1.62 // How much extra / less the spin needs to be for correct turning
+#define R_SPIN_SCALE 1.19 // How much extra / less the spin needs to be for correct turning
+#define NR_SCALE	1.3 // How much extra to turn right wheel when nudging (helps balance to keep straigh)
+
 /*
 
 This is "Sir DriveControl". His job is to make the motors turn in such a precise
@@ -94,7 +98,7 @@ public:
 
 	void goToPoint(float x, float y, float speed_scalar = 1); // Pass in relative coordinates (in mm) to travel there.
 	void goToPointSticky(float x, float y, float speed_scalar = 1); // As above, but don't undo last rotation
-	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment techniques to move a small distance
+	void nudge(float x, float y, float speed_scalar = 1); // Uses fine adjustment techniques to move a small distance
 
 	// All angles are in degrees (because people are used to it!)
 	void turnRight(float theta, float speed_scalar = 1); // Shortcut for turnAngle(|theta|). Can be as large as needed, must be > 0.

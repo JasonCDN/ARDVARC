@@ -8,19 +8,23 @@ ArmControl arm;
 void setup() {
   Serial.begin(9600);
   arm.setServoPins(A0, A1);
+  driver.setSpeed(0.9); // Preserve motors
   driver.setMotorPins(3, 4, 2, 5, 6, 7);
   driver.setWheelDiameter(55);
-  driver.setTrackWidth(102);
+  driver.setTrackWidth(105);
   driver.setRevsPerDC(22.5);
-  driver.setBackScaling(1);
+  driver.setBackScaling(0.75);
 }
 
 void loop() {
   arm.restPosition();
-  driver.backward(100);
+  driver.nudge(20, 20, 1);
 
   while (true) {
     driver.run();
+    if (!isTestMode()) {
+      driver.stopAll();
+    }
   }
 }
 

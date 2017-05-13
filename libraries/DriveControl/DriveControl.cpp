@@ -68,6 +68,26 @@ void DriveControl::backward(float dist, float speed_scalar = 1)
 
 /*
 
+	Stopping Motion (management)
+
+*/
+
+void DriveControl::pause(int duration) {
+
+	if (duration <= 0) {
+		return; // Make sure input makes sense
+	}
+
+	// Build instruction simply with a duration (positive)
+	drive_instruction pause_inst;
+	pause_inst.duration = duration; // In milliseconds
+	// Keep other struct variables as given (defaults)
+
+	queue.push(pause_inst);
+}
+
+/*
+
 Rotational Motion
 
 */
@@ -92,6 +112,13 @@ void DriveControl::turnAngle(float theta, float speed_scalar = 1)
 
 	// Calculate the arc length given the subtending angle
 	float arc_len = turn_circ * abs(theta)/360;
+
+	// Correct with scaling factors, depending on direction we're turning
+	if (theta > 0) {
+		arc_len *= R_SPIN_SCALE;
+	} else {
+		arc_len *= L_SPIN_SCALE;
+	}
 
 	// Determine direction of rotation
 	short director = 1; // This is toggled to 1 or -1, depending on direction
@@ -164,7 +191,7 @@ void DriveControl::goToPointSticky(float x, float y, float speed_scalar = 1)
 // Uses two arcs to move horizontally, and then corrects the vertical.
 // This function uses a very specific algorithm, meant for SHORT movements.
 // Longer paths won't work with this algorithm.
-void DriveControl::nudge(float x, float y, float speed_scalar = 0.5)
+void DriveControl::nudge(float x, float y, float speed_scalar = 1)
 {
 	// Ensure the displacement is within doable boundaries
 	if (abs(x) > _track || abs(y) > _track) {
@@ -175,7 +202,7 @@ void DriveControl::nudge(float x, float y, float speed_scalar = 0.5)
 	// Find the angle needed for proper displacement
 	double angle = acos(1 - abs(x)/_track); // Angle needs to be in rads
 	// Find arc length
-	float wheel_dist = angle * (_track / 2); 
+	float wheel_dist = angle * (_track); 
 	// Find how much to correct vertically after our two arcs
 	double vert_correct = abs(y) - abs(_track * sin(angle));
 
@@ -192,14 +219,14 @@ void DriveControl::nudge(float x, float y, float speed_scalar = 0.5)
 	// Determine the motion based on the sign of x
 	if (x > 0) { // Left wheel first
 		addInstruction(wheel_dist, 0, speed_scalar);
-		addInstruction(0, wheel_dist, speed_scalar);
-	} else if (x < 0) { // Right wheel first
-		addInstruction(0, wheel_dist, speed_scalar);
+		addInstruction(0, NR_SCALE * wheel_dist, speed_scalar);
+	} else { // Right wheel first
+		addInstruction(0, NR_SCALE * wheel_dist, speed_scalar);
 		addInstruction(wheel_dist, 0, speed_scalar);
 	} // If x == 0, do nothing.
 
 	// Do vertical correction
-	forward(vert_correct, speed_scalar);
+	forward(NR_SCALE * vert_correct, speed_scalar);
 }
  
 
@@ -275,7 +302,7 @@ drive_instruction DriveControl::newInstruction(float left_dist, float right_dist
 
 	// Work out relative scales of the speeds. Be aware of division by 0.
 	float left_speed = (abs(left_dist) > 0) ? left_dist / abs(left_dist) : 0;
-	float right_speed = (abs(right_dist) > 0) ? right_dist / abs(left_dist) : 0;
+	float right_speed = (abs(right_dist) > 0) ? right_dist / abs(right_dist) : 0;
 	float normalizer = 1 / abs(max(left_speed, right_speed)); // Need to use this to cap the speeds at "1"
 
 	// Must be within range for this to work, also modified by global
