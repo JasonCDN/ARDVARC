@@ -32,8 +32,6 @@ void loop() {
   digitalWrite(13, LOW);
  }
 
- Serial.println(sensors.getMagBearing());
-
  // test magnetic sensor axis outputs
  Array<float> mags = Array<float>(3);
  sensors.getMagComponents(mags);
