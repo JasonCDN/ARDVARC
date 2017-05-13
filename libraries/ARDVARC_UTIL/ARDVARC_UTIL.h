@@ -28,8 +28,10 @@ License: GPLv3
 	but will automatically only be called once whenever 
 	an ardvarc function is called.
 */
+
 static bool __ardvarc_initialized = false;
 inline void _ardvarc_init() {
+
 	if (!__ardvarc_initialized) {
 		Serial.println("ARDVARC Initialized.");
 		__ardvarc_initialized = true;
@@ -40,6 +42,7 @@ inline void _ardvarc_init() {
 // Returns true or false based on whether or not the 
 // test mode switch is on or off.
 inline bool isTestMode() {
+
 	_ardvarc_init();
 	return digitalRead(TEST_SWITCH_PIN) == LOW;
 }
