@@ -20,7 +20,7 @@ License: GPLv3
 #endif
 
 #include <Servo.h> // Need the type definitions
-
+#include <ARDVARC_UTIL.h>
 
 
 /*

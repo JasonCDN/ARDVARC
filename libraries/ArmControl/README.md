@@ -17,6 +17,8 @@ This person's job is to control the mechanical arm.
 
 # WARNING
 
+## Synchronous Library
+
 Nothing else can be happening while the arm is in operation - no sensors, no
 driving - nothing. This is because the nature of the arm library is
 synchronous, so any code that you try to run concurrently will not run - it
@@ -25,6 +27,10 @@ will be forced to wait until the arm is finished moving.
 You can, of course, move the arm in steps, do some code, then move the arm
 again. Just remember that **you cannot do other things at the same time as
 moving the arm**.
+
+## Signal Noise
+
+If you don't tell the servos to go somewhere, and then you run DC motors, then the servos will max themselves out of their own accord. This is because they are at a floating signal state and they don't care where they sit. All you need to do is make sure the servos initially know where they're supposed to be before turning any other motors on.
 
 
 # Intro

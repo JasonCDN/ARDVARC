@@ -45,11 +45,10 @@ License: GPLv3
   #include "WConstants.h"
 #endif
 
-#include <L293dDriver.h> // Need the type definitions
+#include <L293dDriver.h>
 #include <QueueList.h>
-
-
-#define F_DEBUG true // A debug flag that logs Serial messages (if available) when true.
+#include <Coordinates.h>
+#include <ARDVARC_UTIL.h>
 
 /*
 
