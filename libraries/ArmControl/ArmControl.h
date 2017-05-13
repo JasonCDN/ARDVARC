@@ -20,21 +20,20 @@ License: GPLv3
 #endif
 
 #include <Servo.h> // Need the type definitions
-#include <Servo.h> // Need the type definitions
 
-// TODO Pull this into the ARDVARC library
-#define F_DEBUG true // A debug flag that logs Serial messages (if available) when true.
+
 
 /*
 	Maximum, minimum (and thus starting angle) for the servos.
 	(Some *could* go more, but would then break the continuity of the system).
 */
-#define BASE_MAX 180 
+#define BASE_MAX 170 
 #define BASE_MIN 0
-#define GRIP_MAX 180
-#define GRIP_MIN 0
+#define GRIP_MAX 125
+#define GRIP_MIN 25
+#define GRIP_SCALE 0.5 // Scale input angle by this much before mapping
 
-#define MAX_STEP 50 // How many ms is a max (i.e servo speed is 0) for servo speeds
+#define MAX_STEP 40 // How many ms is a max (i.e servo speed is 0) for servo speeds
 #define MIN_STEP 2  // How many ms is a min (i.e servo speed is 1) for servo speeds
 
 class ArmControl

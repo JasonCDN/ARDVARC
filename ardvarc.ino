@@ -1,5 +1,6 @@
 #include <DriveControl.h>
 #include <SensorControl.h>
+#include <ArmControl.h>
 #include <ARDVARC_UTIL.h>
 
 DriveControl driver;

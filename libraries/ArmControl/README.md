@@ -15,6 +15,17 @@ class sort of like a person, who can be given tasks (like "stow target") and
 will carry them out for you - without you needing to think about the details.
 This person's job is to control the mechanical arm.
 
+# WARNING
+
+Nothing else can be happening while the arm is in operation - no sensors, no
+driving - nothing. This is because the nature of the arm library is
+synchronous, so any code that you try to run concurrently will not run - it
+will be forced to wait until the arm is finished moving.
+
+You can, of course, move the arm in steps, do some code, then move the arm
+again. Just remember that **you cannot do other things at the same time as
+moving the arm**.
+
 
 # Intro
 

@@ -23,6 +23,7 @@ License: GPLv3
 #include <QueueList.h>
 
 #define TEST_SWITCH_PIN 13
+#define F_DEBUG true // A debug flag that logs Serial messages (if available) when true.
 
 /*
 	DO NOT CALL THIS
@@ -45,5 +46,12 @@ bool isTestMode() {
 	_ardvarc_init();
 	return digitalRead(TEST_SWITCH_PIN) == LOW;
 }
+
+// Need our own map function that can handle decimals
+float mapf(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 
 #endif
