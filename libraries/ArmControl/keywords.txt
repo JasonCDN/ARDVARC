@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ArmControl	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setServoPins		KEYWORD2
+setServoSpeed		KEYWORD2
+setAngle			KEYWORD2
+getAngle			KEYWORD2
+setGrip				KEYWORD2
+getGrip				KEYWORD2
+collectTarget		KEYWORD2
+restPosition		KEYWORD2
+readyPosition		KEYWORD2

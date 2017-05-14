@@ -45,11 +45,14 @@ License: GPLv3
   #include "WConstants.h"
 #endif
 
-#include <L293dDriver.h> // Need the type definitions
+#include <L293dDriver.h>
 #include <QueueList.h>
+#include <Coordinates.h>
+#include <ARDVARC_UTIL.h>
 
-
-#define F_DEBUG true // A debug flag that logs Serial messages (if available) when true.
+#define L_SPIN_SCALE 1.62 // How much extra / less the spin needs to be for correct turning
+#define R_SPIN_SCALE 1.19 // How much extra / less the spin needs to be for correct turning
+#define NR_SCALE	1.3 // How much extra to turn right wheel when nudging (helps balance to keep straigh)
 
 /*
 
@@ -82,6 +85,8 @@ public:
 	void setRevsPerDC(float rpdc); // Used to keep track of how far car has gone in a certain amount of time
 	void setWheelDiameter(float wheel); // Wheel (diameter) is in mm, and is used to keep track of travel distance
 	void setTrackWidth(float track); // How far apart the drive wheels are (in mm)
+	void setBackScaling(float speed); // How to modify drive duration for moving backwards (scalar for duration)
+	void setWheelScales(float left, float right); // One of these should be 1, and the other is the percent rotation
 	void setMotorPins(int en1, int in1, int in2, int en2, int in3, int in4); // Pins for the motors
 
 	void run(); // This class runs on a queue system. This function must be called to progress the queue. See README.
@@ -93,7 +98,7 @@ public:
 
 	void goToPoint(float x, float y, float speed_scalar = 1); // Pass in relative coordinates (in mm) to travel there.
 	void goToPointSticky(float x, float y, float speed_scalar = 1); // As above, but don't undo last rotation
-	void nudge(float x, float y, float speed_scalar = 0.5); // Uses fine adjustment techniques to move a small distance
+	void nudge(float x, float y, float speed_scalar = 1); // Uses fine adjustment techniques to move a small distance
 
 	// All angles are in degrees (because people are used to it!)
 	void turnRight(float theta, float speed_scalar = 1); // Shortcut for turnAngle(|theta|). Can be as large as needed, must be > 0.
@@ -102,15 +107,21 @@ public:
 	void turnAngle(float theta, float speed_scalar = 1); // Will turn the vehicle a certain angle relative to its current position.
 	void turnAngleClamped(float theta, float speed_scalar = 1); // As above, but constrains to +-180 degrees.
 	
+	void pause(int duration); // Make the driver stop the wheels for <duration> ms.
+
 	bool isDriving() const; // Returns the "_driving" flag, for external use. Will be true when items are in queue.
 private:
 	L293D _motors; // Default initializer works fine.
 	bool _driving = false; // Flag for if driving or not. Could be used externally to perform an interrupt routine.
 	float _global_speed_scalar = 1; // Between 0 and 1 - scales the speed down from the max.
+	float _back_scalar = 1; // Between 0 and 5 - scales the backwards duration.
+	float _left_scalar = 1; // Between 0 and 1 - scales the left wheel speed.
+	float _right_scalar = 1; // Between 0 and 1 - scales the right wheel speed.
 	float _wheel_dia = 1; // Wheel diameter - for distance tracking while travelling
 	float _track = 1; // Distance between wheel centers - used for rotational calculations
 	float _rpdc = 1; // Revs-per-Duty-cycle. Note that this is actually RPM per Duty Cycle.
 
+	unsigned long time_passed; // Declaration for keeping track of time
 
 	QueueList<drive_instruction> queue; // Dynamic linked list to hold drive instructions
 	drive_instruction empty_instruction; // Used in value checking and to stop the car

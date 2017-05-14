@@ -17,6 +17,8 @@ setRevsPerDC     	KEYWORD2
 setWheelDiameter 	KEYWORD2
 setTrackWidth    	KEYWORD2
 setMotorPins     	KEYWORD2
+setBackScaling     	KEYWORD2
+setWheelScales		KEYWORD2
 
 run              	KEYWORD2
 clearQueue       	KEYWORD2
@@ -27,6 +29,7 @@ backward         	KEYWORD2
 goToPoint        	KEYWORD2
 goToPointSticky  	KEYWORD2
 nudge            	KEYWORD2
+pause				KEYWORD2
 turnRight        	KEYWORD2
 turnLeft         	KEYWORD2
 turnAngle        	KEYWORD2
