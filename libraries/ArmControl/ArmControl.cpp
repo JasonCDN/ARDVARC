@@ -4,13 +4,14 @@
 /*
 	Setting Variables
 */
-void ArmControl::setServoPins(int base, int grip) {
-	if (base == grip) {
-		if (F_DEBUG && Serial) Serial.println("WARNING: Base and grip servos on same pin");
+void ArmControl::setServoPins(int base, int grip, int dump) {
+	if (base == grip or grip == dump ) {
+		if (F_DEBUG && Serial) Serial.println("WARNING: Multiple servos on same pin");
 		return;
 	}
 	s_base.attach(base);
 	s_grip.attach(grip);
+	s_dump.attach(dump);
 }
 
 void ArmControl::setServoSpeed(float speed){
@@ -66,6 +67,14 @@ int ArmControl::getGrip(){
 	return s_grip.read();
 }   
 
+void ArmControl::setDump(int angle){
+	moveServo(s_dump, angle, 0, 90, DUMP_MAX, DUMP_MIN);
+}  
+
+int ArmControl::getDump(){
+	return s_dump.read();
+}   
+
 
 /*
 	Predefined actions
@@ -93,4 +102,13 @@ void ArmControl::readyPosition(){
 	// Order is important!
 	setGrip(60); // Not too wide, enough to catch a target
 	setAngle(180); // Fully down, ready
+}
+
+void ArmControl::dumpTargets(){
+	setDump(90);
+	delay(500);
+	setDump(70); // A bit of a shake
+	setDump(90);
+	delay(500);
+	setDump(0);
 }

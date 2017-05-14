@@ -1,17 +1,19 @@
 # Arm Control
 
 This document will describe how the ArmControl API works, like a tutorial. The
-aim is to take you through how to use all the features of the ArmControl API to
-make full use of the arm.
+aim is to take you through how to use all the features of the ArmControl API
+to make full use of the arm. Note also that the ArmControl API has the
+functions required to handle the dump bin. This is a choice made because the
+dump bin is effectively part of the collection mechanism, and it keeps the
+same library having control of all the servos.
 
-There are different levels of features. High-level features like `stowTarget()`
-will coordinate all the servos to put the collected target in the stow bin. Low
-level features, such as `setFirstArmAngle(theta, [speed])` will move the lower
-part of the arm to the desired `theta`, at a given percentage of its total
-possible `speed`.
+There are different levels of features. High-level features like
+`collectTarget()` will coordinate all the servos to put the collected target
+in the stow bin. Low level features, such as `setBase(theta)` will move the
+lower part of the arm to the desired `theta`.
 
 Each method in the API is attached to the **ArmControl** class. Think of this
-class sort of like a person, who can be given tasks (like "stow target") and
+class sort of like a person, who can be given tasks (like "collect target") and
 will carry them out for you - without you needing to think about the details.
 This person's job is to control the mechanical arm.
 
@@ -83,10 +85,11 @@ visualization easier.
 Also, for the grip servo, you can set it from 0 (fully closed) to 90 (fully open).
 
 # Function Reference
-### void setServoPins(int base, int grip)
+### void setServoPins(int base, int grip, int dump)
 
-Set the pin numbers for the base servo and the grip servo. Use the `A<x>`
-constants for the analog pins. (e.g. `A0` for Analog 0);
+Set the pin numbers for the base servo and the grip servo. Also pass in a pin
+for the dump-bin servo. Use the `A<x>` constants for the analog pins. (e.g.
+`A0` for Analog 0);
 
 ### void setServoSpeed(float speed) 
 
@@ -140,3 +143,7 @@ the arm will be completely above the vehicle (minimum footprint).
 
 Moves the arm to be ready to pick up a target. This means the jaws are open
 and down at ground level.
+
+### void dumpTargets() 
+
+Moves the dump servo in such a manner as to dump out the targets.
