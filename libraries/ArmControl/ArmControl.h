@@ -23,6 +23,9 @@ License: GPLv3
 #include <ARDVARC_UTIL.h>
 
 
+#define SET_INITIAL true // Whether or not to set the initial position of the servos on setup
+
+
 /*
 	Maximum, minimum (and thus starting angle) for the servos.
 	(Some *could* go more, but would then break the continuity of the system).

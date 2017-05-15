@@ -34,6 +34,8 @@ moving the arm**.
 
 If you don't tell the servos to go somewhere, and then you run DC motors, then the servos will max themselves out of their own accord. This is because they are at a floating signal state and they don't care where they sit. All you need to do is make sure the servos initially know where they're supposed to be before turning any other motors on.
 
+By default (i.e. based on the `SET_INITIAL` flag in the library header file) the `setServoPins(...)` function will automatically tell the servos to stick to their default configuration (i.e. fully closed).
+
 
 # Intro
 
@@ -91,6 +93,8 @@ Set the pin numbers for the base servo and the grip servo. Also pass in a pin
 for the dump-bin servo. Use the `A<x>` constants for the analog pins. (e.g.
 `A0` for Analog 0);
 
+**Important Note:** This function actually does two things. It attaches the servos to the specified pins, and will then proceed to put them in their default configuration positions *at maximum speed*. This will usually take about a second or so.
+
 ### void setServoSpeed(float speed) 
 
 Takes a decimal (from 0 -> 1) and uses that to define the servo speed. When 0,
@@ -115,10 +119,15 @@ Set gripping servo's angle from 0 (fully closed) to 90 (fully open).
 
 ### int getGrip()   
 
-Reads the grip servo's last-written angle and returns it. Note that this may
-not reflect the actual angle of the servo - it's just remembering what angle
-it was last told to go to (i.e. not actually reading the angle off the
-hardware itself).
+Reads the grip servo's last-written angle and returns it. See warnings for `getAngle()`.
+
+### void setDump(int angle)  
+
+Set dumping servo's angle from 0 (fully down) to 90 (fully up).
+
+### int getDump()   
+
+Reads the dump servo's last-written angle and returns it. See warnings for `getAngle()`.
 
 ### void collectTarget() 
 
@@ -146,4 +155,4 @@ and down at ground level.
 
 ### void dumpTargets() 
 
-Moves the dump servo in such a manner as to dump out the targets.
+Moves the dump servo in such a manner as to dump out the targets. Note that this function will also make sure that the gripper arm is out of the way before trying to dump the targets, to avoid a self collision.

@@ -12,6 +12,11 @@ void ArmControl::setServoPins(int base, int grip, int dump) {
 	s_base.attach(base);
 	s_grip.attach(grip);
 	s_dump.attach(dump);
+
+	if (SET_INITIAL) { // Move everything to its default state
+		restPosition();
+		setDump(0);
+	}
 }
 
 void ArmControl::setServoSpeed(float speed){
@@ -105,6 +110,13 @@ void ArmControl::readyPosition(){
 }
 
 void ArmControl::dumpTargets(){
+
+	// If we have to, move the gripper arm out of the way!
+	if (getAngle() < 30) {
+		setAngle(30)
+		delay(100);
+	}
+
 	setDump(90);
 	delay(500);
 	setDump(70); // A bit of a shake
