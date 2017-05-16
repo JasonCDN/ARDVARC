@@ -1,17 +1,19 @@
 # Arm Control
 
 This document will describe how the ArmControl API works, like a tutorial. The
-aim is to take you through how to use all the features of the ArmControl API to
-make full use of the arm.
+aim is to take you through how to use all the features of the ArmControl API
+to make full use of the arm. Note also that the ArmControl API has the
+functions required to handle the dump bin. This is a choice made because the
+dump bin is effectively part of the collection mechanism, and it keeps the
+same library having control of all the servos.
 
-There are different levels of features. High-level features like `stowTarget()`
-will coordinate all the servos to put the collected target in the stow bin. Low
-level features, such as `setFirstArmAngle(theta, [speed])` will move the lower
-part of the arm to the desired `theta`, at a given percentage of its total
-possible `speed`.
+There are different levels of features. High-level features like
+`collectTarget()` will coordinate all the servos to put the collected target
+in the stow bin. Low level features, such as `setBase(theta)` will move the
+lower part of the arm to the desired `theta`.
 
 Each method in the API is attached to the **ArmControl** class. Think of this
-class sort of like a person, who can be given tasks (like "stow target") and
+class sort of like a person, who can be given tasks (like "collect target") and
 will carry them out for you - without you needing to think about the details.
 This person's job is to control the mechanical arm.
 
@@ -31,6 +33,8 @@ moving the arm**.
 ## Signal Noise
 
 If you don't tell the servos to go somewhere, and then you run DC motors, then the servos will max themselves out of their own accord. This is because they are at a floating signal state and they don't care where they sit. All you need to do is make sure the servos initially know where they're supposed to be before turning any other motors on.
+
+By default (i.e. based on the `SET_INITIAL` flag in the library header file) the `setServoPins(...)` function will automatically tell the servos to stick to their default configuration (i.e. fully closed).
 
 
 # Intro
@@ -83,10 +87,13 @@ visualization easier.
 Also, for the grip servo, you can set it from 0 (fully closed) to 90 (fully open).
 
 # Function Reference
-### void setServoPins(int base, int grip)
+### void setServoPins(int base, int grip, int dump)
 
-Set the pin numbers for the base servo and the grip servo. Use the `A<x>`
-constants for the analog pins. (e.g. `A0` for Analog 0);
+Set the pin numbers for the base servo and the grip servo. Also pass in a pin
+for the dump-bin servo. Use the `A<x>` constants for the analog pins. (e.g.
+`A0` for Analog 0);
+
+**Important Note:** This function actually does two things. It attaches the servos to the specified pins, and will then proceed to put them in their default configuration positions *at maximum speed*. This will usually take about a second or so.
 
 ### void setServoSpeed(float speed) 
 
@@ -112,10 +119,15 @@ Set gripping servo's angle from 0 (fully closed) to 90 (fully open).
 
 ### int getGrip()   
 
-Reads the grip servo's last-written angle and returns it. Note that this may
-not reflect the actual angle of the servo - it's just remembering what angle
-it was last told to go to (i.e. not actually reading the angle off the
-hardware itself).
+Reads the grip servo's last-written angle and returns it. See warnings for `getAngle()`.
+
+### void setDump(int angle)  
+
+Set dumping servo's angle from 0 (fully down) to 90 (fully up).
+
+### int getDump()   
+
+Reads the dump servo's last-written angle and returns it. See warnings for `getAngle()`.
 
 ### void collectTarget() 
 
@@ -140,3 +152,7 @@ the arm will be completely above the vehicle (minimum footprint).
 
 Moves the arm to be ready to pick up a target. This means the jaws are open
 and down at ground level.
+
+### void dumpTargets() 
+
+Moves the dump servo in such a manner as to dump out the targets. Note that this function will also make sure that the gripper arm is out of the way before trying to dump the targets, to avoid a self collision.
