@@ -46,11 +46,8 @@ Ultrasonic Sensors
 // Modifies a 4-element array of distance measurements (clockwise from front).
 void SensorControl::fillDistArray(Array<int> array) {
 	array[0] = getDistance(front_sonar);
-	delay(PING_INTERVAL);
 	array[1] = getDistance(right_sonar);
-	delay(PING_INTERVAL);
 	array[2] = getDistance(rear_sonar);	
-	delay(PING_INTERVAL);
 	array[3] = getDistance(left_sonar);
 }
 
@@ -76,7 +73,7 @@ int SensorControl::getLeftDistance() {
 // Takes a sensor object and returns its median ping times 10 (convert to mm).
 int SensorControl::getDistance(NewPing sonar) {
 	delay(getPingDelay()); // Stop crosstalk
-	int dist = NewPing::convert_cm(sonar.ping_median(3)) * 10;
+	int dist = NewPing::convert_cm(sonar.ping_median(PING_COUNT)) * 10;
 	_last_ping_time = millis();
 	return dist;
 } 
