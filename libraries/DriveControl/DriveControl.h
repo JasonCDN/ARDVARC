@@ -50,9 +50,9 @@ License: GPLv3
 #include <Coordinates.h>
 #include <ARDVARC_UTIL.h>
 
-#define L_SPIN_SCALE 1.62 // How much extra / less the spin needs to be for correct turning
+#define L_SPIN_SCALE 1.42// How much extra / less the spin needs to be for correct turning
 #define R_SPIN_SCALE 1.19 // How much extra / less the spin needs to be for correct turning
-#define NR_SCALE	1.3 // How much extra to turn right wheel when nudging (helps balance to keep straigh)
+#define NR_SCALE	1.3 // How much extra to turn right wheel when nudging (helps balance to keep straight)
 
 /*
 

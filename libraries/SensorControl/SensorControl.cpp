@@ -171,7 +171,8 @@ int SensorControl::getMagBearing() {
 	Vector vec = mag.readNormalize();
 
 	// Find angle in the Q1 section
-	int angle = atan2(vec.YAxis, vec.XAxis) * 180.0/PI;
+	// NOTE: We're using ZAxis because the sensor is mounted vertically
+	int angle = atan2(vec.ZAxis, vec.XAxis) * 180.0/PI;
 
 	return angle;
 } 
@@ -204,14 +205,14 @@ bool SensorControl::isMagValid() {
 	Array<float> comps = Array<float>(3);
 	getMagComponents(comps);
 	for (int i = 0; i < 3; ++i) {
-		if (abs(comps[i]) > (290)) {
+		if (abs(comps[i]) > (2000)) {
 			return false;
 		}
 	}
 	return true;
 } 
 
-// True if the magnitude of the signal is far enough from Earth's magnetic field
+// True if the magnitude of the signal is far enough from background magnetic field
 bool SensorControl::isMagInRange() {
-	return abs(getMagStrength() - EARTH_FIELD) > MAG_THRESHOLD;
+	return abs(getMagStrength() - BACKGROUND_FIELD) > MAG_THRESHOLD;
 } 

@@ -28,13 +28,13 @@ License: GPLv3
 #include <Math.h>
 #include <Wire.h>
 
-#define MAG_ADDR 0x1E		// Address of the HMC5883L
-#define EARTH_FIELD 110     // milligauss
-#define PING_INTERVAL 40    // Minimum amount of time to wait in-between pings.
-#define ANGLE_THRESHOLD 5   // Max angle measured difference before filtering applies.
-#define MAG_THRESHOLD 70    // Number of milligauss deviation before considered a real signal.
-#define FRONT_SENS_NUM 3    // Number of sensors on the front.
-#define MAX_SONAR_DIST 5000 // Maximum distance for sensing (in mm).
+
+#define MAG_ADDR 0x1E		 // Address of the HMC5883L
+#define BACKGROUND_FIELD 200 // milligauss - used to determine if magnetic field is of target
+#define MAG_THRESHOLD 70     // Number of milligauss deviation before considered a real signal.
+
+#define PING_INTERVAL 20    // Minimum amount of time to wait (ms) in-between pings.
+#define MAX_SONAR_DIST 3000 // Maximum distance for sensing (in mm).
 
 
 class SensorControl

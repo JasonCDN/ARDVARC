@@ -113,7 +113,7 @@ void ArmControl::dumpTargets(){
 
 	// If we have to, move the gripper arm out of the way!
 	if (getAngle() < 30) {
-		setAngle(30)
+		setAngle(30);
 		delay(100);
 	}
 
