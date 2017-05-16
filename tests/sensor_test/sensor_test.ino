@@ -32,6 +32,7 @@ void loop() {
   digitalWrite(13, LOW);
  }
 
+ /*
  // test magnetic sensor axis outputs
  Array<float> mags = Array<float>(3);
  sensors.getMagComponents(mags);
@@ -41,9 +42,14 @@ void loop() {
  Serial.print(", ");
  Serial.print(mags[2]); // Z
  Serial.print(", ");
- Serial.println(sensors.getMagStrength());
-  
-
+ Serial.println(sensors.getMagStrength());*/
+ Serial.println(atan2(1, 1) * 180/PI);
+ Serial.println(atan2(1, 0) * 180/PI);
+ Serial.println(atan2(-1, 1) * 180/PI);
+ Serial.println(atan2(-1, -1) * 180/PI);
+ Serial.println(atan2(0, 1) * 180/PI);
+ Serial.println();
+ Serial.println(sensors.getMagBearing());
 
 /*
 	// Test the TCRT5000 sensor
