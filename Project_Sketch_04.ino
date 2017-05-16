@@ -1,7 +1,10 @@
-//#include <SensorControl.h>
-//#include <ArmControl.h>
-//#include <DriveControl.h>
+#include <SensorControl.h>
+#include <ArmControl.h>
+#include <DriveControl.h>
 
+ArmControl arm;
+SensorControl sensors;
+DriveControl driver;
 
 /*
  * xCoordinate = x coordinate of vehicle's position (mm)
@@ -9,9 +12,9 @@
  * orientation = direction of front of vehicle relative to starting position, in radians (0 = forward, 90 = right, 180 = back, 270 = left) 
  * !! use mod for left turns and multiple right turns !!
  */
- float x_position = 100;
- float y_position = 100;
- float orientation = 90;
+ float x_position = 0;
+ float y_position = 0;
+ float orientation = 0;
  const float pi = 3.14159;
  float radian_orientation = orientation * (pi / 180);
 
@@ -33,50 +36,41 @@
  */
 int distances[5];
 
+float overall_angle(int turning_angle){
+  //Calculates the overall change in angle of the centre of the vehicle, used for x_rotation and y_rotation
+  //Parameters : front_angle -> the angle by which the vehicle has turned, in degrees (-360 <= front_angle <= 360)
+  float positive_angle = turning_angle % 360; // 0 <= positive_turning_angle < 360
+  float radian_angle = degrees_to_radians(positive_angle); // 0 <= radian_angle <= 2pi
+  float relative_angle;
+  if(radian_angle == 0){
+    relative_angle = 0;
+  }
+  else if(radian_angle <= pi){
+    relative_angle = (3*pi + radian_angle)/2;
+  }
+  else{
+    relative_angle = -(pi - radian_angle)/2;
+  }
+  float overall_angle = radian_orientation + relative_angle;
+  orientation += turning_angle;
+  Serial.println(relative_angle);
+  return overall_angle; // given in radians
+}
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  Serial.print("Current coordinates: ");
-  Serial.print(x_position);
-  Serial.print(", ");
-  Serial.println(y_position);
-//  driver.setMotorPins(3, 4, 5, 6, 7, 8);
-//  driver.setWheelDiameter(65);
-//  driver.setTrackWidth(125);
-//  driver.setRevsPerDC(31);
-//  sensors.setSonarSpacing(20);
-  //Set initial positioning by right and rear wall bearings (vehicle should be placed in the right corner)  
-  //x_position = 2400 - sensors.getWallDistance() * sin(getWallAngle());
-  //y_position = sensors.getDistanceRear() + len;
-  //int y = y_rotation(dist, angle);
-  //int x = x_rotation(dist, angle);
-  update_motion(20);
-  Serial.print(orientation);
-  Serial.print("New coordinates: ");
-  Serial.print(x_position);
-  Serial.print(", ");
-  Serial.println(y_position);
-  orientation -= 360;
-  update_motion(20);
-  Serial.print(orientation);
-  Serial.print("New coordinates: ");
-  Serial.print(x_position);
-  Serial.print(", ");
-  Serial.println(y_position);
-  orientation -= 360;
-  update_motion(20);
-  Serial.print(orientation);
-  Serial.print("New coordinates: ");
-  Serial.print(x_position);
-  Serial.print(", ");
-  Serial.println(y_position);
-  orientation = 360;
-  update_motion(20);
-  Serial.print(orientation);
-  Serial.print("New coordinates: ");
-  Serial.print(x_position);
-  Serial.print(", ");
-  Serial.println(y_position); 
+  
+//  sensors.setSensorPins(10, 11, 8, 9, 12);
+//  arm.setServoPins(A0, A1);
+//  driver.setSpeed(0.9); // Preserve motors
+//  driver.setMotorPins(3, 4, 2, 5, 6, 7);
+//  driver.setWheelDiameter(55);
+//  driver.setTrackWidth(105);
+//  driver.setRevsPerDC(22.5);
+//  driver.setBackScaling(1);
+  
+  float i = overall_angle(360);
 }
 
 void loop() {
@@ -137,23 +131,6 @@ float degrees_to_radians(float degrees1){
 //  return new_y;
 //}
 
-float overall_angle(int turning_angle){
-  //Calculates the overall change in angle of the centre of the vehicle, used for x_rotation and y_rotation
-  //Parameters : front_angle -> the angle by which the vehicle has turned, in degrees (-360 <= front_angle <= 360)
-  float positive_angle = turning_angle % 360; // 0 <= positive_turning_angle < 360
-  float radian_angle = degrees_to_radians(positive_angle);
-  float relative_angle;
-  if(radian_angle <= pi){
-    relative_angle = (3*pi + radian_angle)/2;
-  }
-  else{
-    relative_angle = -(pi + radian_angle)/2;
-  }
-  float overall_angle = radian_orientation + relative_angle;
-  orientation += turning_angle;
-  return overall_angle; // given in radians
-}
-
 float distance(int turning_angle){//given in degrees
   float positive_angle = turning_angle % 360; // 0 <= restricted_front_angle < 360
   float radian_turn = degrees_to_radians(positive_angle); //0 <= radian_turn <= pi
@@ -161,7 +138,7 @@ float distance(int turning_angle){//given in degrees
   return distance;
 }
 
-float update_rotation(int turning_angle){//Called after a rotation by turning_angle degrees (-360 <= turning_angle <= 360
+float update_rotation(int turning_angle){//Called after a rotation by turning_angle degrees
   float angle = overall_angle(turning_angle);
   float dist = distance(turning_angle);
   x_position -= dist * sin(angle);

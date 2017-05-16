@@ -119,8 +119,6 @@ float update_rotation(int turning_angle){//Called after a rotation by turning_an
   float dist = distance(turning_angle);
   x_position += dist * sin(angle);
   y_position += dist * cos(angle);
-  Serial.println(x_position);
-  Serial.println(y_position);
 }
 
 float update_motion(int distance){//Called after straight-line motion to update coordinates
