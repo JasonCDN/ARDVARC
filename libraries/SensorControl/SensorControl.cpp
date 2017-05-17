@@ -148,7 +148,7 @@ float magtd3(float a, float b, float c) {
 // Modifies an x,y,z array of ints with field components
 void SensorControl::getMagComponents(Array<float> array) {
 
-	Vector vec = mag.readRaw();
+	Vector vec = mag.readNormalize();
 
 	array[0] = vec.XAxis;
 	array[1] = vec.YAxis;
@@ -169,7 +169,7 @@ int SensorControl::getMagBearing() {
 
 	// Find angle in the Q1 section
 	// NOTE: We're using ZAxis because the sensor is mounted vertically
-	int angle = atan2(vec.ZAxis, vec.XAxis) * 180.0/PI;
+	int angle = atan2(vec.ZAxis, vec.XAxis) * 180.0/PI + R_CORRECTION;
 
 	return angle;
 } 
@@ -178,7 +178,7 @@ int SensorControl::getMagBearing() {
 int SensorControl::getMagElevation() {
 	Vector vec = mag.readNormalize();
 
-	return atan2(vec.ZAxis, vec.XAxis) * 180/PI;
+	return atan2(vec.YAxis, vec.XAxis) * 180/PI;
 }
 
 // Returns the strength (magnitude) of the magnetic field

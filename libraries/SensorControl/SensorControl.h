@@ -30,9 +30,10 @@ License: GPLv3
 
 
 #define MAG_ADDR 0x1E		 // Address of the HMC5883L
-#define BACKGROUND_FIELD 200 // milligauss - used to determine if magnetic field is of target
-#define MAG_THRESHOLD 70     // Number of milligauss deviation before considered a real signal.
+#define BACKGROUND_FIELD 300 // milligauss - used to determine if magnetic field is of target
+#define MAG_THRESHOLD 90     // Number of milligauss deviation before considered a real signal.
 
+#define R_CORRECTION 90     // Angle added to the bearing to correct for negatives
 #define PING_COUNT 2		// Number of pings to average out for our final value
 #define PING_INTERVAL 20    // Minimum amount of time to wait (ms) in-between pings.
 #define MAX_SONAR_DIST 3000 // Maximum distance for sensing (in mm).
