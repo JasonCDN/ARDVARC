@@ -45,10 +45,10 @@ Ultrasonic Sensors
 
 // Modifies a 4-element array of distance measurements (clockwise from front).
 void SensorControl::fillDistArray(Array<int> array) {
-	array[0] = getDistance(front_sonar);
-	array[1] = getDistance(right_sonar);
-	array[2] = getDistance(rear_sonar);	
-	array[3] = getDistance(left_sonar);
+	array[0] = getFrontDistance();
+	array[1] = getRightDistance();
+	array[2] = getRearDistance();	
+	array[3] = getLeftDistance();
 }
 
 // INDIVIDUAL SONARS:
@@ -57,7 +57,9 @@ int SensorControl::getFrontDistance() {
 }
 
 int SensorControl::getRightDistance() {
-	return getDistance(right_sonar);
+	int dist = getDistance(right_sonar);
+	pushToBlipStore(dist, _r_blip_hist);
+	return dist;
 }
 
 int SensorControl::getRearDistance() {
@@ -65,7 +67,9 @@ int SensorControl::getRearDistance() {
 }
 
 int SensorControl::getLeftDistance() {
-	return getDistance(left_sonar);
+	int dist = getDistance(left_sonar);
+	pushToBlipStore(dist, _l_blip_hist);
+	return dist;
 }
 
 
@@ -90,6 +94,58 @@ int SensorControl::getPingDelay() {
 }
 
 
+// Blipping
+
+int SensorControl::getLeftBlipped() {
+	return getBlippedFromStore(_l_blip_hist);
+}
+
+int SensorControl::getRightBlipped() {
+	return getBlippedFromStore(_r_blip_hist);
+}
+
+// Searches the blip_store for a blip and returns "now - timestamp". Otherwise, -1.
+int SensorControl::getBlippedFromStore(PingCapture blip_store[]) {
+	int expected = 0;
+	int rising_edge = BLIP_HIST; // Start here so the next loop won't run if there's no edge
+	
+	// We start i at 1 so we have something to compare with in the algorithm
+	for (int i = 1; i < BLIP_HIST; ++i)	{
+		// Must be a negative difference, otherwise not a rising edge
+		if (blip_store[i].dist - blip_store[i - 1].dist < -1 * BLIP_THRESHOLD) {
+			// Store what we expect, so we can compare the falling edge in the next loop
+			rising_edge = i;
+			expected = blip_store[i - 1].dist;
+			break;
+		}
+	}
+
+	// If we have a rising edge, this will run and return something if there's a falling edge
+	for (int i = rising_edge; i < BLIP_HIST; ++i) {
+		// If the value in the store is close enough to the value before the falling edge...
+		if (abs(blip_store[i].dist - expected) < BLIP_RETURN_THRESHOLD) {
+			return millis() - blip_store[rising_edge].s_time; // Then return the time of the rising edge.
+		}
+	}
+
+	// We didn't find a falling edge to the right value, or no edges at all
+	return -1;
+}
+
+void SensorControl::pushToBlipStore(int dist, PingCapture blip_store[]) {
+	// Iterate backwards for a shift-then-overwrite routine
+	for (int i = BLIP_HIST - 1; i >= 0; --i) {	
+		if (i > 0) { // If we're in the thick of it:
+			// Replace each member with the next most recent
+			blip_store[i] = blip_store[i - 1];
+			// (Effectively a right shift)
+		} else if (i == 0) { // Otherwise, we're at the top of the history
+			// So put our new value in the right spot
+			blip_store[i].dist = dist; // Store distance
+			blip_store[i].s_time = millis(); // Then store the timestamp
+		}
+	}
+}
 
 /*
 
