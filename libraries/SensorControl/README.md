@@ -310,10 +310,9 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 
 #### <a href="#ultrasonicsonars">Ultrasonic sonars (*Wall* or *Distance*)</a>
 
-* <a href="#getwallangle">getWallAngle()</a> : Calculates the angle to the wall from the normal
-* <a href="#getwalldistance">getWallDistance()</a> : Returns the closest distance measured from the front
-* <a href="#getdistancecomponents">getDistanceComponents(Array<int> array)</a> : Returns a 3-element array of distance measurements (from left to right).
-* <a href="#getreardistance">getRearDistance()</a> : Returns the distance to the closest rear obstacle (in line of sight of sensor).
+* <a href="#getwalldistance">get<Side>Distance()</a> : Returns the closest distance measured from the <Side>
+* <a href="#filldistarray">fillDistArray(Array<int> array)</a> : Fills a 4-element array of distance measurements (from front, clockwise around to the left).
+
 
 #### <a href="#magneticsensor">Magnetic sensor (*Mag*)</a>
 
@@ -332,47 +331,54 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 <a id="ultrasonicsonars"></a>
 ## Ultrasonic sensors (*Wall* or *Distance*)
 
-<a id="getwallangle"></a>
-### int getWallAngle()
-
-Returns the argument angle to the wall's normal. The angle will be negative if
-the car is angled to the right, and positive if angled to the left. All angles
-are relative to the normal vector.
-
-Note that the angle range isn't strictly `-90 -> 90` degrees. Rather, the
-angle range depends on the spacing and the accuracy of the ultrasonic sensors.
-
-Also take care with how often you call this function. It takes roughly 100 ms
-to get get samples from the ultrasonics on the front of the car (speed of
-sound and all that), so try not to use it while running timer sensitive tasks
-(like driving, for instance).
-
 <a id="getwalldistance"></a>
-### int getWallDistance()
-
-Returns the shortest distance to the wall - nuff said. (Contact API author if
-average or middle distance needed.)
-
-Like with previous functions, take care with how often you call *this* function.
-It takes roughly 100 ms to get get samples from the ultrasonics on the front of
-the car (speed of sound and all that), so try not to use it while running
-timer sensitive tasks.
-
-
-<a id="getdistancecomponents"></a>
-### void getDistanceComponents(Array<int> array)
-
-Internally fills a 3-element array with distances from each of the three
-ultrasonic sensors on the front. See the ["Using Arrays with the API"](#arraysandapi) section.
-
-Note that it takes roughly 100 ms to ping all three sensors, so try to keep
-pinging to a minimum. (Contact author if the timing is giving you trouble,
-then will check if can avoid pinging all three sensors.)
-
-<a id="getreardistance"></a>
+### int getFrontDistance()
+### int getRightDistance()
 ### int getRearDistance()
+### int getLeftDistance()
 
-Returns the distance measured by the rear ultrasonic sensor.
+Returns the distance and object in line of sight to whichever face of the
+vehicle corresponds to the function name.
+
+Like with previous functions, take care with how often you call this. It takes
+roughly 30 ms to get samples from the ultrasonics (speed of sound and all
+that), so try not to use it while running timer sensitive tasks.
+
+<a id="filldistarray"></a>
+### void fillDistArray(Array<int> array)
+
+Internally fills a 4-element array with distances from each of the four
+ultrasonic sensors on the sides. See the ["Using Arrays with the API"](#arraysandapi) section.
+
+Note that it takes roughly 100 ms to ping all the sensors, so try to keep
+pinging to a minimum. (Contact author if the timing is giving you trouble,
+then will check if can avoid pinging all the sensors.)
+
+### int getLeftBlipped()
+### int getRightBlipped()
+
+Returns the time ago (in milliseconds) that there was a blip on one of the
+sonars (depending on which function you call). It returns -1 if no blip was
+detected.
+
+#### Important note about how blipping works
+
+So we're clear on the data you're getting, here's a quick rundown on how
+blipping works. A "blip" is a change in the distance signal, where the
+distance is momentarily closer and then returns to the previous value. In more
+technical terms, there's a "rising edge" followed by a "falling edge" to the
+same amplitude.
+
+Whenever you ping a sonar that can be checked for a blip, the value of the
+ping at that point in time is automatically recorded into internal memory and
+timestamped. We store a certain amount of these "historical" pings (the exact
+amount is controlled by the "BLIP_HIST" constant). Then, when you ask if a
+sonar has blipped, we scan through the historical pings and search for the
+blip pattern (the shape of the pattern is decided by internal constants).
+
+Finally, if the right pattern is in the historical pings, we return the time
+when the signal blip was *first detected*. This gives you an approximate time
+when we detected something that caused a blip.
 
 
 ------------------------------------------------------------------------------
