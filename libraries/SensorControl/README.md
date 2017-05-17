@@ -312,6 +312,7 @@ tracker, and functions with "Mag" are for the magnetic sensor.
 
 * <a href="#getwalldistance">get<Side>Distance()</a> : Returns the closest distance measured from the <Side>
 * <a href="#filldistarray">fillDistArray(Array<int> array)</a> : Fills a 4-element array of distance measurements (from front, clockwise around to the left).
+* <a href="#getblipped">get<Left/Right>Blipped()</a> : Returns time of last blip, or -1.
 
 
 #### <a href="#magneticsensor">Magnetic sensor (*Mag*)</a>
@@ -354,6 +355,7 @@ Note that it takes roughly 100 ms to ping all the sensors, so try to keep
 pinging to a minimum. (Contact author if the timing is giving you trouble,
 then will check if can avoid pinging all the sensors.)
 
+<a id="getblipped"></a>
 ### int getLeftBlipped()
 ### int getRightBlipped()
 
@@ -379,6 +381,11 @@ blip pattern (the shape of the pattern is decided by internal constants).
 Finally, if the right pattern is in the historical pings, we return the time
 when the signal blip was *first detected*. This gives you an approximate time
 when we detected something that caused a blip.
+
+The important thing to note is that the ping history isn't forever. We assume
+you've been searching for blips, thus each ping in the history should be
+relatively close together (time-wise). Once you get a blip, act on it as soon
+as you can, otherwise it will be gone!
 
 
 ------------------------------------------------------------------------------
