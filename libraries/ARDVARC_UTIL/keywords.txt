@@ -6,6 +6,7 @@
 # Datatypes (KEYWORD1)
 #######################################
 
+ARDVARC_UTIL 		KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
