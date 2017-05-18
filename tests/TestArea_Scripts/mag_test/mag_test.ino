@@ -19,14 +19,16 @@ void loop() {
  }
 
  // test magnetic sensor axis outputs
- Array<float> mags = Array<float>(3);
- sensors.getMagComponents(mags);
- Serial.print(mags[0]); // X
- Serial.print(", ");
- Serial.print(mags[1]); // Y
- Serial.print(", ");
- Serial.print(mags[2]); // Z
- Serial.print(", ");
- Serial.println(sensors.getMagStrength());
+// Array<float> mags = Array<float>(3);
+// sensors.getMagComponents(mags);
+// Serial.print(mags[0]); // X
+// Serial.print(", ");
+// Serial.print(mags[1]); // Y
+// Serial.print(", ");
+// Serial.print(mags[2]); // Z
+// Serial.print(", ");
+// Serial.println(sensors.getMagStrength());
+
+Serial.println(sensors.getMagBearing());
 
 }

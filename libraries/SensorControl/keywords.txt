@@ -1,0 +1,33 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+SensorControl			KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setSensorPins           	KEYWORD2
+fillDistArray           	KEYWORD2
+getFrontDistance        	KEYWORD2
+getRightDistance        	KEYWORD2
+getRearDistance         	KEYWORD2
+getLeftDistance         	KEYWORD2
+getBehindDistance       	KEYWORD2
+isFloorStart            	KEYWORD2
+isFloorMain             	KEYWORD2
+getFloorType            	KEYWORD2
+hasFloorChanged         	KEYWORD2
+getTimeFloorLastChanged 	KEYWORD2
+getMagComponents        	KEYWORD2
+getMagBearing           	KEYWORD2
+getMagElevation         	KEYWORD2
+getMagStrength          	KEYWORD2
+deltaMagScore           	KEYWORD2
+isMagValid              	KEYWORD2
+isMagInRange            	KEYWORD2
