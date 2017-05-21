@@ -356,12 +356,17 @@ pinging to a minimum. (Contact author if the timing is giving you trouble,
 then will check if can avoid pinging all the sensors.)
 
 <a id="getblipped"></a>
-### int getLeftBlipped()
-### int getRightBlipped()
+### void getLeftBlipped(Array<int> out)
+### void getRightBlipped(Array<int> out)
 
-Returns the time ago (in milliseconds) that there was a blip on one of the
-sonars (depending on which function you call). It returns -1 if no blip was
-detected.
+Fills a **two-element** out array with the distance (in mm) and the time ago
+(in milliseconds) that there was a blip on one of the sonars (depending on
+which function you call). Note that the array is filled *in that order*.
+Element `0` is the distance, and element `1` is the time. Both values will be
+-1 if no blip was detected.
+
+**Warning:** The value of the distance (mm) is likely to be less accurate than
+others, because it is caused by a momentary disturbance in the sensor.
 
 #### Important note about how blipping works
 

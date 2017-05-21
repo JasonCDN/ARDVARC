@@ -64,8 +64,8 @@ public:
 	int getBehindDistance() { return getRearDistance(); }; // Alias for getRearDistance
 
 	// Ultrasonic blipping
-	int getLeftBlipped(); // Returns the number of milliseconds since last blip on left sonar
-	int getRightBlipped(); // Same as above, but for the right sonar
+	void SensorControl::getLeftBlipped(Array<int> out); // Returns the number of milliseconds since last blip on left sonar
+	void SensorControl::getRightBlipped(Array<int> out); // Same as above, but for the right sonar
 
 	// TCRT5000
 	bool isFloorStart(); // Returns true if the floor is dark
@@ -111,7 +111,7 @@ private:
 	int _last_right_blip;
 	int _last_left_blip;
 	void pushToBlipStore(int dist, PingCapture blip_store[]);
-	int getBlippedFromStore(PingCapture blip_store[]); // Returns time of a blip in the store
+	void SensorControl::getBlippedFromStore(PingCapture blip_store[], Array<int> out); // Fills an array with time and dist of blip
 
 	int getDistance(NewPing sonar); // Returns the distance ping in mm (rather than cm)
 	int getPingDelay(); // Returns a delay (in ms) that should work to wait for next ping

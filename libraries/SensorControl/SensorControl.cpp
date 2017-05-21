@@ -96,16 +96,16 @@ int SensorControl::getPingDelay() {
 
 // Blipping
 
-int SensorControl::getLeftBlipped() {
-	return getBlippedFromStore(_l_blip_hist);
+void SensorControl::getLeftBlipped(Array<int> out) {
+	getBlippedFromStore(_l_blip_hist, out);
 }
 
-int SensorControl::getRightBlipped() {
-	return getBlippedFromStore(_r_blip_hist);
+void SensorControl::getRightBlipped(Array<int> out) {
+	getBlippedFromStore(_r_blip_hist, out);
 }
 
 // Searches the blip_store for a blip and returns "now - timestamp". Otherwise, -1.
-int SensorControl::getBlippedFromStore(PingCapture blip_store[]) {
+void SensorControl::getBlippedFromStore(PingCapture blip_store[], Array<int> out) {
 	int expected = 0;
 	int rising_edge = BLIP_HIST; // Start here so the next loop won't run if there's no edge
 	
@@ -124,12 +124,15 @@ int SensorControl::getBlippedFromStore(PingCapture blip_store[]) {
 	for (int i = rising_edge; i < BLIP_HIST; ++i) {
 		// If the value in the store is close enough to the value before the falling edge...
 		if (abs(blip_store[i].dist - expected) < BLIP_RETURN_THRESHOLD) {
-			return millis() - blip_store[rising_edge].s_time; // Then return the time of the rising edge.
+			out[0] = blip_store[rising_edge].dist; 				// Then return the distance of the edge...
+			out[1] = millis() - blip_store[rising_edge].s_time; // And return the time of the rising edge.
 		}
 	}
 
 	// We didn't find a falling edge to the right value, or no edges at all
-	return -1;
+	out[0] = -1;
+	out[1] = -1;
+	return;
 }
 
 void SensorControl::pushToBlipStore(int dist, PingCapture blip_store[]) {
