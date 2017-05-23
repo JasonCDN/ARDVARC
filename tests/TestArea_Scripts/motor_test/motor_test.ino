@@ -17,7 +17,10 @@ void setup() {
 }
 
 void loop() {
-  driver.forward(10000); // 10 meters
+  driver.forward(100);
+  driver.turnRight(90);
+  driver.turnLeft(90);
+  driver.backward(100);
 
   while (true) {
     driver.run();
