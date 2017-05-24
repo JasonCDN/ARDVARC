@@ -121,14 +121,6 @@ Set gripping servo's angle from 0 (fully closed) to 90 (fully open).
 
 Reads the grip servo's last-written angle and returns it. See warnings for `getAngle()`.
 
-### void setDump(int angle)  
-
-Set dumping servo's angle from 0 (fully down) to 90 (fully up).
-
-### int getDump()   
-
-Reads the dump servo's last-written angle and returns it. See warnings for `getAngle()`.
-
 ### void collectTarget() 
 
 Runs through a pre-defined motion set to pick up a target that is already
@@ -152,7 +144,3 @@ the arm will be completely above the vehicle (minimum footprint).
 
 Moves the arm to be ready to pick up a target. This means the jaws are open
 and down at ground level.
-
-### void dumpTargets() 
-
-Moves the dump servo in such a manner as to dump out the targets. Note that this function will also make sure that the gripper arm is out of the way before trying to dump the targets, to avoid a self collision.
