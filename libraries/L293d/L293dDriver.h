@@ -24,6 +24,8 @@ License: GPLv3
   #include "WConstants.h"
 #endif
 
+#define INVERTER true  // Reverse motor directions to keep constant.
+
 /*
 
 This class contains all the low-level code to get the voltages and currents

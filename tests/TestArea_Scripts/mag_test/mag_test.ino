@@ -23,7 +23,7 @@ void loop() {
 // sensors.getMagComponents(mags);
 // Serial.print(mags[0]); // X
 // Serial.print(", ");
-// Serial.print(mags[1]); // Y
+// Serial.print(mags[1d]); // Y
 // Serial.print(", ");
 // Serial.print(mags[2]); // Z
 // Serial.print(", ");

@@ -85,7 +85,13 @@ void Motor::drive(float speed)
 	// Clean up the speed value. The value might be "messy" because
 	// the user is using a math function to interpolate speeds.
 	speed = constrain(floor(speed), -255, 255);
+	
+	if (INVERTER) { // Invert the direction incase motors wired backwards
+		speed *= -1;
+	}
+
 	Motor::_speed = speed;
+
 
 	if (Motor::_speed > 0) {
 		// We define "forward" as in1 high.
