@@ -3,11 +3,13 @@
 ArmControl arm;
 
 void setup() {
-  arm.setServoPins(A1, A0);
+  Serial.begin(9600);
+  arm.setServoPins(A0, A1, A2);
+  arm.setServoSpeed(0.8);
 }
 
 void loop() {
-  arm.collectTarget();
-  delay(2000);
+  arm.setGrip(0);
+  delay(5000);
 }
 
