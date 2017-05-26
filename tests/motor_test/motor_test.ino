@@ -36,7 +36,7 @@ void loop() {
 
   while (true) {
     driver.run();
-    if (!isTestMode()) {
+    if (isTestMode()) {
       driver.stopAll();
     }
   }

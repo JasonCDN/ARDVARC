@@ -29,9 +29,9 @@ License: GPLv3
 #include <Wire.h>
 
 
-#define MAG_ADDR 0x1E		 // Address of the HMC5883L
-#define BACKGROUND_FIELD 300 // milligauss - used to determine if magnetic field is of target
-#define MAG_THRESHOLD 90     // Number of milligauss deviation before considered a real signal.
+#define MAG_ADDR 0x1E		  // Address of the HMC5883L
+#define BACKGROUND_FIELD 2500 // milligauss - used to determine if magnetic field is of target
+#define MAG_THRESHOLD 1500    // Number of milligauss deviation before considered a real signal.
 
 #define R_CORRECTION 90     // Angle added to the bearing to correct for negatives
 #define PING_COUNT 2		// Number of pings to average out for our final value
@@ -40,7 +40,7 @@ License: GPLv3
 
 // Blipping constants
 #define BLIP_CAP 2000 // distances are capped at this to stop noise from being interpreted as a blip
-#define BLIP_HIST 5   // Number of readings to keep in history
+#define BLIP_HIST 30   // Number of readings to keep in history
 #define BLIP_THRESHOLD 50        // Difference in reading that counts as a falling edge on the blip
 #define BLIP_RETURN_THRESHOLD 50 // Difference from expected reading (from falling edge) that counts as a rising edge
 

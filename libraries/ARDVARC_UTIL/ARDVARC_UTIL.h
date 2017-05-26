@@ -19,7 +19,7 @@ License: GPLv3
   #include "WConstants.h"
 #endif
 
-#define TEST_SWITCH_PIN 13
+#define TEST_SWITCH_PIN A0
 #define F_DEBUG true // A debug flag that logs Serial messages (if available) when true.
 
 /*
