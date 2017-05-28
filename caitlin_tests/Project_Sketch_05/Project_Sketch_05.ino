@@ -10,7 +10,7 @@ DriveControl driver;
  float y_position = 0;
  float orientation = 0;
  const float pi = 3.14159;
- float radian_orientation = orientation * (pi / 180);
+ float radian_orientation = 0;
 
  const int len = 115;
  const int width = 45;
@@ -42,12 +42,14 @@ float overall_angle(int turning_angle){
   }
   float overall_angle = radian_orientation + relative_angle;
   orientation += turning_angle;
+  radian_orientation += turning_angle * (pi/180); 
   return overall_angle; // given in radians
 }
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  float c = update_rotation(349);
   
 //  sensors.setSensorPins(10, 11, 8, 9, 12);
 //  arm.setServoPins(A0, A1);
@@ -107,7 +109,7 @@ float degrees_to_radians(float degrees1){
 
 float distance(int turning_angle){//given in degrees
   float positive_angle = turning_angle % 360; // 0 <= restricted_front_angle < 360
-  float radian_turn = degrees_to_radians(positive_angle); //0 <= radian_turn <= pi
+  float radian_turn = degrees_to_radians(positive_angle); //0 <= radian_turn <= 2pi
   float distance = sqrt(2*65*65*(1 - cos(radian_turn)));
   return distance;
 }
@@ -115,8 +117,8 @@ float distance(int turning_angle){//given in degrees
 float update_rotation(int turning_angle){//Called after a rotation by turning_angle degrees
   float angle = overall_angle(turning_angle);
   float dist = distance(turning_angle);
-  x_position -= dist * sin(angle);
-  y_position -= dist * cos(angle);
+  x_position += dist * sin(angle);
+  y_position += dist * cos(angle);
 }
 
 float update_motion(int distance){//Called after straight-line motion to update coordinates
