@@ -1,11 +1,25 @@
 /*
- * 1. collect 
+ * To the poor unfortunate soul who has accidentally wandered into this tragic cesspit of broken dreams: Greetings.
+ * What you have before you can only be described as a wasteland of certain uncertainty, consistent inconsistencies and ultimately, the
+ * beginning of the last chapter in your life. The lucky ones last a mere two minutes in this heartbreaking maze of confusion. 
+ * We're still searching for the unlucky ones.
+ * Get out while you can.
+ * One final warning: If you touch anything in here, you are doomed. You may try to run, change your name, move to Sweden. But ultimately,
+ * you will end up exactly like poor Jimmy Cooper. Ever heard of him?
+ * Exactly.
+ */
+
+
+/*
+ * 1. collect _/
  * 2. forward_scan
  * 3. magnet_scan (need two?)
- * 4. set path_follow
+ * 4. set path_follow _/
  * 5. Upper and lower level
  * 6. Comments and constants
- * 7. Test for 10 targets
+ * 7. Test for 10 targets _/
+ * 8. Test for change in initial US, adjust so straight
+ * 9. Going around non magnetic objects
  */
 
 #include <SensorControl.h>
@@ -21,7 +35,7 @@ DriveControl driver;
 unsigned long comparison;
 
 //Determines how the vehicle will react, based on position
-bool lower_level = true;
+bool lower_level = false; //should be true at start
 
 //Number of targets currently holding
 int targets = 0; // Hopefully not for long :0
@@ -52,24 +66,6 @@ void magnet_scan(){
   
 }
 
-int collect(int orientation, int distance){
-  driver.turnAngle(orientation);
-  int turn_back = -orientation;
-  driver.forward(distance);
-  if(sensors.isMaginRange() && sensors.isMagValid()){
-    //arm.collectTarget();
-    targets += targets;
-    //arm.restPosition();
-  }
-  driver.backward(distance); //Back you go
-  driver.turnAngle(turn_back)
-  check_return();
-  if(miracle != true){
-    driver.forward(2000);
-    driver.run();
-  }
-}
-
 void check_return(){
   if(lower_level && (millis() >= 270000 || targets == 10)){
     //Checks if vehicle needs to return
@@ -81,7 +77,7 @@ void check_return(){
    else if(lower_level != true && (millis() >= 240000 || targets == 10)){
     driver.stopAll();
     driver.turnAngle(180);
-    while(sensors.getFrontDistance() < follow_path){
+    while(sensors.getFrontDistance() > follow_path){
       driver.forward(20);
       control();
     }
@@ -160,13 +156,43 @@ void control(){
   /*
    * Executes the current driving queue, until empty. Then resets the queue.
    */
-  while(true){
+   while(true){
     driver.run();
     if(driver.isDriving() == false){
+      driver.stopAll();
       break;
     }
+   }
+   driver.stopAll();
+}
+}
+
+int collect(int orientation, int distance){
+  driver.turnAngle(orientation);
+  int turn_back = -orientation;
+  driver.forward(distance);
+  control();
+  if(sensors.isMagInRange() && sensors.isMagValid()){
+    //arm.collectTarget();
+    targets += targets;
+    //arm.restPosition();
   }
-  driver.stopAll();
+  driver.backward(distance); //Back you go
+  driver.turnAngle(turn_back);
+  control();
+  check_return();
+  if(miracle != true){//U: Perhaps move to loop() - > using break statements now
+    Serial.print("Done collecting");
+    finished();
+  }
+}
+
+void finished(){
+  while(true){
+  }
+}
+
+void movement(){ 
 }
 
 void setup() {
@@ -192,56 +218,76 @@ void setup() {
 //    straighten(); //T: use only if necessary.
 //    //Stores the left, right and rear distances at the point before initial movement
 //    update_sides();
-//    driver.forward(2000);
-//    driver.run();
+//    follow_path = sensors.getRightDistance() + 20;
+//    on_path = true;
+//    main();
 //  }
+  update_sides();
+  Serial.print("Initial right: ");
+  Serial.print(dist_to_right);
+  Serial.print(" Initial left: ");
+  Serial.print(dist_to_left);
 }
 
 void loop() {
   // Only consider first level
-
-  update_sides();
+  while(sensors.getRightDistance() == 0 || sensors.getLeftDistance() == 0 || sensors.getFrontDistance() == 0 || sensors.getRearDistance() == 0){
+    driver.forward(1);
+    control();
+  }
   
-  while(driver.isDriving()){
-    if(sensors.getRightDistance() - dist_to_right >= 20){
-      driver.stopAll();
-      int orientation = -90; //U: when vehicle turns correctly, will change to 90
-      int distance = sensors.getRightDistance() - 60;
-      collecting = true;
-      collect(orientation, distance);
-    }
-    else if(sensors.getLeftDistance() - dist_to_left >= 20){
-      driver.stopAll();
-      int distance = sensors.getLeftDistance() - 60;
-      driver.backward(50);
-      control();
-      int orientation = 90;//U: when vehicle turns correctly, will change to -90
-      collecting = true;
-      collect(orientation, distance);
-    }
-    else if(sensors.getFrontDistance() <= 150 || (sensors.isMagInRange() && sensors.isMagValid())){
-      driver.stopAll();
-      forward_scan();
-    }
-   else if(sensors.isMagInRange() && sensors.isMagValid()){
-    driver.stopAll();
-    magnet_scan();
-   }
-   else if(sensors.getRearDistance() >= 1950 - len){
-    //U: more reliable way to check rear distance
-    //Should be approximately 5cm from bottom of ramp
-    driver.stopAll();
-    driver.forward(558);//U: what about when there is a target right at the top of the ramp?
-    driver.turnAngle(90);
-    driver.forward(2000);
-    driver.run();
-   }
-   else if(millis() > 230000){
-    check_return();
-   }
-   else{
-    update_sides();
-    check_return();
-   }
-  }   
+  update_sides();
+  comparison = millis();
+  driver.forward(100);
+  driver.run();
+
+  while(true){
+    //While statement so comparison doesn't reset, also to help control so loop reset
+    if(millis() - comparison >= 10{
+      //Spaces out ultrasonic sampling and comparisons
+      
+      if(right_dist - sensors.getRightDistance() >= 20 && sensors.getRightDistance() != 0){//U: test for unstable structure
+      //Compares recent sample with current sample, useful if  right ultrasonic isn't spazzing and returning 0       
+        driver.stopAll();
+        int distance = sensors.getRightDistance() - 140; //U: 140 must be tested
+        //Distance between right ultrasonic and target, with space for collecting
+        int orientation = -42; //U: will be 90
+        collect(orientation, dist);
+      }
+      
+      else if(left_dist - sensors.getleftDistance() >= 20 && sensors.getleftDistance() != 0){
+        //Same as for right distance      
+        driver.stopAll();
+        int distance = sensors.getLeftDistance() - 140; //U: 140 must be tested
+        int orientation = 97; //U: will be 90
+        driver.backward(20);//U: to align magnetic sensor with target after turn
+        collect(orientation, dist);
+      }
+      
+      else if(sensors.getFrontDistance() <= 100 && sensors.getFrontDistance() != 0){
+        driver.stopAll();
+        //forward scan
+        //count angle
+        //if magnetic, collect
+        //if not, go around
+      }
+      
+      else if(sensors.isMagInRange() && sensors.isMagValid()){
+        driver.stopAll();
+        //magnet scan
+      }
+      
+      else if(sensors.getRearDistance() >= 1950 - len && lower_level){
+        //Vehicle is at base of ramp
+        driver.stopAll();
+        driver.forward(558)//U: reach top
+        driver.turnAngle(97);//Will be -90
+        lower_level = false;
+      }
+      
+      else if(millis() > 230000){
+        //Vehicle may need to return to start area
+      }
+      break;
+  }
 }
