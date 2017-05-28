@@ -1,5 +1,6 @@
 #include <SensorControl.h>
 #include <Array.h>
+#include <ARDVARC_UTIL.h>
 
 SensorControl sensors;
 
@@ -43,12 +44,8 @@ void loop() {
  Serial.print(mags[2]); // Z
  Serial.print(", ");
  Serial.println(sensors.getMagStrength());*/
- Serial.println(atan2(1, 1) * 180/PI);
- Serial.println(atan2(1, 0) * 180/PI);
- Serial.println(atan2(-1, 1) * 180/PI);
- Serial.println(atan2(-1, -1) * 180/PI);
- Serial.println(atan2(0, 1) * 180/PI);
- Serial.println();
+ Serial.print(sensors.getMagStrength());
+ Serial.print(", ");
  Serial.println(sensors.getMagBearing());
 
 /*
