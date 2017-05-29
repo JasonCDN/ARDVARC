@@ -7,7 +7,7 @@ ArmControl arm;
 
 void setup() {
   Serial.begin(9600);
-  arm.setServoPins(A0, A1, A2);
+  arm.setServoPins(A1, A2, A3);
   driver.setSpeed(1); // Preserve motors
   driver.setMotorPins(3, 4, 2, 5, 6, 7);
   driver.setWheelDiameter(55);
