@@ -46,6 +46,8 @@ void loop() {
  Serial.println(sensors.getMagStrength());*/
  Serial.print(sensors.getMagStrength());
  Serial.print(", ");
+ Serial.print(isTestMode());
+ Serial.print(", ");
  Serial.println(sensors.getMagBearing());
 
 /*

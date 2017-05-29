@@ -31,13 +31,11 @@ License: GPLv3
 	(Some *could* go more, but would then break the continuity of the system).
 */
 #define BASE_MAX 180 
-#define BASE_MIN 30
-#define DUAL_OFFSET -50
-#define GRIP_MIN 0
+#define BASE_MIN 18
+#define DUAL_OFFSET 20
+#define GRIP_MIN 30
 #define GRIP_MAX 90
 #define GRIP_SCALE 0.5 // Scale input angle by this much before mapping
-#define DUMP_MAX 170 
-#define DUMP_MIN 0
 
 #define MAX_STEP 40 // How many ms is a max (i.e servo speed is 0) for servo speeds
 #define MIN_STEP 2  // How many ms is a min (i.e servo speed is 1) for servo speeds
