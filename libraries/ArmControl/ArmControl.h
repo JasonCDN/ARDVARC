@@ -30,9 +30,9 @@ License: GPLv3
 	Maximum, minimum (and thus starting angle) for the servos.
 	(Some *could* go more, but would then break the continuity of the system).
 */
-#define BASE_MAX 180 
-#define BASE_MIN 18
-#define DUAL_OFFSET 20
+#define BASE_MAX 20 
+#define BASE_MIN 180
+#define DUAL_OFFSET -10
 #define GRIP_MIN 30
 #define GRIP_MAX 90
 #define GRIP_SCALE 0.5 // Scale input angle by this much before mapping
